@@ -1,0 +1,133 @@
+/* ============================================================
+   时间轴 · 3D 翻书（首页板块）
+   来自 demo/timeline-3d.html
+   ============================================================ */
+
+.spacer{display:none}
+.bookwrap{position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;pointer-events:none;padding-top:6px}
+.stage{position:relative;width:min(1200px,96%);height:640px;margin:0 auto}
+
+/* ===== 入场动画：从两端向中间生长 ===== */
+.tl-end{transition:width 1.05s cubic-bezier(.2,.75,.25,1)}
+.tl-dot,.tl-labhit{opacity:0;transition:opacity .5s ease, transform .22s cubic-bezier(.22,.61,.36,1), background .2s ease}
+.tl.playing .tl-end{width:3.5vw}
+.tl.playing .tl-dot,.tl.playing .tl-labhit{opacity:1}
+.tl:not(.playing) .tl-end{width:0}
+/* 生长尖端的金色粒子 */
+.spark-wrap{position:absolute;top:50%;pointer-events:none;z-index:5;will-change:transform}
+.spark{width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;
+  background:radial-gradient(circle,#fff3c4 0%,#e8b93c 45%,rgba(217,167,46,0) 100%);
+  pointer-events:none;will-change:transform,opacity}
+/* 外层：横向线性抛出 */
+@keyframes sparkFly{ from{transform:translateX(0)} to{transform:translateX(var(--dx))} }
+/* 内层：先上扬再溅落（抛物线），末尾淡出 */
+@keyframes sparkFall{
+  0%   {transform:translateY(0) scale(1);    opacity:0}
+  12%  {transform:translateY(calc(var(--up) * -1)) scale(1); opacity:1}
+  100% {transform:translateY(var(--down)) scale(.55); opacity:0}
+}
+
+/* ===== 年份金框：从年份上方生长到书右页，围成方框并展示照片 ===== */
+.callout{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:6;
+  overflow:visible;opacity:0;transition:opacity .2s ease}
+.callout.on{opacity:1}
+.callout path{fill:none;stroke:var(--gold,#c9a227);stroke-width:3.5;
+  vector-effect:non-scaling-stroke;stroke-linejoin:miter;stroke-linecap:butt;
+  filter:drop-shadow(0 0 2px rgba(201,162,39,.6))}   /* 与首页板块金线一致 */
+.co-img{position:fixed;z-index:7;pointer-events:none;opacity:0;
+  transition:opacity .35s ease;overflow:hidden;border-radius:2px}
+.co-img.on{opacity:1}
+.co-img img{width:100%;height:100%;object-fit:cover;display:block}
+.co-img .yr{position:absolute;left:8px;bottom:6px;font-size:13px;letter-spacing:.1em;
+  color:#f4e3b2;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+
+/* ===== 金色时间轴：不连线，点悬浮；两端短粗实线留出间距 ===== */
+.tl{position:relative;width:60vw;height:96px;margin:0 auto;
+  pointer-events:auto;cursor:pointer}
+/* 两端短粗实线（与端年留出间距，不连接） */
+.tl-end{position:absolute;top:calc(50% - 1.5px);height:3px;width:3.5vw;
+  border-radius:999px;                 /* 两端全圆角 */
+  background:#b8912f}
+.tl-end.l{right:calc(100% + 52px)}
+.tl-end.r{left:calc(100% + 52px)}
+/* 中间年份的小点：悬浮，不连线 */
+.tl-dot{position:absolute;top:calc(50% - 2.25px);width:4.5px;height:4.5px;margin-left:-2.25px;
+  border-radius:50%;background:rgba(184,145,47,.55);
+  transition:transform .22s cubic-bezier(.22,.61,.36,1), background .2s ease}
+.tl-dot.on{background:#8b1a22}                 /* 变色持久保留 */
+.tl-dot.on:hover{transform:scale(1.9)}         /* 放大只在悬停时 */
+.tl-dot:hover{transform:scale(1.5)}
+/* 关键年份：与点同高，位于轴线中间；用底色遮住背后的点 */
+/* 命中层：固定大小、不缩放 —— 避免"放大后悬停区跟着变大" */
+.tl-labhit{position:absolute;top:50%;transform:translate(-50%, -50%);   /* 垂直居中，正对轴线 */
+  z-index:2;pointer-events:auto}
+.tl-lab{font-size:19px;line-height:24px;letter-spacing:.05em;color:#b8912f;white-space:nowrap;
+  padding:0 4px;display:inline-block;
+  transition:transform .22s ease, color .22s ease}
+.tl-labhit:hover .tl-lab{transform:scale(1.35)}
+.tl-lab.on{color:#8b1a22}                      /* 关键年份：变色持久保留（不加粗） */
+@keyframes tlpop{0%{transform:scale(1)}45%{transform:scale(1.28)}100%{transform:scale(1)}}
+.tl-lab.pop{animation:tlpop .4s ease-out}
+@keyframes dtpop{0%{transform:scale(1)}45%{transform:scale(2.2)}100%{transform:scale(1)}}
+.tl-dot.pop{animation:dtpop .4s ease-out}
+
+/* ===== 隐形滚动区（页面上不出现文字）===== */
+.tlscroll{display:none;height:0}
+.tlbar{position:fixed;left:0;right:0;bottom:0;height:2px;background:rgba(184,145,47,.15);z-index:9}
+.tlbar i{display:block;height:100%;width:0;background:#b8912f;transition:width .1s linear}
+.stage canvas{display:block;width:100%;height:100%}
+.hint{text-align:center;font-size:13px;color:var(--muted);margin-top:6px}
+.spread{text-align:center;font-size:20px;letter-spacing:.15em;color:#8b1a22;opacity:.85;margin-top:1vh}
+input[type=range]{width:min(600px,80%);display:block;margin:10px auto 0}
+
+
+/* ---- 首页板块专用：缩小上下留白 ---- */
+#timeline3d{padding-top:24px;padding-bottom:94px}
+#timeline3d .section-title{margin-bottom:14px}
+#timeline3d .section-title::after{margin-top:12px}
+
+/* ================= 小点：金色刻度线 + 悬停变年份 ================= */
+/* 外面 .tl-dot 只做平移，内部元素做缩放，避免和 squeeze 的行内 transform 打架 */
+.tl-dot{
+  width:0; height:0; margin-left:0; top:50%;
+  background:transparent !important;      /* 旧的圆点背景去掉，改由内部 i 画 */
+  border-radius:0; box-shadow:none;
+  /* ★ 挤压要跟手：过渡缩短到 0.13s，且不带任何 delay */
+  transition:opacity .35s ease, transform .13s cubic-bezier(.25,.8,.35,1);
+}
+/* 刻度线已按要求移除 */
+/* 已废弃 */
+/* 圆点本体 */
+.tl-dotc{
+  position:absolute; left:-2.25px; top:-2.25px; width:4.5px; height:4.5px;   /* ★ 圆心=锚点=时间轴中线 */
+  border-radius:50%; background:#b8912f;
+  transition:transform .22s cubic-bezier(.22,.61,.36,1), background .22s ease, opacity .22s ease;
+}
+.tl-dot.on .tl-dotc{ background:#8b1a22; }
+/* 已废弃 */
+/* 悬停时出现的年份 */
+/* ★ 年份就落在小点【原位】——即"小点本身变成年份" */
+.tl-dotyr{
+  position:absolute; left:0; top:0; white-space:nowrap;   /* ★ 与小点同高（同一锚点）*/
+  font-size:14px; font-weight:600; letter-spacing:.5px; color:#8b1a22;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.7);
+  transform-origin:center;
+  transition:opacity .16s ease, transform .16s ease;
+  pointer-events:none;
+}
+/* 已废弃 */
+/* 悬停时圆点淡出，让位给年份 */
+/* 已废弃 */
+
+/* ★ 悬停判定由 JS 按位置决定（不是 :hover），所以用 .showyr 类驱动 */
+/* 不用 DOM :hover 的原因：squeeze 会把小点推走，导致鼠标脱离 -> 闪烁 + 错位 */
+.tl-dot{ pointer-events:none; }        /* 视觉层不参与命中，判定完全交给 JS */
+.tl-dot.showyr .tl-dotc{ opacity:0; transform:scale(.4); }
+/* 已废弃：刻度线 */
+.tl-dot.showyr .tl-dotyr{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* ★ 金线的显隐：出现时淡入，消失时【立刻】（避免离开年份后还拖尾=闪烁）*/
+#callout{ transition: opacity .28s ease; }
+#callout:not(.on){ transition: none !important; opacity: 0 !important; }

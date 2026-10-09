@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投稿 —— 盛世华章</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta name="description" content="投稿——上传你的国庆照片与故事，让记忆汇入时代的洪流。">
+<script>document.documentElement.className += ' js';</script>
+<script>setTimeout(function(){ if(!window.__shReady) document.documentElement.classList.remove('js'); }, 2600);</script>
+<style>
+/* ==================== 投稿页专属样式 ==================== */
+:root{ --red:#8b1a22; --red-dk:#5e0f16; --gold:#c9a227; --ink:#241a14; --paper:#f6f1e6; }
+
+/* 底图：海报铺满 */
+.page-bg{
+  position:fixed; inset:0; z-index:-2;
+  background:url('assets/poster.jpg') center 34%/cover no-repeat;
+  background-color:#3a0c11;
+}
+/* 蒙版：压暗底图，让表单读得清 */
+.page-veil{
+  position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 42%, rgba(20,4,6,.30) 0%, rgba(20,4,6,.72) 62%, rgba(12,2,3,.90) 100%),
+    linear-gradient(180deg, rgba(94,15,22,.55) 0%, rgba(20,4,6,.62) 45%, rgba(12,2,3,.86) 100%);
+}
+body{ background:transparent; }
+
+/* 页头：深红半透明，压在底图上 */
+.site-header{ background:rgba(58,10,15,.72); backdrop-filter:blur(6px); border-bottom:1px solid rgba(201,162,39,.28); }
+
+/* ---------- HERO ---------- */
+.sub-hero{ position:relative; padding:78px 0 34px; text-align:center; }
+.sub-hero .kicker{
+  font-size:12px; letter-spacing:.42em; color:rgba(201,162,39,.92);
+  text-transform:uppercase; margin-bottom:14px;
+}
+/* 毛体标题：整幅书法图，用 filter 做落影让它从海报上浮起来 */
+.sub-hero .mao-title{ margin:0 0 20px; line-height:0; }
+.sub-hero .mao-title img{
+  width:min(300px,42vw); height:auto; display:inline-block;
+  filter:drop-shadow(0 4px 22px rgba(0,0,0,.72)) drop-shadow(0 1px 2px rgba(0,0,0,.85));
+}
+.sub-hero .mao-slogan img{
+  width:min(430px,62vw); height:auto; display:inline-block;
+  filter:drop-shadow(0 2px 14px rgba(0,0,0,.78)) drop-shadow(0 0 20px rgba(201,162,39,.22));
+}
+.sub-hero .divider{
+  width:76px; height:3px; margin:0 auto 20px; border-radius:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.sub-hero .slogan{ margin-bottom:12px; line-height:0; }
+.sub-hero p{ max-width:620px; margin:0 auto; color:rgba(255,244,228,.72); font-size:15px; line-height:1.9; }
+
+/* ---------- 表单卡片 ---------- */
+.sub-form-wrap{ padding:22px 0 190px; }
+.sub-card{
+  position:relative; max-width:760px; margin:0 auto; padding:0; overflow:hidden;
+  border-radius:28px;
+  /* 磨砂水滴玻璃：半透明 + 背景模糊 + 高饱和 */
+  /* === 水滴玻璃：容器内部完全透明，只有折射在起作用 === */
+  background:transparent;
+  -webkit-backdrop-filter:url(#droplet) blur(1.5px) saturate(135%) brightness(1.18);
+  backdrop-filter:url(#droplet) blur(1.5px) saturate(135%) brightness(1.18);
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:
+    0 40px 110px rgba(0,0,0,.52),
+    0 0 0 0.5px rgba(0,0,0,.10),
+    /* 水滴内壁：上缘亮、下缘暖、四周一圈柔和的白色内晕 */
+    0 2px 1px -1px rgba(255,255,255,.90) inset,
+    0 -2px 1px -1px rgba(255,255,255,.42) inset,
+    0 0 26px 2px rgba(255,255,255,.30) inset,
+    0 0 60px 8px rgba(255,255,255,.12) inset;
+}
+/* 水滴镜面反光：左上角一团柔光 + 右上角一抹亮边 */
+.sub-card::before{
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:
+    /* 水滴的主高光点 */
+    radial-gradient(circle 42px at 13% 7%, rgba(255,255,255,.95), rgba(255,255,255,.25) 45%, rgba(255,255,255,0) 72%),
+    /* 左上一条弧形反光 */
+    radial-gradient(ellipse 40% 22% at 30% 2%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%),
+    /* 右下角的一点透光 */
+    radial-gradient(ellipse 22% 14% at 94% 96%, rgba(255,255,255,.30), rgba(255,255,255,0) 72%);
+  mix-blend-mode:screen;
+}
+.sub-card > *{ position:relative; z-index:1; }
+.sub-card-top{
+  padding:20px 30px;
+  /* iOS 工具栏同样是材质：极薄、发亮、低饱和 */
+  background:linear-gradient(180deg, rgba(255,255,255,.44), rgba(255,255,255,.28));
+  -webkit-backdrop-filter:blur(30px) saturate(0%) brightness(1.58) contrast(0.94);
+  backdrop-filter:blur(30px) saturate(0%) brightness(1.58) contrast(0.94);
+  border-bottom:0.5px solid rgba(255,255,255,.42);
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.sub-card-top .t{ color:#fff6ea; font-size:17px; font-weight:700; letter-spacing:.05em;
+  text-shadow:0 1px 10px rgba(0,0,0,.75), 0 1px 3px rgba(0,0,0,.9); }
+.sub-card-top .s{ color:rgba(255,246,234,.82); font-size:12.5px; letter-spacing:.06em; margin-left:auto;
+  text-shadow:0 1px 8px rgba(0,0,0,.8); }
+
+.sub-card-body{ padding:30px; }
+
+/* 分组 */
+.grp{ margin-bottom:26px; }
+.grp:last-of-type{ margin-bottom:20px; }
+.grp-h{ display:flex; align-items:center; gap:13px; margin-bottom:18px; }
+.grp-h .num{
+  /* 大号金色衬线数字：杂志章节式排版，取代原来的红圈 */
+  font-family:Georgia,'Times New Roman','Songti SC',serif;
+  font-style:italic; font-weight:700;
+  font-size:30px; line-height:1;
+  letter-spacing:-.01em;
+  color:#e8c46a;
+  padding-right:2px;
+  background:linear-gradient(180deg,#f6dfa2 0%,#d9b250 55%,#b8912f 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.72)) drop-shadow(0 0 18px rgba(201,162,39,.30));
+  user-select:none;
+}
+.grp-h .tt{ font-size:15.5px; font-weight:700; color:#fff6ea; letter-spacing:.14em;
+  text-shadow:0 1px 10px rgba(0,0,0,.8), 0 1px 2px rgba(0,0,0,.95); }
+.grp-h .ln{ flex:1; height:1px; background:linear-gradient(90deg,rgba(201,162,39,.62),rgba(255,255,255,.16) 40%,transparent); }
+
+/* 栅格 */
+.row{ display:grid; grid-template-columns:1fr 1fr; gap:16px 18px; }
+@media (max-width:640px){ .row{ grid-template-columns:1fr; } }
+
+.field{ margin:0; position:relative; }
+.field label{ display:block; font-size:13.5px; color:#fff3e6; margin-bottom:7px; font-weight:600; letter-spacing:.02em;
+  text-shadow:0 1px 9px rgba(0,0,0,.85), 0 1px 2px rgba(0,0,0,.95); }
+.field label .req{ color:#ffb3a8; margin-left:3px; text-shadow:0 1px 6px rgba(0,0,0,.9); }
+.field input[type=text], .field select, .field textarea{
+  width:100%; padding:12px 14px; border-radius:12px; font-size:15px; font-family:inherit;
+  border:0.5px solid rgba(255,255,255,.66);
+  background:rgba(255,255,255,.52);
+  -webkit-backdrop-filter:blur(12px) saturate(0%); backdrop-filter:blur(12px) saturate(0%);
+  box-shadow:0 0.5px 0 rgba(255,255,255,.6) inset, 0 1px 3px rgba(20,4,6,.05);
+  color:var(--ink);
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus{
+  outline:none; border-color:rgba(201,162,39,.92);
+  background:rgba(255,255,255,.72);
+  box-shadow:0 0 0 3px rgba(201,162,39,.22), 0 0.5px 0 rgba(255,255,255,.7) inset;
+}
+.field textarea{ resize:vertical; min-height:118px; line-height:1.75; }
+.field .cnt{ position:absolute; right:12px; bottom:10px; font-size:11.5px; color:rgba(46,32,20,.62); }
+
+/* 上传区 */
+.drop{
+  border:2px dashed rgba(255,255,255,.72); border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,.42));
+  padding:26px 20px; text-align:center; cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset;
+  transition:border-color .22s, background .22s, transform .22s;
+}
+.drop:hover{ border-color:rgba(201,162,39,.86); background:linear-gradient(180deg, rgba(255,253,246,.56), rgba(255,255,255,.34)); }
+.drop.over{ border-color:var(--gold); background:linear-gradient(180deg, rgba(255,248,228,.68), rgba(255,255,255,.42)); transform:scale(1.008); }
+.drop .ic{ font-size:26px; line-height:1; margin-bottom:10px; opacity:.75; }
+.drop .m1{ font-size:14.5px; color:var(--ink); font-weight:600; margin-bottom:5px; }
+.drop .m2{ font-size:12.5px; color:rgba(46,32,20,.72); }
+.drop input[type=file]{ display:none; }
+
+/* 预览 */
+.pv{ display:none; margin-top:14px; gap:14px; align-items:center;
+     border:1px solid rgba(255,255,255,.62); border-radius:14px; padding:12px;
+     background:linear-gradient(180deg, rgba(255,255,255,.50), rgba(255,255,255,.30));
+     box-shadow:0 1px 0 rgba(255,255,255,.5) inset; }
+.pv.on{ display:flex; }
+.pv img{ width:96px; height:96px; object-fit:cover; border-radius:9px; flex:0 0 96px;
+         border:1px solid rgba(139,26,34,.16); background:#eee; }
+.pv .meta{ flex:1; min-width:0; }
+.pv .fn{ font-size:13.5px; font-weight:600; color:var(--ink); margin-bottom:5px;
+         overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pv .fs{ font-size:12.5px; color:rgba(46,32,20,.70); }
+.pv .rm{ font-size:12.5px; color:var(--red); background:none; border:1px solid rgba(139,26,34,.30);
+         border-radius:8px; padding:6px 12px; cursor:pointer; transition:background .2s; }
+.pv .rm:hover{ background:rgba(139,26,34,.07); }
+
+/* 提示 / 错误 */
+.hint{ font-size:12.5px; color:rgba(46,32,20,.68); margin-top:7px; }
+.err{ font-size:12.5px; color:#b3261e; margin-top:7px; display:none; }
+.err.on{ display:block; }
+input.bad, select.bad, textarea.bad{ border-color:#d24a42 !important; background:#fff6f5 !important; }
+
+/* 提交按钮 */
+.sub-actions{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:4px; }
+.btn-sub{
+  flex:1; min-width:200px; padding:15px 26px; border:none; border-radius:12px; cursor:pointer;
+  font-size:16px; font-weight:700; letter-spacing:.10em; color:#fff6e8;
+  background:linear-gradient(135deg,#a8202a,var(--red) 55%,var(--red-dk));
+  box-shadow:0 8px 22px rgba(139,26,34,.34), 0 1px 0 rgba(255,255,255,.22) inset;
+  transition:transform .18s, box-shadow .18s, filter .18s;
+}
+.btn-sub:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(139,26,34,.42); filter:brightness(1.06); }
+.btn-sub:active{ transform:translateY(0); }
+.sub-actions .note{ font-size:12.5px; color:rgba(255,244,232,.80); line-height:1.7; flex:1; min-width:180px;
+  text-shadow:0 1px 9px rgba(0,0,0,.85); }
+
+/* 成功提示 */
+.ok-box{
+  display:none; margin-top:20px; border-radius:14px; padding:16px 20px; font-size:14.5px;
+  background:linear-gradient(180deg, rgba(232,248,236,.62), rgba(216,240,224,.44));
+  border:1px solid rgba(255,255,255,.62); color:#17692c;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+}
+.ok-box.on{ display:block; }
+
+/* 页脚 */
+.site-footer{ background:rgba(30,5,8,.80); backdrop-filter:blur(6px); border-top:1px solid rgba(201,162,39,.22); }
+
+/* ══════════════════════════════════════════════════════════════════
+   ★ 2026-10-08 新增：投稿表单改造所需的样式
+     · .opt        「选填」标签（与红色必填星号区分）
+     · .city-pick  城市检索下拉（2210 座目录）
+     · .pv-grid    多图预览网格
+     · .ok-*       成功提示里的跳转按钮
+   ══════════════════════════════════════════════════════════════════ */
+
+/* 「选填」标签 ✗ 用低调的暖灰 ✗ 和红色必填星号一眼区分 */
+.field label .opt{
+  font-size:11.5px; font-weight:500; margin-left:8px;
+  color:rgba(255,244,232,.72); letter-spacing:.02em;
+  text-shadow:0 1px 8px rgba(0,0,0,.85);
+}
+
+/* ── 城市检索 ── */
+.city-pick{ position:relative; }
+.city-pick input[type=text]{ width:100%; padding:12px 40px 12px 14px; border-radius:12px; font-size:15px; font-family:inherit;
+  border:0.5px solid rgba(255,255,255,.66); background:rgba(255,255,255,.52);
+  -webkit-backdrop-filter:blur(12px) saturate(0%); backdrop-filter:blur(12px) saturate(0%);
+  box-shadow:0 0.5px 0 rgba(255,255,255,.6) inset, 0 1px 3px rgba(20,4,6,.05);
+  color:var(--ink); transition:border-color .2s, box-shadow .2s, background .2s; }
+.city-pick input[type=text]:focus{ outline:none; border-color:rgba(201,162,39,.92);
+  background:rgba(255,255,255,.72); box-shadow:0 0 0 3px rgba(201,162,39,.22), 0 0.5px 0 rgba(255,255,255,.7) inset; }
+.city-pick.has input[type=text]{ border-color:rgba(201,162,39,.85); background:rgba(255,253,244,.78); }
+.city-clear{ position:absolute; right:9px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:50%; border:none; cursor:pointer; display:none;
+  background:rgba(46,32,20,.14); color:rgba(46,32,20,.7); font-size:15px; line-height:1; padding:0; }
+.city-pick.has .city-clear{ display:block; }
+.city-clear:hover{ background:rgba(139,26,34,.16); color:var(--red); }
+
+.city-drop{ position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:60;
+  max-height:268px; overflow-y:auto; display:none; padding:6px; border-radius:13px;
+  background:rgba(255,252,246,.975); border:1px solid rgba(255,255,255,.75);
+  box-shadow:0 20px 44px rgba(40,12,8,.30), 0 1px 0 rgba(255,255,255,.9) inset; }
+.city-drop.on{ display:block; }
+.city-item{ display:flex; align-items:baseline; gap:10px; padding:9px 12px; border-radius:8px;
+  cursor:pointer; font-size:14.5px; color:var(--ink); transition:background .14s; }
+.city-item:hover, .city-item.act{ background:rgba(201,162,39,.17); }
+.city-item .nm{ flex:1; min-width:0; font-weight:600; }
+.city-item .nm em{ font-style:normal; color:var(--red); }
+.city-item .pv{ font-size:12px; color:rgba(46,32,20,.62); flex:0 0 auto; }
+.city-item .tg{ font-size:10.5px; color:#fff6e8; background:var(--red); border-radius:99px;
+  padding:1.5px 7px; flex:0 0 auto; letter-spacing:.02em; }
+.city-drop .empty{ padding:16px 12px; text-align:center; font-size:13px; color:rgba(46,32,20,.62); line-height:1.7; }
+.city-hint{ font-size:12.5px; color:rgba(255,244,232,.76); margin-top:7px;
+  text-shadow:0 1px 8px rgba(0,0,0,.85); }
+.city-hint.picked{ color:#c8f0d2; }
+
+/* ── 多图预览 ── */
+.pv-grid{ display:none; margin-top:14px; gap:12px;
+  grid-template-columns:repeat(auto-fill, minmax(148px, 1fr)); }
+.pv-grid.on{ display:grid; }
+.pv-item{ position:relative; border-radius:12px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.62);
+  background:linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.30));
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 3px 12px rgba(40,12,8,.10); }
+.pv-item img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#eee; }
+.pv-item .m{ padding:8px 10px 9px; font-size:12px; color:rgba(46,32,20,.76); line-height:1.55;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pv-item .rm{ position:absolute; right:7px; top:7px; width:25px; height:25px; border-radius:50%;
+  border:none; background:rgba(20,5,8,.60); color:#fff; cursor:pointer; font-size:15px;
+  line-height:1; padding:0; transition:background .18s, transform .18s; }
+.pv-item .rm:hover{ background:var(--red); transform:scale(1.1); }
+.pv-item .badge{ position:absolute; left:7px; top:7px; font-size:10.5px; color:#fff6e8;
+  background:rgba(139,26,34,.86); border-radius:99px; padding:2px 8px; letter-spacing:.03em; }
+.pv-item.busy::after{ content:"压缩中…"; position:absolute; inset:0; display:flex;
+  align-items:center; justify-content:center; font-size:12.5px; color:#fff;
+  background:rgba(30,8,10,.5); }
+
+/* 字数提示 */
+.cnt-hint{ margin-left:8px; color:rgba(46,32,20,.55); }
+.cnt-hint.ok{ color:#17692c; }
+.cnt-hint.short{ color:#b3261e; }
+
+/* ── 成功提示 ── */
+.ok-box .ok-line{ font-size:15px; font-weight:700; margin-bottom:6px; }
+.ok-box .ok-sub{ font-size:13px; color:#2b6b3d; opacity:.92; margin-bottom:14px; }
+.ok-box .ok-act{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.ok-box .ok-go{ display:inline-block; padding:11px 22px; border-radius:11px; text-decoration:none;
+  font-size:14.5px; font-weight:700; color:#fff6e8; letter-spacing:.04em;
+  background:linear-gradient(135deg, #a8202a, var(--red) 60%);
+  box-shadow:0 6px 18px rgba(139,26,34,.32); transition:transform .18s, box-shadow .18s; }
+.ok-box .ok-go:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(139,26,34,.42); }
+.ok-box .ok-again{ padding:11px 20px; border-radius:11px; cursor:pointer; font-size:14px;
+  color:var(--red); background:rgba(255,255,255,.6); border:1px solid rgba(139,26,34,.28);
+  transition:background .18s; }
+.ok-box .ok-again:hover{ background:rgba(139,26,34,.08); }
+
+@media (max-width:640px){
+  .pv-grid{ grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); }
+  .city-drop{ max-height:216px; }
+}
+
+</style>
+</head>
+<body class="submit-page">
+
+</div>
+
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+  <filter id="droplet" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+    <!-- 低频噪声：产生缓慢起伏的扭曲，模拟水滴的弧度 -->
+    <feTurbulence type="fractalNoise" baseFrequency="0.0016 0.0024" numOctaves="2" seed="11" result="warp"/>
+    <feGaussianBlur in="warp" stdDeviation="3" result="warpSoft"/>
+    <feDisplacementMap in="SourceGraphic" in2="warpSoft" scale="20" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
+    <!-- 高频噪声：水滴表面的细小起伏 -->
+    <feTurbulence type="fractalNoise" baseFrequency="0.9 0.9" numOctaves="1" seed="4" result="grain"/>
+    <feDisplacementMap in="refracted" in2="grain" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<div class="page-bg"></div>
+<div class="page-veil"></div>
+
+<header class="site-header">
+  <nav class="navbar container">
+    <a href="../index.html" class="brand"><img class="brand-logo" src="assets/logo.png" alt="盛世华章标志"><span class="brand-sub">1949—2026</span></a>
+    <button class="nav-toggle" aria-label="打开菜单">☰</button>
+    <div class="nav-links"><a href="../index.html">首页</a><a href="speeches.html">祖国之发展</a><a href="parade.html">人民之热情</a><a href="gallery.html">你我之见证</a><a href="submit.html" class="active">投稿</a></div>
+  </nav>
+</header>
+
+<main>
+  <!-- ===== HERO ===== -->
+  <section class="sub-hero">
+    <div class="container">
+      <div class="kicker">SUBMISSION</div>
+      <h1 class="mao-title"><img src="assets/title-submit-mao.png" alt="投稿"></h1>
+      <div class="divider"></div>
+      <div class="slogan mao-slogan"><img src="assets/slogan-mao.png" alt="一万年太久　只争朝夕"></div>
+      <p>分享你的国庆照片与故事，让属于你的记忆，汇入时代的洪流。</p>
+    </div>
+  </section>
+
+  <!-- ===== 表单 ===== -->
+  <section class="sub-form-wrap">
+    <div class="container">
+      <div class="sub-card">
+        <div class="sub-card-top">
+          <span class="t">上传你的国庆记忆</span>
+          <span class="s">「城市」与「照片」必填，其余选填</span>
+        </div>
+
+        <div class="sub-card-body">
+          <form id="submit-form" novalidate>
+
+            <!-- ① 关于你 -->
+            <div class="grp">
+              <div class="grp-h"><span class="num">01</span><span class="tt">关于你</span><span class="ln"></span></div>
+              <div class="row">
+                <div class="field">
+                  <label for="name">怎样称呼你<span class="opt">选填</span></label>
+                  <input id="name" name="name" type="text" placeholder="留空则显示为「匿名」" autocomplete="name">
+                </div>
+                <div class="field">
+                  <label for="contact">联系方式</label>
+                  <input id="contact" name="contact" type="text" placeholder="邮箱或手机号（选填）" autocomplete="email">
+                </div>
+              </div>
+            </div>
+
+            <!-- ② 关于照片 -->
+            <div class="grp">
+              <div class="grp-h"><span class="num">02</span><span class="tt">关于照片</span><span class="ln"></span></div>
+
+              <!-- ★ 新增：投稿城市 ✗ 只能从目录里选 ✗ 不给自由填写 -->
+              <div class="field" style="margin-bottom:16px">
+                <label for="city">投稿城市<span class="req">*</span></label>
+                <div class="city-pick">
+                  <input id="city" type="text" placeholder="输入城市名搜索，例如：昆山 / 苏州 / 喀什" autocomplete="off"
+                         role="combobox" aria-expanded="false" aria-controls="city-drop" aria-autocomplete="list">
+                  <button type="button" class="city-clear" id="city-clear" title="清除">×</button>
+                  <div class="city-drop" id="city-drop" role="listbox" aria-label="城市候选"></div>
+                </div>
+                <input type="hidden" id="city-name" name="city">
+                <input type="hidden" id="city-lon"  name="cityLon">
+                <input type="hidden" id="city-lat"  name="cityLat">
+                <input type="hidden" id="city-tier" name="cityTier">
+                <div class="city-hint" id="city-hint">从全部 2210 座县级及以上城市中检索</div>
+                <div class="err" id="err-city">请从下拉列表中选择一个城市</div>
+              </div>
+
+              <div class="row" style="margin-bottom:16px">
+                <div class="field">
+                  <label for="year">拍摄年份<span class="opt">选填</span></label>
+                  <select id="year" name="year">
+                    <option value="">不填写</option>
+                    <option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>更早</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="title">照片标题<span class="opt">选填</span></label>
+                  <input id="title" name="title" type="text" placeholder="给照片起个名字">
+                </div>
+              </div>
+
+              <div class="field">
+                <label>上传照片<span class="req">*</span><span class="opt" id="photo-tip">最多 3 张，可随时增删</span></label>
+                <div class="drop" id="dropzone">
+                  <input id="photo" name="photo" type="file" accept="image/*" multiple>
+                  <div class="ic">🖼</div>
+                  <div class="m1">点击选择照片，或把图片拖到这里</div>
+                  <div class="m2">支持 JPG / PNG / WebP · 会自动压缩到 1024px 以内</div>
+                </div>
+                <div class="pv-grid" id="pv-grid"></div>
+                <div class="err" id="err-photo">照片读取失败，请换一张试试</div>
+              </div>
+            </div>
+
+            <!-- ③ 关于故事 -->
+            <div class="grp">
+              <div class="grp-h"><span class="num">03</span><span class="tt">关于故事</span><span class="ln"></span></div>
+              <div class="field">
+                <label for="desc">照片故事<span class="opt">选填 · 1~100 字</span></label>
+                <textarea id="desc" name="desc" maxlength="100" placeholder="说说这张照片背后的故事……（选填，1~100 字）"></textarea>
+                <div class="cnt" id="cnt-wrap"><span id="cnt">0</span> / 100
+                  <span class="cnt-hint" id="cnt-hint">选填，1~100 字</span></div>
+                <div class="err" id="err-desc">文案请填 1~100 字，或留空不填</div>
+              </div>
+            </div>
+
+            <div class="sub-actions">
+              <button type="submit" class="btn-sub">提 交 投 稿</button>
+              <div class="note">数据保存在本机浏览器中，这台电脑上打开《你我之见证》即可看到你的投稿。</div>
+            </div>
+          </form>
+
+          <div class="ok-box" id="submit-ok">
+            <div class="ok-line">✅ 投稿成功！感谢你的分享 —— 你的照片已经进入《你我之见证》。</div>
+            <div class="ok-sub" id="ok-sub"></div>
+            <div class="ok-act">
+              <a class="ok-go" id="ok-go" href="gallery.html">去见证页看看 →</a>
+              <button type="button" class="ok-again" id="ok-again">再投一张</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="f-brand"><img class="f-logo" src="assets/logo.png" alt=""></div>
+    <div class="f-line"></div>
+    <p>新中国国庆纪事 &middot; 1949&mdash;2026</p>
+    <p style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.6)">本网站为「全国大学生数字编辑创新大赛」参赛作品</p>
+    <p style="margin-top:10px;color:rgba(255,255,255,.6)">© <span id="year-copy"></span> 盛世华章 &middot; 资料仅供学习交流，图片与讲话原文如有版权或出处问题请联系修正</p>
+    <p style="margin-top:8px;font-size:13px;color:rgba(255,255,255,.6)">页面标题与标语使用的「书体坊毛泽东字体」为作者自费购买的正版商业授权，非盗版侵权</p>
+    <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,.6)">本页底图海报（页面背景的国庆主题摄影）来源于「哔哩哔哩用户 羊角乌鸦」。以上均用于本作品展示，非商业用途，版权归原作者所有</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/img-compress.js"></script>
+<script src="js/submit-store.js"></script>
+<script src="js/cities-all.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+ *  投稿页交互 —— 城市检索 / 多图压缩 / 字数校验 / 入库
+ *  ══════════════════════════════════════════════════════════════════════
+ *  依赖：js/cities-all.js  （2210 座城市目录）
+ *        js/img-compress.js（照片压缩）
+ *        js/submit-store.js（localStorage 存取）
+ * ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('submit-form');
+  if (!form) return;
+
+  var cityIn   = $('city'),     cityDrop = $('city-drop'), cityHint = $('city-hint');
+  var cityWrap = cityIn ? cityIn.closest('.city-pick') : null;
+  var cityName = $('city-name'), cityLon = $('city-lon'), cityLat = $('city-lat'), cityTier = $('city-tier');
+  var photoIn  = $('photo'),    drop = $('dropzone'), grid = $('pv-grid'), errPhoto = $('err-photo');
+  var ta = $('desc'), cnt = $('cnt'), cntHint = $('cnt-hint'), errDesc = $('err-desc');
+  var okBox = $('submit-ok'), okSub = $('ok-sub'), okAgain = $('ok-again');
+  var MAXP = 3;                       /* 最多 3 张 */
+
+  function esc(x) {
+    return String(x).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function human(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(0) + ' KB';
+    return (b / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  /* ══════════════ 一、城市检索 ══════════════ */
+  var POOL = (window.__CITY_POOL && window.__CITY_POOL.list) || [];
+  var TIER = { 1: '超大城市', 2: '省会/超大市', 3: '地级市', 4: '县级' };
+  var picks = [], act = -1, chosen = null;
+
+  function search(q) {
+    q = (q || '').trim();
+    var res = [], i, n;
+    if (!q) {
+      for (i = 0; i < POOL.length && res.length < 40; i++) {
+        res.push(mk(POOL[i]));
+      }
+      return res;
+    }
+    for (i = 0; i < POOL.length; i++) {
+      n = POOL[i][0];
+      if (n.indexOf(q) >= 0) {
+        res.push(mk(POOL[i]));
+        if (res.length >= 120) break;
+      }
+    }
+    res.sort(function (a, b) {
+      var an = a.name.replace(/[市县区旗]$/, ''), bn = b.name.replace(/[市县区旗]$/, '');
+      var a0 = (a.name === q || an === q) ? 0 : (an.indexOf(q) === 0 ? 1 : 2);
+      var b0 = (b.name === q || bn === q) ? 0 : (bn.indexOf(q) === 0 ? 1 : 2);
+      if (a0 !== b0) return a0 - b0;
+      return a.name.length - b.name.length;
+    });
+    return res.slice(0, 50);
+  }
+  function mk(c) { return { name: c[0], lon: c[1], lat: c[2], tier: c[3], prov: c[4] }; }
+
+  function renderDrop(q) {
+    picks = search(q);
+    act = -1;
+    if (!picks.length) {
+      cityDrop.innerHTML = '<div class="empty">没有找到「' + esc(q) + '」<br>' +
+        '只能选择目录里已有的县级及以上城市 —— 没有的填不了</div>';
+    } else {
+      var rx = q ? new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g') : null;
+      cityDrop.innerHTML = picks.map(function (p, i) {
+        var nm = esc(p.name);
+        if (rx) nm = nm.replace(rx, '<em>$&</em>');
+        /* ★ 2026-10-08：去掉了「超大城市 / 省会 / 地级市 / 县级」那个档位标签 ✗
+           用户反馈显示出来有点奇怪 ✗ 只留城市名 + 所属省份。 */
+        return '<div class="city-item" data-i="' + i + '" role="option">' +
+               '<span class="nm">' + nm + '</span>' +
+               '<span class="pv">' + esc(p.prov || '') + '</span></div>';
+      }).join('');
+    }
+    cityDrop.classList.add('on');
+    cityIn.setAttribute('aria-expanded', 'true');
+  }
+  function closeDrop() {
+    cityDrop.classList.remove('on');
+    cityIn.setAttribute('aria-expanded', 'false');
+  }
+  function choose(p) {
+    chosen = p;
+    cityIn.value = p.name;
+    cityName.value = p.name; cityLon.value = p.lon; cityLat.value = p.lat; cityTier.value = p.tier;
+    if (cityWrap) cityWrap.classList.add('has');
+    cityHint.textContent = '已选择：' + p.name + (p.prov ? '（' + p.prov + '）' : '');
+    cityHint.classList.add('picked');
+    setErr('city', false);
+    closeDrop();
+  }
+  function clearCity() {
+    chosen = null;
+    cityIn.value = '';
+    cityName.value = ''; cityLon.value = ''; cityLat.value = ''; cityTier.value = '';
+    if (cityWrap) cityWrap.classList.remove('has');
+    cityHint.textContent = '从全部 ' + POOL.length + ' 座县级及以上城市中检索';
+    cityHint.classList.remove('picked');
+  }
+
+  if (cityIn) {
+    cityIn.addEventListener('focus', function () { renderDrop(cityIn.value); });
+    cityIn.addEventListener('input', function () {
+      if (chosen && cityIn.value !== chosen.name) { chosen = null; cityName.value = ''; if (cityWrap) cityWrap.classList.remove('has'); }
+      renderDrop(cityIn.value);
+    });
+    cityIn.addEventListener('keydown', function (e) {
+      var items = cityDrop.querySelectorAll('.city-item');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        act += (e.key === 'ArrowDown' ? 1 : -1);
+        if (act < 0) act = items.length - 1;
+        if (act >= items.length) act = 0;
+        for (var i = 0; i < items.length; i++) items[i].classList.toggle('act', i === act);
+        items[act].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        if (act >= 0 && picks[act]) { e.preventDefault(); choose(picks[act]); }
+        else if (picks.length === 1) { e.preventDefault(); choose(picks[0]); }
+      } else if (e.key === 'Escape') { closeDrop(); }
+    });
+    cityDrop.addEventListener('mousedown', function (e) {
+      var it = e.target.closest ? e.target.closest('.city-item') : null;
+      if (!it) return;
+      e.preventDefault();
+      var p = picks[+it.getAttribute('data-i')];
+      if (p) choose(p);
+    });
+    document.addEventListener('click', function (e) {
+      if (!cityWrap) return;
+      if (!cityWrap.contains(e.target)) closeDrop();
+    });
+    var clr = $('city-clear');
+    if (clr) clr.addEventListener('click', function (e) { e.stopPropagation(); clearCity(); cityIn.focus(); });
+  }
+
+  /* ══════════════ 二、照片：多选 / 压缩 / 增删 ══════════════ */
+  var photos = [];        /* {d, w, h, bytes, name} */
+
+  function renderGrid() {
+    grid.innerHTML = photos.map(function (p, i) {
+      return '<div class="pv-item" data-i="' + i + '">' +
+             (i === 0 ? '<span class="badge">第 1 张</span>' : '') +
+             '<button type="button" class="rm" title="移除">×</button>' +
+             '<img src="' + p.d + '" alt="">' +
+             '<div class="m">' + esc(p.name) + ' · ' + human(p.bytes) + '</div></div>';
+    }).join('');
+    grid.classList.toggle('on', photos.length > 0);
+    drop.style.display = photos.length >= MAXP ? 'none' : '';
+    var tip = $('photo-tip');
+    if (tip) tip.textContent = '已选 ' + photos.length + ' / ' + MAXP + ' 张，可随时增删';
+    if (photos.length) setErr('photo', false);
+  }
+  grid.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.rm') : null;
+    if (!b) return;
+    var it = b.closest('.pv-item');
+    photos.splice(+it.getAttribute('data-i'), 1);
+    renderGrid();
+  });
+
+  function addFiles(files) {
+    var arr = Array.prototype.slice.call(files || []);
+    if (!arr.length) return;
+    var room = MAXP - photos.length;
+    if (room <= 0) { errPhoto.textContent = '最多 ' + MAXP + ' 张，请先移除一些'; setErr('photo', true); return; }
+    arr = arr.slice(0, room);
+    arr.forEach(function (f) {
+      if (!/^image\//.test(f.type)) return;
+      /* 占位格 ✗ 让用户知道正在压 */
+      var ph = document.createElement('div');
+      ph.className = 'pv-item busy';
+      ph.innerHTML = '<img alt=""><div class="m">' + esc(f.name) + '</div>';
+      grid.appendChild(ph);
+      grid.classList.add('on');
+      window.__compressImage(f, { maxSide: 1024, quality: 0.72 }).then(function (r) {
+        var j = photos.indexOf(null);
+        photos.push({ d: r.dataUrl, w: r.width, h: r.height, bytes: r.bytes, name: f.name });
+        renderGrid();
+      }).catch(function (err) {
+        console.warn('[投稿] 压缩失败', f.name, err);
+        errPhoto.textContent = '「' + f.name + '」读取失败，请换一张';
+        setErr('photo', true);
+        renderGrid();
+      });
+    });
+  }
+
+  if (drop) {
+    drop.addEventListener('click', function () { photoIn.click(); });
+    photoIn.addEventListener('change', function () { addFiles(photoIn.files); photoIn.value = ''; });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); });
+    });
+    drop.addEventListener('drop', function (e) {
+      addFiles(e.dataTransfer && e.dataTransfer.files);
+    });
+  }
+
+  /* ══════════════ 三、字数：1~100 ══════════════ */
+  function countText() {
+    var n = ta.value.trim().length;
+    cnt.textContent = ta.value.length;
+    if (n === 0) { cntHint.textContent = '选填，1~100 字'; cntHint.className = 'cnt-hint'; }
+    else if (n < 1) { cntHint.textContent = '还需至少 1 字'; cntHint.className = 'cnt-hint short'; }
+    else { cntHint.textContent = '✓ 可以了'; cntHint.className = 'cnt-hint ok'; }
+  }
+  ta.addEventListener('input', countText);
+  countText();
+
+  /* ══════════════ 四、校验 ══════════════ */
+  function setErr(id, on) {
+    var el = $(id), e2 = $('err-' + id);
+    if (el && el.classList) el.classList.toggle('bad', !!on);
+    if (e2) e2.classList.toggle('on', !!on);
+    return !on;
+  }
+  ['name', 'year', 'title'].forEach(function (id) {
+    var el = $(id);
+    if (!el) return;
+    el.addEventListener('input', function () { setErr(id, false); });
+    el.addEventListener('change', function () { setErr(id, false); });
+  });
+  cityIn.addEventListener('input', function () { setErr('city', false); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    if (!chosen) ok = setErr('city', true) && ok;                 /* 城市必选 ✗ 只能从目录里选 */
+    if (!photos.length) { errPhoto.textContent = '请至少上传一张照片'; ok = setErr('photo', true) && ok; }
+    var t = ta.value.trim();
+    if (t.length > 0 && (t.length < 1 || t.length > 100)) ok = setErr('desc', true) && ok;
+    if (!ok) {
+      var first = form.querySelector('.bad');
+      if (first && first.focus) first.focus();
+      okBox.classList.remove('on');
+      return;
+    }
+
+    /* 入库 */
+    var res = window.__SubmitStore.add({
+      city: chosen.name, lon: chosen.lon, lat: chosen.lat, tier: chosen.tier,
+      author: $('name').value,
+      year: $('year').value,
+      text: t,
+      photos: photos.map(function (p) { return { d: p.d, w: p.w, h: p.h }; })
+    });
+    if (!res.ok) {
+      okBox.classList.remove('on');
+      errPhoto.textContent = '本机存储空间不足（' + res.error + '），请先删掉一些旧投稿';
+      setErr('photo', true);
+      return;
+    }
+    var st = window.__SubmitStore.stat();
+    okSub.textContent = '已存入本机 · 当前共 ' + st.count + ' 条投稿 · ' +
+      chosen.name + (t ? ' · ' + t.length + ' 字' : '') + (photos.length > 1 ? ' · ' + photos.length + ' 张照片' : '');
+    /* ★ 跳转按钮带上城市名 ✗ 见证页据此自动聚焦并闪红圈 */
+    var goBtn = $('ok-go');
+    /* ★★ 2026-10-08：跳转链接带一个时间戳 ✗ 强制浏览器重新拉取 gallery.html。
+       之前一直踩的坑：gallery.html 的 URL 没有版本号 ✗ 浏览器用缓存里的旧 HTML ✗
+       我改的代码根本不被加载 ✗ 表现就是"改了却什么都没变"。
+       加个 ?t= 之后 URL 每次都不一样 ✗ file:// 下也有效 ✗ 一定能拿到最新版。 */
+    if (goBtn) goBtn.href = 'gallery.html?t=' + Date.now() + '#city=' + encodeURIComponent(chosen.name);
+    okBox.classList.add('on');
+    okBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    /* 重置表单 ✗ 但保留城市方便连续投 */
+    form.reset();
+    photos = [];
+    renderGrid();
+    countText();
+    var keep = chosen;
+    clearCity();
+    $('year').value = ''; 
+    okAgain.onclick = function () {
+      okBox.classList.remove('on');
+      if (keep) choose(keep);
+      cityIn.focus();
+      window.scrollTo({ top: form.offsetTop - 80, behavior: 'smooth' });
+    };
+  });
+
+  /* 年份里把当前年标出来 */
+  var yc = $('year-copy');
+  if (yc) yc.textContent = new Date().getFullYear();
+
+  renderGrid();
+})();
+</script>
+<script>
+</script>
+</body>
+</html>

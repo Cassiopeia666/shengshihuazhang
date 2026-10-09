@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>盛世华章 —— 新中国国庆纪事（1949—2026）</title>
+<link rel="stylesheet" href="pages/css/style.css">
+<link rel="stylesheet" href="pages/css/timeline3d.css">
+  <link rel="icon" type="image/png" href="pages/assets/favicon.png">
+  <meta name="description" content="盛世华章——新中国国庆纪事（1949—2026），通过关键年份的国庆领导人讲话与群众游行，展示新中国七十余年的发展变化。">
+<script>document.documentElement.className += ' js';</script>
+<script>setTimeout(function(){ if(!window.__shReady) document.documentElement.classList.remove('js'); }, 2600);</script>
+</head>
+<body>
+<header class="site-header">
+  <nav class="navbar container">
+    <a href="index.html" class="brand">
+      <img class="brand-logo" src="pages/assets/logo.png" alt="盛世华章标志">
+      
+      <span class="brand-sub">1949—2026</span>
+    </a>
+    <button class="nav-toggle" aria-label="打开菜单">☰</button>
+    <div class="nav-links">
+      <a href="index.html" class="active">首页</a>
+      <a href="pages/speeches.html">祖国之发展</a>
+      <a href="pages/parade.html">人民之热情</a>
+      <a href="pages/gallery.html">你我之见证</a>
+      <a href="pages/submit.html">投稿</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-sticky">
+    <div class="hero-bg"></div>
+    <div class="hero-veil"></div>
+
+    <div class="hero-stage s1">
+      <div class="hero-kicker reveal">新 中 国 国 庆 纪 事 &nbsp;·&nbsp; 1 9 4 9 — 2 0 2 6</div>
+      <h1 class="hero-title reveal" data-delay="1"><img src="pages/assets/title-mao.png" alt="盛世华章"></h1>
+      <p class="hero-subtitle reveal" data-delay="2"><img src="pages/assets/subtitle-mao.png" alt="喜看稻菽千重浪，遍地英雄下夕烟"></p>
+      <div class="hero-divider reveal" data-delay="3"></div>
+      <a class="hero-scroll" href="#sections">向 下 滚 动</a>
+    </div>
+
+    <div class="hero-stage s2">
+      <p class="hero-lead reveal">从开国大典到21世纪新时代——透过国庆阅兵与群众游行<br>回望新中国七十七载波澜壮阔的历史</p>
+      <p class="hero-intro reveal" data-delay="1">本网站以 1949—2026 年间的关键年份为线索，选取整数周年（如十周年、二十周年），以及重要发展、重大事件之后的周年国庆（如港澳回归后的国庆），通过「国家发展」与「群众活动」两大视角，立体呈现国家的发展与人民生活的变迁。</p>
+      <div class="hero-points reveal" data-delay="2">
+        <div class="pt"><b>七十余载</b><span>1949 — 2026</span></div>
+        <div class="pt"><b>双重叙事</b><span>讲话 · 群众游行</span></div>
+        <div class="pt"><b>全民参与</b><span>照片展示 · 投稿</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sections">
+  <div class="ornament o1" data-parallax="-0.06">章</div>
+  <div class="container">
+    <div class="section-title reveal">
+      <div class="en">SECTIONS</div>
+      <h2>五大板块</h2>
+      <p>点击进入，展开一段关于国家与人民的时光之旅。</p>
+    </div>
+    <div class="board-grid">
+      <a class="card anim-card" href="pages/speeches.html" data-img="pages/assets/card-development.jpg"><h3>祖国之发展</h3><p>国家主席在天安门城楼上的庄严宣告，记录七十余年来国家的发展与重要成就。</p></a>
+      <a class="card anim-card" href="pages/parade.html" data-img="pages/assets/card-passion.jpg"><h3>人民之热情</h3><p>国庆群众游行与庆祝活动，映照群众生活的变迁与对祖国的热情。</p></a>
+      <a class="card anim-card" href="pages/gallery.html" data-img="pages/assets/card-witness.jpg"><h3>你我之见证</h3><p>转动可旋转、可自转的 3D 地球，看看我们与祖国共同走过的每一个国庆。</p></a>
+      <a class="card anim-card" href="pages/submit.html" data-img="pages/assets/card-submit.jpg"><h3>投稿</h3><p>分享你的国庆照片与故事，让记忆汇入时代的洪流。</p></a>
+      <div class="card anim-card" data-img="pages/assets/card-vision.jpg"><h3>我们的构想</h3><p>用讲话与笑脸见证，用数据与影像说话，呈现一个有温度、有细节的中国故事。</p></div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section section-alt" id="timeline3d">
+  <div class="section-title reveal">
+    <div class="en">TIMELINE</div>
+    <h2>七十七载光阴</h2>
+    <p>随着书页翻动，回顾七十七年征程</p>
+  </div>
+<div class="bookwrap">
+  <div class="stage" id="stage"></div>
+  <svg class="callout" id="callout" xmlns="http://www.w3.org/2000/svg">
+    <path id="coLine"></path>
+    <path id="coBox"></path>
+  </svg>
+  <div class="co-img" id="coImg"><img id="coPic" alt=""><span class="yr" id="coYear"></span></div>
+  <div class="tl" id="tl">
+    <div class="tl-end l"></div>
+    <div class="tl-end r"></div>
+  </div>
+</div>
+<div class="tlscroll" id="tlscroll"></div>
+<div class="tlbar"><i id="tlbar"></i></div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="f-brand"><img class="f-logo" src="pages/assets/logo.png" alt=""></div>
+    <div class="f-line"></div>
+    <p>新中国国庆纪事 &middot; 1949&mdash;2026</p>
+    <p style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.6)">本网站为「全国大学生数字编辑创新大赛」参赛作品</p>
+    <p style="margin-top:10px;color:rgba(255,255,255,.6)">© <span id="year"></span> 盛世华章 &middot; 资料仅供学习交流，图片与讲话原文如有版权或出处问题请联系修正</p>
+    <p style="margin-top:8px;font-size:13px;color:rgba(255,255,255,.6)">版权说明：首页底图油画《中流砥柱》，作者：段江华、彭晖、欧劲，仅供学习交流</p>
+    <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,.6)">页面标题与副标题使用的「书体坊毛泽东字体」为作者自费购买的正版商业授权，非盗版侵权</p>
+    <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,.6)">「七十七载光阴」时间轴中各年份的历史照片素材来源于「新华网」「人民网」「央视新闻」「百度百科」。以上均用于本作品展示，非商业用途，版权归原作者所有</p>
+  </div>
+</footer>
+<script src="pages/js/three.min.js"></script>
+<script src="pages/js/years-data.js"></script>
+<script src="pages/js/timeline3d.js"></script>
+<script src="pages/js/main.js"></script>
+</body>
+</html>

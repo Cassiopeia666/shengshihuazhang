@@ -1,0 +1,25 @@
+/* ================= 3D 地球（本页「你我之见证」） =================
+   本页结构：顶部导航 + 毛体题词（居中一行）+ 地球。
+   地球由 gallery.html 的 .stage 弹性布局撑开（flex:1），落在题词下方。
+   背景是页面上的蓝黑渐变：地球画布全透明、球外像素 alpha=0，不画自己的浅灰底。
+   所以这里只给容器定位与尺寸 —— 不能加背景色、边框、圆角或投影，
+   任何一样都会重新变成一块方框。 */
+
+#globe3d{
+  position:relative;
+  width:100%;
+  min-height:0;               /* 允许在 flex 里收缩 */
+  overflow:hidden;
+  background:transparent;     /* 露出页面的蓝黑渐变 */
+  opacity:1;
+  /* ★ 点「进入」后地球「缓缓变清晰」：模糊在 JS/HTML 里过渡，这里额外补一层透明度，
+     从略暗到全亮，让"浮现"更明显 */
+  transition:opacity 1.6s ease;
+}
+
+#globe3d canvas{
+  display:block;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}

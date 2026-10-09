@@ -1,0 +1,1911 @@
+/* ================= 盛世华章 · 浮雕 / 油画 风格 ================= */
+:root{
+  --red:#7c1420; --red-2:#98182a; --red-deep:#4c0b13;
+  --bronze:#a8863c; --bronze-lt:#e0c47c; --gold:#c9a227; --gold-lt:#f2e2ab;
+  --stone:#e9dfcc; --stone-2:#d6c8ab; --canvas:#f7f1e4; --canvas-2:#efe6d2;
+  --ink:#2b1a10; --text:#463223; --muted:#7d6a53; --line:rgba(150,120,70,.30);
+  --shadow:0 16px 36px rgba(70,40,15,.20);
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  --serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--text);line-height:1.85;-webkit-font-smoothing:antialiased;
+  background:var(--canvas);background-image:var(--noise);}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);line-height:1.35;font-weight:700}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+ul{list-style:none}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* ---------- 浮雕通用 ---------- */
+.relief{background:linear-gradient(160deg,var(--canvas),var(--stone-2));
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.85) inset, 0 -3px 8px rgba(90,60,30,.14) inset, var(--shadow);
+  border-radius:14px}
+.gold-text{background:linear-gradient(180deg,#fdf7e2 0%,#ecd28c 42%,#b98f37 70%,#7d5d1f 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- 顶部导航 ---------- */
+.site-header{position:sticky;top:0;z-index:60;
+  background:linear-gradient(135deg,var(--red-deep),var(--red));
+  box-shadow:0 2px 0 rgba(255,255,255,.10) inset, 0 3px 0 rgba(0,0,0,.25), 0 10px 26px rgba(0,0,0,.28)}
+.site-header::after{content:"";display:block;height:3px;
+  background:linear-gradient(90deg,transparent,var(--bronze-lt),var(--bronze),var(--bronze-lt),transparent)}
+.navbar{display:flex;align-items:center;justify-content:space-between;height:78px}
+/* 页头容器比正文更宽，让 logo 与导航更靠两侧 */
+.site-header .container{max-width:min(1880px,87vw)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-logo{width:72px;height:72px;object-fit:contain;flex:0 0 auto;display:block;
+  filter:drop-shadow(0 2px 7px rgba(0,0,0,.45))}
+.brand .brand-mark{font-size:20px;color:var(--bronze-lt);text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.brand .brand-text{font-family:var(--serif);font-size:23px;font-weight:700;letter-spacing:3px;color:#fff;
+  text-shadow:0 1px 0 rgba(0,0,0,.45),0 0 18px rgba(255,220,150,.25)}
+.brand .brand-sub{font-size:12.5px;color:var(--gold-lt);letter-spacing:1.5px;padding-left:3px}
+.nav-links{display:flex;gap:2px;align-items:center}
+.nav-links a{position:relative;display:block;padding:11px 17px 14px;font-size:15px;letter-spacing:.06em;
+  color:rgba(255,255,255,.80);transition:color .25s,transform .28s cubic-bezier(.2,.8,.3,1)}
+.nav-links a::after{content:"";position:absolute;left:50%;bottom:10px;width:62%;height:1px;
+  background:#f0dfa6;
+  transform:translateX(-50%) scaleX(.04);transform-origin:center;opacity:0;pointer-events:none;
+  transition:transform .2s cubic-bezier(.25,.85,.3,1),opacity .07s linear}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{transform:translateX(-50%) scaleX(1);opacity:1}
+.nav-links a.active{color:#fff;font-weight:600;transform:translateY(-1px)}
+.nav-links a.settling{transform:translateY(0);transition:none}
+.nav-links a.active::after{transform:translateX(-50%) scaleX(1);opacity:1}
+/* 点击跳转：回缩成小点 → 消失 */
+.nav-links a.retract::after{transform:translateX(-50%) scaleX(.04);opacity:0;
+  transition:transform .17s cubic-bezier(.5,0,.7,.4),opacity .07s linear .11s}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:26px;cursor:pointer}
+
+/* ---------- 首页首屏（合并 hero + 简介） ---------- */
+.hero{position:relative;height:120vh;background:#181212}
+.hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+.hero-bg{position:absolute;inset:0;
+  background:url("../assets/zhongliudizhu-hero.jpg") center top/cover no-repeat;
+  opacity:.82;transform:translateZ(0);backface-visibility:hidden;
+  -webkit-backface-visibility:hidden}
+.hero-veil{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(68,10,20,.54) 0%,rgba(40,7,13,.20) 22%,rgba(16,5,9,.70) 48%,rgba(11,3,6,.92) 74%,rgba(9,3,5,.97) 100%)}
+.hero-stage{position:absolute;left:0;right:0;top:0;height:100%;z-index:2;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  color:#fff;padding:150px 24px 70px;
+  will-change:opacity,transform;backface-visibility:hidden}
+.hero.ready .hero-stage{transition:opacity .55s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+.hero-stage.s2{opacity:0;transform:translateY(30px);pointer-events:none}
+.hero.phase2 .hero-stage.s1{opacity:0;transform:translateY(-38px);pointer-events:none}
+.hero.phase2 .hero-stage.s2{opacity:1;transform:none;pointer-events:auto}
+/* 英雄区入场统一使用 .reveal（位置检测 + 兜底，不依赖动画时钟） */
+.hero-kicker{font-size:13px;letter-spacing:.5em;color:var(--gold-lt);text-shadow:0 1px 0 rgba(0,0,0,.5)}
+.hero-title{margin:14px 0 4px;line-height:0}
+.hero-title img{width:clamp(320px,60vw,860px);height:auto;display:block;margin:0 auto;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.62))}
+.hero-subtitle{margin:26px 0 0;line-height:0}
+.hero-subtitle img{width:min(84vw,680px);height:auto;display:block;margin:0 auto;
+  filter:drop-shadow(0 5px 14px rgba(0,0,0,.55))}
+.hero-divider{width:150px;height:16px;margin:16px auto 22px;position:relative}
+.hero-divider::before{content:"";position:absolute;left:0;right:0;top:7px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--bronze-lt),transparent)}
+.hero-divider::after{content:"◆";position:absolute;left:50%;top:-3px;transform:translateX(-50%);
+  color:var(--bronze-lt);font-size:13px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.hero-lead{font-family:var(--serif);font-size:clamp(17px,2.4vw,23px);color:#fdf3dc;letter-spacing:.06em;
+  text-shadow:0 2px 8px rgba(0,0,0,.55)}
+.hero-intro{margin:20px auto 0;max-width:760px;font-size:15.5px;color:rgba(255,246,228,.88);
+  text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.hero-points{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:30px}
+.hero-points .pt{min-width:150px;padding:14px 20px;border-radius:12px;text-align:center;
+  background:linear-gradient(160deg,rgba(58,10,20,.72),rgba(30,6,12,.62));
+  border:1px solid rgba(240,220,160,.35);
+  box-shadow:0 1px 0 rgba(255,255,255,.10) inset,0 8px 22px rgba(0,0,0,.32)}
+.hero-points .pt b{display:block;font-family:var(--serif);font-size:18px;color:var(--gold-lt);letter-spacing:1px}
+.hero-points .pt span{font-size:12.5px;color:rgba(255,244,224,.85)}
+.hero-scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;
+  color:var(--gold-lt);font-size:12.5px;letter-spacing:.24em;text-align:center;animation:floatY 2.4s ease-in-out infinite}
+.hero-scroll::after{content:"↓";display:block;font-size:18px;margin-top:4px}
+
+/* ---------- 二级页页头 ---------- */
+.page-hero{position:relative;overflow:hidden;text-align:center;color:#fff;padding:78px 24px 66px;
+  background:radial-gradient(1000px 460px at 50% -12%,#b8253a,var(--red) 52%,var(--red-deep))}
+.page-hero::before{content:"";position:absolute;inset:0;opacity:.35;background-image:var(--noise)}
+.page-hero::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 10%,rgba(255,255,255,.10),transparent 60%)}
+.page-hero .container{position:relative;z-index:1}
+.page-hero .kicker{color:var(--gold-lt);letter-spacing:.5em;font-size:12.5px}
+.page-hero h1{color:#fff;font-size:clamp(30px,5.2vw,48px);letter-spacing:.12em;margin:12px 0 14px;
+  text-shadow:0 2px 0 rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.45)}
+.page-hero p{max-width:740px;margin:0 auto;color:rgba(255,248,234,.92);font-size:15.5px}
+.page-hero .divider{width:120px;height:14px;margin:18px auto;position:relative}
+.page-hero .divider::before{content:"";position:absolute;left:0;right:0;top:6px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--bronze-lt),transparent)}
+
+/* ---------- 区块与标题 ---------- */
+.section{padding:78px 0;position:relative}
+.section-alt{background:linear-gradient(180deg,var(--canvas-2),var(--stone));background-image:var(--noise)}
+.section-title{text-align:center;margin-bottom:46px}
+.section-title .en{color:var(--bronze);letter-spacing:.5em;font-size:11.5px}
+.section-title h2{font-size:clamp(25px,3.6vw,36px);margin:8px 0 12px;letter-spacing:.08em;
+  text-shadow:0 1px 0 rgba(255,255,255,.7),0 -1px 0 rgba(120,90,40,.18)}
+.section-title p{color:var(--muted);max-width:700px;margin:0 auto;font-size:15px}
+.section-title::after{content:"";display:block;width:78px;height:12px;margin:20px auto 0;position:relative;
+  transition:opacity .45s ease;
+  background:linear-gradient(90deg,transparent,var(--bronze),transparent)}
+.section-title::before{content:"◆";position:absolute;left:50%;bottom:0;transform:translateX(-50%);color:var(--bronze);font-size:11px;line-height:1;z-index:1;
+  transition:opacity .45s ease}
+/* 有卡片放大时，标题下的金色装饰条淡出（避免压在大卡上方显得多余） */
+.section.card-open .section-title::after,
+.section.card-open .section-title::before{opacity:0}
+/* 仅承载按钮的 section-title 不需要装饰条与菱形 */
+.section-title.no-orn::before,.section-title.no-orn::after{display:none}
+.section-title{position:relative}
+
+/* ---------- 卡片（浮雕面板） ---------- */
+.card{position:relative;padding:28px;border-radius:14px;overflow:hidden;
+  background:linear-gradient(160deg,#fdf8ee,var(--stone-2));
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -3px 9px rgba(90,60,30,.13) inset,var(--shadow);
+  transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s}
+.card::before{content:"";position:absolute;inset:0;opacity:.5;background-image:var(--noise);pointer-events:none}
+.card::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--bronze-lt),transparent);opacity:.85}
+.card h3{font-size:20px;margin-bottom:8px;position:relative}
+.card p{color:var(--muted);font-size:14.5px;position:relative}
+a.card:hover{transform:translateY(-6px);box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 -3px 9px rgba(90,60,30,.13) inset,0 22px 46px rgba(70,40,15,.28),0 0 0 1px rgba(200,160,80,.5)}
+
+.grid{display:grid;gap:24px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+
+/* ---------- 时间轴（浮雕） ---------- */
+.timeline{position:relative;margin:0 auto;max-width:880px;padding-left:34px}
+.timeline::before{content:"";position:absolute;left:10px;top:8px;bottom:8px;width:4px;border-radius:2px;
+  background:linear-gradient(var(--bronze-lt),var(--bronze),var(--red));
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 2px 6px rgba(80,50,20,.3)}
+.tl-item{position:relative;padding:0 0 38px 28px}
+.tl-item::before{content:"";position:absolute;left:-30px;top:8px;width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#f6e3a8,var(--bronze) 60%,#6f5620);
+  border:2px solid var(--canvas);box-shadow:0 3px 8px rgba(60,30,10,.45)}
+.tl-year{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--red);
+  text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.tl-title{font-size:18px;color:var(--ink);font-weight:600;margin:2px 0 7px;letter-spacing:.04em}
+.tl-body{color:var(--text);font-size:14.8px}
+.tl-body .tag{display:inline-block;background:linear-gradient(180deg,var(--gold-lt),var(--bronze-lt));
+  color:var(--red-deep);font-size:12px;padding:2px 10px;border-radius:999px;margin-right:8px;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 5px rgba(90,60,20,.25)}
+
+/* ---------- 照片墙 ---------- */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.photo{position:relative;aspect-ratio:4/3;border-radius:14px;overflow:hidden;cursor:pointer;
+  background:linear-gradient(150deg,var(--stone),var(--stone-2));
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 -3px 8px rgba(90,60,30,.12) inset,var(--shadow);
+  display:flex;align-items:center;justify-content:center;transition:transform .35s,box-shadow .35s}
+.photo:hover{transform:translateY(-5px);box-shadow:0 22px 44px rgba(70,40,15,.3)}
+.photo .ph-mark{font-size:42px;color:rgba(124,20,32,.5);text-shadow:0 2px 4px rgba(255,255,255,.6)}
+.photo .ph-cap{position:absolute;inset:auto 0 0 0;padding:36px 14px 13px;
+  background:linear-gradient(transparent,rgba(40,10,14,.78));color:#fff;font-size:13px;letter-spacing:.03em}
+.photo.placeholder::after{content:"待补充照片";position:absolute;top:14px;left:14px;color:rgba(90,60,30,.55);font-size:12px}
+
+/* 灯箱 */
+.lightbox{position:fixed;inset:0;background:rgba(20,4,7,.92);display:none;align-items:center;justify-content:center;z-index:120;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox img{max-width:88vw;max-height:76vh;border-radius:10px;border:3px solid var(--bronze);box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.lightbox .lb-cap{color:var(--gold-lt);margin-top:16px;font-family:var(--serif);letter-spacing:.05em}
+.lightbox .lb-close{position:absolute;top:22px;right:32px;color:#fff;font-size:36px;cursor:pointer;line-height:1}
+
+/* ---------- 按钮与表单 ---------- */
+.btn{display:inline-block;padding:13px 34px;border-radius:999px;cursor:pointer;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,var(--red-2),var(--red-deep));color:#fff;font-size:15px;border:1px solid var(--bronze);
+  letter-spacing:.12em;box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 10px 24px rgba(80,10,20,.35);transition:.3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 16px 34px rgba(80,10,20,.45)}
+.btn::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,235,190,.45),transparent);transition:left .6s}
+.btn:hover::after{left:130%}
+.btn-ghost{background:transparent;color:var(--red-deep);border:1px solid var(--bronze);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px rgba(90,60,20,.18)}
+.btn-ghost:hover{background:rgba(200,160,80,.14)}
+
+.form{max-width:660px;margin:0 auto;position:relative;padding:30px;border-radius:16px;
+  background:linear-gradient(160deg,#fdf8ee,var(--stone-2));border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -3px 9px rgba(90,60,30,.13) inset,var(--shadow)}
+.field{margin-bottom:20px;position:relative}
+.field label{display:block;font-size:14px;color:var(--ink);margin-bottom:7px;font-weight:600;letter-spacing:.02em}
+.field input,.field textarea,.field select{width:100%;padding:12px 15px;border-radius:10px;font-size:15px;font-family:inherit;
+  color:var(--text);background:linear-gradient(180deg,#fff,#fbf6ec);border:1px solid var(--line);
+  box-shadow:0 2px 5px rgba(90,60,30,.10) inset;transition:.25s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--bronze);
+  box-shadow:0 2px 6px rgba(90,60,30,.14) inset,0 0 0 3px rgba(200,160,80,.22)}
+.field textarea{resize:vertical;min-height:120px}
+.form-note{background:linear-gradient(180deg,var(--gold-lt),#e8d59a);border:1px solid var(--line);
+  border-radius:10px;padding:14px 18px;font-size:13px;color:var(--red-deep);margin-bottom:20px;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset}
+
+/* ---------- 页脚 ---------- */
+.site-footer{position:relative;background:linear-gradient(180deg,var(--red-deep),#340710);color:rgba(255,244,228,.85);
+  padding:26px 0 20px;text-align:center;font-size:14px;overflow:hidden}
+.site-footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--bronze-lt),var(--bronze),var(--bronze-lt),transparent)}
+.site-footer::after{content:"";position:absolute;inset:0;opacity:.5;background-image:var(--noise)}
+.site-footer .container{position:relative;z-index:1}
+.site-footer .f-brand{display:flex;flex-direction:column;align-items:center;gap:11px;
+  font-family:var(--serif);font-size:21px;color:#fff;letter-spacing:3px;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.site-footer .f-logo{width:112px;height:112px;object-fit:contain;display:block;
+  filter:drop-shadow(0 4px 11px rgba(0,0,0,.45))}
+.site-footer .f-line{width:48px;height:2px;background:var(--bronze-lt);margin:8px auto}
+.site-footer a{color:var(--gold-lt)}
+
+/* ---------- 动效 ---------- */
+html.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+html.js .reveal.in{opacity:1;transform:none}
+html.js .reveal[data-delay="1"]{transition-delay:.12s}
+html.js .reveal[data-delay="2"]{transition-delay:.24s}
+html.js .reveal[data-delay="3"]{transition-delay:.36s}
+html.js .reveal[data-delay="4"]{transition-delay:.48s}
+@keyframes floatY{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-9px)}}
+@keyframes floatY2{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes glowPulse{0%,100%{opacity:.55}50%{opacity:.9}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.float{animation:floatY2 6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){
+  html.js .reveal{opacity:1;transform:none;transition:none}
+  .float,.hero-scroll{animation:none}
+}
+
+.year-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+.year-strip .ys{flex:1 1 175px;max-width:230px;text-align:center;padding:22px 16px;border-radius:14px;
+  background:linear-gradient(160deg,#fdf8ee,var(--stone-2));border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -3px 9px rgba(90,60,30,.13) inset,var(--shadow);transition:.35s}
+.year-strip .ys:hover{transform:translateY(-6px);box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 22px 44px rgba(70,40,15,.28)}
+.year-strip .ys b{display:block;font-family:var(--serif);font-size:27px;color:var(--red);text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.year-strip .ys span{font-size:13.5px;color:var(--muted)}
+
+.board-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px}
+.board-grid .card{flex:1 1 296px;max-width:352px}
+.card-icon{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;
+  font-family:var(--serif);font-size:21px;font-weight:700;color:#7c1420;margin-bottom:13px;
+  background:radial-gradient(circle at 34% 28%,#fdf6dd,var(--gold-lt) 52%,var(--bronze) 100%);
+  border:1px solid rgba(140,105,50,.55);
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 -2px 6px rgba(120,80,30,.30) inset,0 7px 16px rgba(90,60,20,.26),
+    0 0 0 3px rgba(210,180,110,.16)}
+.card h3{position:relative}
+
+/* ---------- 五大板块动效：金线自绘制 + 鼠标倾斜光扫 ---------- */
+.board-grid .anim-card{overflow:hidden;border-color:transparent;
+  transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s ease,
+    border-color .7s ease 1.15s}
+.board-grid .anim-card.in{border-color:var(--line)}
+.board-grid .anim-card:hover{transform:translateY(-6px);
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 24px 48px rgba(70,40,15,.30)}
+
+/* 金色细线：由 stroke-dashoffset 从 100 画到 0 */
+.board-grid .anim-card .card-stroke{position:absolute;inset:-1px;
+  width:calc(100% + 2px);height:calc(100% + 2px);   /* 覆盖到边框盒，金线才能压住卡片边框 */
+  pointer-events:none;z-index:3;overflow:visible}
+.board-grid .anim-card .card-stroke rect{fill:none;stroke:var(--gold);stroke-width:2;
+  stroke-dasharray:100;stroke-dashoffset:100;
+  filter:drop-shadow(0 0 2px rgba(201,162,39,.6));
+  transition:stroke-dashoffset 1.25s cubic-bezier(.45,.05,.2,1)}
+.board-grid .anim-card.in .card-stroke rect{stroke-dashoffset:0}
+
+/* 鼠标光扫 */
+.board-grid .anim-card .card-sheen{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
+  transition:opacity .4s ease;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),
+    rgba(255,243,198,.58),rgba(255,236,170,.13) 46%,transparent 72%)}
+.board-grid .anim-card:hover .card-sheen{opacity:1}
+
+/* 内容错峰浮现（线画到一半时开始） */
+.board-grid .anim-card .card-icon,
+.board-grid .anim-card h3,
+.board-grid .anim-card p{opacity:0;transform:translateY(14px);
+  transition:opacity .65s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.board-grid .anim-card h3,
+.board-grid .anim-card p,
+.board-grid .anim-card .card-icon{position:relative;z-index:4}
+.board-grid .anim-card.in .card-icon{opacity:1;transform:none;transition-delay:.2s}
+.board-grid .anim-card.in h3{opacity:1;transform:none;transition-delay:.34s}
+.board-grid .anim-card.in p{opacity:1;transform:none;transition-delay:.46s}
+.board-grid .anim-card:hover .card-icon{transform:translateY(-3px) scale(1.07);transition-delay:0s}
+.board-grid .anim-card:hover h3{transform:translateY(-2px);transition-delay:0s}
+
+/* ================= 五大板块：加高 + 点击聚拢展开 ================= */
+
+/* 1) 卡片加高，内容垂直居中 */
+.board-grid .anim-card{min-height:240px;display:flex;flex-direction:column;justify-content:center}
+
+/* 2) 展开态：卡片脱离文档流，位置尺寸全部由 JS 计算 */
+.board-grid.expanded{position:relative}
+
+/* 动画进行中：把每帧重绘最贵的部分降级（多层阴影 / 噪点叠加 / 金线发光滤镜 / 浮动动画） */
+.board-grid.animating .card{box-shadow:0 10px 22px rgba(70,40,15,.20)!important;
+  contain:layout style}
+.board-grid.animating .card::before{opacity:0!important}
+.board-grid.animating .card .card-stroke rect{filter:none!important}
+.board-grid.animating .card.is-small.floaty{animation:none!important}
+.board-grid.expanded .card{position:absolute;margin:0;max-width:none;flex:none;
+  min-height:0;                      /* 关键：取消常态最小高度，否则 JS 算的尺寸会被覆盖 */
+  transition:box-shadow .45s ease}
+
+/* 3) 小卡：标题转竖排、正文变小 */
+.board-grid.expanded .card.is-small{justify-content:center;align-items:center;text-align:center;
+  padding:20px 14px;overflow:hidden}
+.board-grid.expanded .card.is-small h3{writing-mode:vertical-rl;font-size:15px;letter-spacing:.16em;
+  margin:0 0 0 8px;line-height:1.15;max-height:100%}
+.board-grid.expanded .card.is-small p{font-size:10.5px;line-height:1.45;color:var(--muted);margin:8px 0 0;
+  max-height:6.2em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
+.board-grid.expanded .card.is-small p{font-size:10.5px}
+.board-grid.expanded .card.is-small h3{font-size:14px}
+
+/* 扁卡：竖排标题 + 右侧小字说明 的横向排版，矮也能装下内容 */
+.board-grid.expanded .card.is-small.is-flat{flex-direction:row;align-items:center;justify-content:center;
+  gap:14px;text-align:left;padding:12px 16px}
+.board-grid.expanded .card.is-small.is-flat h3{font-size:13px;letter-spacing:.08em;margin:0;
+  max-height:100%;flex:0 0 auto}
+.board-grid.expanded .card.is-small.is-flat p{display:-webkit-box;font-size:10.5px;line-height:1.45;
+  margin:0;max-height:4.4em;-webkit-line-clamp:4;text-align:left}
+
+/* 4) 小卡浮动动效（悬停暂停） */
+.board-grid.expanded .card.is-small.floaty{animation:cardFloat 3.6s ease-in-out infinite}
+.board-grid.expanded .card.is-small.floaty:hover{animation-play-state:paused}
+/* 用 margin-top 而非 transform 做浮动，避免与鼠标倾斜的 transform 冲突 */
+@keyframes cardFloat{0%,100%{margin-top:0}50%{margin-top:-9px}}
+
+/* 5) 主卡：图片铺满，文字叠在下方 */
+.board-grid .card .card-media{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:1;
+  transform:scale(1.045);transform-origin:50% 46%;
+  /* 消失：较快、无延迟，让位给卡片收缩 */
+  transition:opacity .42s ease,transform .42s ease;
+  background:linear-gradient(160deg,#4a1018,#1c0509)}
+.board-grid .card .card-media img{width:100%;height:100%;object-fit:cover;display:block;
+  will-change:transform;transform-origin:52% 48%}
+/* 图片出现时缓慢推近，营造"活着"的画面感 */
+.board-grid.expanded .card.is-big .card-media img{animation:cardKenBurns 20s ease-out both}
+@keyframes cardKenBurns{
+  from{transform:scale(1.02) translate3d(0,0,0)}
+  to{transform:scale(1.16) translate3d(-1.5%,-1.2%,0)}
+}
+.board-grid .card .card-media .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:rgba(255,232,180,.32);font-family:var(--serif);font-size:14px;letter-spacing:.4em}
+.board-grid .card .card-media::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(18,5,9,.10) 0%,rgba(18,5,9,.30) 46%,rgba(18,5,9,.90) 100%)}
+.board-grid.expanded .card.is-big .card-media{opacity:1;transform:none;
+  /* 出现：稍慢、略带延迟，营造"卡片长好了画面才浮现"的层次 */
+  transition:opacity .62s cubic-bezier(.32,.72,.28,1) .07s,
+             transform .85s cubic-bezier(.2,.75,.3,1) .07s}
+/* 放大态的主卡取消金光效果：金线发光滤镜、鼠标光斑 */
+.board-grid.expanded .card.is-big .card-stroke rect{filter:none}
+.board-grid.expanded .card.is-big .card-sheen{display:none}
+.board-grid.expanded .card.is-big{overflow:hidden;justify-content:flex-end;align-items:flex-start;
+  text-align:left;padding:30px;border-color:rgba(200,165,90,.55)}
+.board-grid.expanded .card.is-big::before{opacity:0}
+.board-grid.expanded .card.is-big h3{position:relative;z-index:5;font-size:26px;margin-bottom:8px;
+  color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85)}
+.board-grid.expanded .card.is-big p{position:relative;z-index:5;color:rgba(255,242,215,.9);
+  font-size:14px;max-width:92%;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+
+/* 6) 主卡里的「进入板块」按钮 */
+.board-grid .card .card-enter{position:relative;z-index:6;display:none;margin-top:16px;
+  padding:9px 22px;border-radius:999px;font-size:13.5px;letter-spacing:.1em;color:#fff;text-decoration:none;
+  overflow:hidden;cursor:pointer;
+  background:linear-gradient(180deg,var(--red-2),var(--red-deep));border:1px solid var(--bronze);
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 8px 18px rgba(80,10,20,.35);transition:.3s}
+/* 与站点 .btn 一致的金光扫过效果 */
+.board-grid .card .card-enter::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,235,190,.5),transparent);
+  transition:left .6s}
+.board-grid .card .card-enter:hover::after{left:130%}
+.board-grid .card .card-enter:hover{box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 14px 26px rgba(80,10,20,.45)}
+.board-grid.expanded .card.is-big .card-enter{display:inline-block}
+
+/* 7) 展开时禁用倾斜 */
+.board-grid.expanded .card.is-big{cursor:default}
+
+.ph-layer{position:absolute;left:0;right:0;top:-18%;height:136%;z-index:0;pointer-events:none;
+  background:radial-gradient(58% 62% at 28% 22%,rgba(255,224,152,.18),transparent 68%),
+             radial-gradient(46% 52% at 78% 66%,rgba(255,170,120,.13),transparent 70%),
+             radial-gradient(38% 40% at 55% 92%,rgba(255,255,255,.07),transparent 70%)}
+.ornament{position:absolute;z-index:0;line-height:1;pointer-events:none;user-select:none;
+  font-family:var(--serif);color:rgba(168,134,60,.13)}
+.ornament.o1{top:38px;right:3%;font-size:170px}
+.ornament.o2{bottom:24px;left:3%;font-size:140px}
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:110;
+  background:linear-gradient(90deg,var(--bronze),var(--gold-lt),var(--bronze));
+  box-shadow:0 0 10px rgba(220,180,100,.65);transition:width .1s linear}
+
+.to-top{position:fixed;right:22px;bottom:22px;width:48px;height:48px;border-radius:50%;cursor:pointer;
+  border:1px solid var(--bronze);color:var(--gold-lt);font-size:19px;line-height:1;
+  background:linear-gradient(180deg,var(--red-2),var(--red-deep));
+  display:flex;align-items:center;justify-content:center;z-index:90;
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .35s,transform .35s;
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 10px 24px rgba(60,10,20,.4)}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 16px 32px rgba(60,10,20,.5)}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:900px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-toggle{display:block}
+  .nav-links{position:absolute;top:81px;left:0;right:0;flex-direction:column;display:none;padding:12px 16px 18px;
+    background:linear-gradient(180deg,var(--red),var(--red-deep));box-shadow:0 16px 30px rgba(0,0,0,.4)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 16px;letter-spacing:.04em}
+  .nav-links a::after{display:none}
+  .nav-links a.active{box-shadow:inset 3px 0 0 var(--gold)}
+}
+@media (max-width:560px){
+  .photo-grid{grid-template-columns:1fr}
+  .hero-points .pt{min-width:130px}
+}
+
+/* ================================================================
+   ↓↓↓ 以下为「人民之热情」卷轴页专用样式（自独立页迁移而来）
+   两部分：① 从独立页 style.css 抽出的卷轴基础规则（.sx / .gt / .pg- 等）
+           ② 独立页的 parade.css 全文（页面级覆盖与微调）
+   ================================================================ */
+/* ---------- ① 卷轴基础规则 ---------- */
+
+.hero-scroll{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;
+  color:var(--gold-lt);font-size:12.5px;letter-spacing:.24em;text-align:center;animation:floatY 2.4s ease-in-out infinite}
+
+.hero-scroll::after{content:"↓";display:block;font-size:18px;margin-top:4px}
+
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:110;
+  background:linear-gradient(90deg,var(--bronze),var(--gold-lt),var(--bronze));
+  box-shadow:0 0 10px rgba(220,180,100,.65);transition:width .1s linear}
+
+.scroll-story{position:relative;height:calc(100vh - 81px);
+  background:
+    radial-gradient(1000px 520px at 10% 12%,rgba(255,196,130,.16),transparent 62%),
+    radial-gradient(820px 460px at 88% 82%,rgba(255,214,140,.12),transparent 64%),
+    radial-gradient(560px 380px at 55% 40%,rgba(255,230,170,.05),transparent 70%),
+    linear-gradient(180deg,#5b1120,#420a16 52%,#2e050e)}
+
+.scroll-story::before{content:"";position:absolute;inset:0;opacity:.5;background-image:var(--noise);pointer-events:none}
+
+.gt-img{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+
+.gt-img img{width:100%;height:100%;object-fit:cover;filter:brightness(1.02)}
+
+.pg-title,.pg-intro{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+  z-index:8;text-align:center;width:min(760px,82vw);
+  opacity:0;visibility:hidden;pointer-events:none;will-change:opacity,transform}
+
+.pg-title{transition:opacity .6s ease,transform .6s ease,visibility 0s linear .6s}
+
+.scroll-story.entered .pg-title{opacity:1;visibility:visible}
+
+.pg-title .pg-kicker{color:var(--gold-lt);letter-spacing:.5em;font-size:12.5px;margin:0 0 16px;
+  text-shadow:0 2px 14px rgba(0,0,0,.9)}
+
+.pg-title h2{color:#fff;font-size:clamp(28px,4.4vw,52px);letter-spacing:.14em;margin:0;
+  text-shadow:0 2px 0 rgba(0,0,0,.35),0 14px 34px rgba(0,0,0,.62)}
+
+.pg-intro{top:51%}
+
+.pg-intro p{max-width:700px;margin:0 auto;color:rgba(255,246,234,.94);
+  font-size:clamp(14px,1.45vw,19px);line-height:1.95;letter-spacing:.02em;
+  text-shadow:0 2px 16px rgba(0,0,0,.9),0 1px 3px rgba(0,0,0,.95)}
+
+.pg-enter{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);
+  z-index:8;pointer-events:none;transition:opacity .4s ease,visibility 0s linear .4s}
+
+.pg-enter .sx-hint-btn{pointer-events:auto}
+
+.scroll-story.entered .pg-enter,.scroll-story.entering .pg-enter{opacity:0;visibility:hidden}
+
+.scroll-pin{position:sticky;top:81px;height:calc(100vh - 81px);overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+
+.scroll-stage{position:relative;flex:0 0 auto;width:104px;height:100%;will-change:transform,width;z-index:3}
+
+.sx{display:flex;align-items:center;width:100%;height:calc(100% - 14px);
+  cursor:pointer;filter:drop-shadow(0 22px 38px rgba(10,2,4,.55))}
+
+.scroll-story:not(.open) .sx{transition:transform .35s ease}
+
+.scroll-story:not(.open) .sx:hover{transform:translateY(-5px)}
+
+.sx-rod{position:relative;flex:0 0 auto;width:52px;height:100%}
+
+.sx-rod-shaft{position:absolute;left:50%;top:0;bottom:0;width:16px;transform:translateX(-50%);
+  background:linear-gradient(90deg,#f9e7b4,#eecb80 30%,#cfa14b 68%,#a87d2c);
+  box-shadow:0 0 0 1px rgba(122,72,16,.6),inset 1px 0 0 rgba(255,250,226,.6)}
+
+.sx-rod-roll{position:absolute;left:50%;top:8%;bottom:8%;width:50px;transform:translateX(-50%);
+  border-radius:7px;opacity:calc(1 - var(--unroll,0) * 1.6);
+  background-image:
+    repeating-linear-gradient(180deg,rgba(150,110,60,.07) 0 2px,rgba(150,110,60,0) 2px 9px),
+    linear-gradient(90deg,rgba(88,58,24,.55),rgba(255,252,240,0) 26%,rgba(255,255,255,.42) 44%,rgba(255,252,240,0) 62%,rgba(88,58,24,.5)),
+    linear-gradient(180deg,#e9d8b6,#f9f1de 45%,#e2d0aa);
+  box-shadow:inset 0 0 16px rgba(120,85,40,.28),0 4px 14px rgba(15,3,4,.5)}
+
+.sx-rod-wrap{position:absolute;left:50%;top:8%;bottom:8%;width:36px;transform:translateX(-50%);
+  background-image:var(--swirl),linear-gradient(180deg,#e46a4c,#d04b2f 55%,#b33c22);
+  background-size:34px 34px,100% 100%;
+  box-shadow:0 0 0 1px rgba(122,50,20,.5),inset 0 0 12px rgba(110,25,10,.4)}
+
+.sx-rod-ring{position:absolute;left:50%;width:46px;height:7px;border-radius:2px;transform:translateX(-50%);
+  background:linear-gradient(180deg,#fbeec2,#e9c779 45%,#bb9139);
+  box-shadow:0 0 0 1px rgba(122,72,16,.55),0 1px 3px rgba(80,35,8,.35)}
+
+.sx-ring-a{top:calc(8% + 1px)}
+
+.sx-ring-b{top:calc(8% + 9px)}
+
+.sx-ring-c{bottom:calc(8% + 1px)}
+
+.sx-ring-d{bottom:calc(8% + 9px)}
+
+.sx-rod-cap{position:absolute;left:0;width:52px;height:clamp(30px,8%,46px);background:#7c4c10;
+  clip-path:polygon(4% 0,96% 0,96% 20%,68% 20%,68% 44%,84% 44%,84% 62%,62% 62%,62% 100%,38% 100%,38% 62%,16% 62%,16% 44%,32% 44%,32% 20%,4% 20%)}
+
+.sx-rod-cap::after{content:"";position:absolute;inset:1px;clip-path:inherit;
+  background:linear-gradient(90deg,#fbeec2,#ecc87c 32%,#cfa14b 68%,#a87d2c)}
+
+.sx-cap-t{top:0}
+
+.sx-cap-b{bottom:0;transform:scaleY(-1)}
+
+.sx-paper{position:relative;flex:1 1 auto;min-width:0;height:84%;overflow:hidden;
+  background-image:var(--swirl),linear-gradient(180deg,#e46a4c,#d04b2f 55%,#b33c22);
+  background-size:52px 52px,100% 100%;
+  box-shadow:inset 0 0 30px rgba(110,30,10,.35),0 18px 34px rgba(30,5,6,.5)}
+
+.sx-paper::before{content:"";position:absolute;inset:0;opacity:.35;background-image:var(--noise);pointer-events:none}
+
+.sx-paper::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 3px 0 rgba(255,222,186,.4),inset 0 -3px 0 rgba(110,30,10,.45),
+    inset 0 0 34px rgba(110,30,10,.35)}
+
+.sx-inner{position:absolute;left:42px;right:42px;top:5%;bottom:5%;overflow:hidden;border-radius:3px;
+  display:flex;align-items:center;justify-content:flex-start;gap:2.4vw;padding:12px 2vw;
+  background:linear-gradient(160deg,#fefaf1,#f9eeda 55%,#f3e3c9);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(150,90,40,.3),0 3px 10px rgba(120,50,20,.2)}
+
+.sx-inner::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;border-radius:3px;
+  box-shadow:inset 0 0 30px rgba(150,80,40,.16)}
+
+.sx-head{position:absolute;left:3%;top:6.5%;z-index:5;width:clamp(230px,25%,430px);text-align:left;
+  display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;
+  opacity:0;transition:opacity .7s ease}
+
+.scroll-story.open .sx-head{opacity:1;transition-delay:.85s}
+
+.sx-head .kicker{color:var(--bronze);letter-spacing:.42em;font-size:11px}
+
+.sx-head h2{font-size:clamp(19px,1.6vw,27px);margin:0 0 10px;letter-spacing:.1em;
+  text-shadow:0 1px 0 rgba(255,255,255,.75)}
+
+.sx-head p{font-size:12.5px;line-height:1.85;color:var(--muted)}
+
+.gt{position:relative;z-index:1;flex:1 1 0;width:auto;min-width:0;height:100%;overflow:visible;opacity:1}
+
+.gt-river{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0}
+
+.gt-river use{fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+.gt-river .rv-trib{stroke:rgba(232,178,86,.42);stroke-width:2}
+
+.gt-river .rv-halo{stroke:rgba(255,190,90,.22);stroke-width:36;filter:blur(10px)}
+
+.gt-river .rv-body{stroke-width:10;filter:drop-shadow(0 0 10px rgba(255,186,80,.55))}
+
+.gt-river .rv-shine{stroke:rgba(255,253,242,.95);stroke-width:3}
+
+.gt-nodes{position:absolute;inset:0;z-index:3}
+
+.gt-river,.gt-nodes{clip-path:inset(0 calc((1 - var(--grow,1)) * 100%) 0 0)}
+
+.gt-node{position:absolute;left:0;top:0;transform:translate(-50%,-50%);
+  width:46px;height:46px;display:flex;align-items:center;justify-content:center;opacity:1}
+
+.gt-dot{width:15px;height:15px;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,#fffdf4 0%,#ffeaa9 30%,#f6c65c 58%,#d59a2c 82%,#a9761c 100%);
+  box-shadow:0 0 0 3px rgba(255,252,238,.9),0 0 14px 5px rgba(255,206,120,.9),
+    0 0 30px 12px rgba(255,178,70,.42),0 4px 9px rgba(90,50,10,.32);
+  animation:dotPulse 2.8s ease-in-out infinite}
+
+.gt-node>.gt-year{position:absolute;left:calc(100% - 8px);top:50%;transform:translateY(-50%);
+  font-family:var(--serif);font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#a8761c;
+  white-space:nowrap;pointer-events:none;text-shadow:0 1px 0 rgba(255,255,255,.85)}
+
+.gt-pop{position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%) translateY(10px);
+  width:206px;padding:9px;border-radius:12px;opacity:0;visibility:hidden;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;
+  background:linear-gradient(160deg,#fdf9f0,#f0e4ca);border:1px solid rgba(200,165,90,.62);
+  box-shadow:0 20px 38px rgba(70,40,15,.34),inset 0 1px 0 rgba(255,255,255,.9),
+    0 0 0 3px rgba(255,214,130,.18);
+  transition:opacity .26s ease,transform .3s cubic-bezier(.2,.7,.3,1),visibility 0s linear .3s}
+
+.gt-node.below .gt-pop{bottom:auto;top:calc(100% + 5px)}
+
+.gt-node:hover .gt-pop,.gt-node:focus-within .gt-pop{opacity:1;visibility:visible;
+  transform:translateX(-50%) translateY(0);transition-delay:0s}
+
+.gt-pop::after{content:"";position:absolute;left:50%;bottom:-6px;width:10px;height:10px;
+  transform:translateX(-50%) rotate(45deg);background:#f2e7cf;
+  border-right:1px solid rgba(200,165,90,.62);border-bottom:1px solid rgba(200,165,90,.62)}
+
+.gt-node.below .gt-pop::after{bottom:auto;top:-6px;border:none;
+  border-left:1px solid rgba(200,165,90,.62);border-top:1px solid rgba(200,165,90,.62)}
+
+.gt-pop h3{font-size:14px;margin:0;letter-spacing:.04em;white-space:nowrap}
+
+.gt-pop p{font-size:10.5px;line-height:1.5;color:var(--text);text-align:center;max-width:100%;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+.gt-photo{position:relative;width:100%;height:104px;border-radius:8px;overflow:hidden;
+  border:1px solid rgba(226,196,124,.6);
+  background:linear-gradient(160deg,#8c2030,#5a0f1e 55%,#330710);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 24px rgba(0,0,0,.35)}
+
+.gt-photo::before{content:"";position:absolute;left:0;right:0;top:0;height:48%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,240,200,.32),rgba(255,240,200,.03))}
+
+.gt-photo::after{content:"";position:absolute;left:-40%;top:-70%;width:60%;height:180%;pointer-events:none;
+  transform:rotate(22deg);
+  background:linear-gradient(90deg,transparent,rgba(255,244,214,.16),transparent)}
+
+.gt-tag{position:absolute;left:6px;top:6px;z-index:2;font-size:10px;color:rgba(255,238,200,.95);
+  padding:1px 7px;border-radius:99px;border:1px solid rgba(226,196,124,.55);
+  background:rgba(70,10,20,.55);letter-spacing:.06em}
+
+.gt-photo .ph-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:30px;color:rgba(240,220,170,.5);text-shadow:0 2px 8px rgba(0,0,0,.55)}
+
+.gt-photo .ph-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 6px 5px;font-size:10.5px;
+  color:rgba(255,238,200,.95);text-align:center;
+  background:linear-gradient(transparent,rgba(30,5,10,.82))}
+
+.gt-cap{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:7px 0 3px}
+
+.gt-cap .gt-year{position:static;left:auto;top:auto;transform:none;font-size:16px;color:var(--red);
+  text-shadow:0 1px 0 rgba(255,255,255,.75);line-height:1.2}
+
+.sx-foot{display:flex;flex-direction:column;gap:7px;width:100%;margin-top:14px;
+  opacity:0;transition:opacity .45s ease}
+
+.scroll-story.open .sx-foot{opacity:1;transition:opacity .7s ease 2.1s}
+
+.sx-chip{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;text-align:left;
+  background:linear-gradient(160deg,rgba(255,248,228,.92),rgba(228,202,148,.62));
+  border:1px solid rgba(168,134,60,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 5px 12px rgba(90,60,20,.22)}
+
+.sx-chip b{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border-radius:50%;font-family:var(--serif);font-size:13px;color:#f7e9c8;
+  background:radial-gradient(circle at 33% 28%,#df9c4e,#8c1f30 62%,#56091a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 3px 6px rgba(60,10,18,.4)}
+
+.sx-chip span{font-size:11.5px;line-height:1.45;color:var(--text)}
+
+.sx-intro{position:absolute;right:calc(50% + 118px);top:50%;transform:translateY(-50%);z-index:6;
+  max-width:min(42vw,440px);display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+  padding-left:24px;text-align:right;pointer-events:none;
+  transition:opacity .5s ease,visibility 0s linear .5s}
+
+.scroll-story.open .sx-intro{opacity:0;visibility:hidden}
+
+.sx-intro .kicker{color:var(--gold-lt);letter-spacing:.5em;font-size:11.5px}
+
+.sx-intro h2{color:#fff;font-size:clamp(22px,3vw,32px);letter-spacing:.12em;
+  text-shadow:0 2px 0 rgba(0,0,0,.3),0 10px 24px rgba(0,0,0,.55)}
+
+.sx-intro p{max-width:660px;color:rgba(255,244,226,.86);font-size:14px;line-height:1.75;
+  text-shadow:0 1px 6px rgba(0,0,0,.5)}
+
+.sx-hint-btn{pointer-events:auto;cursor:pointer;position:relative;overflow:hidden;margin-top:5px;
+  padding:13px 34px;border-radius:999px;font-family:var(--serif);font-size:15.5px;letter-spacing:.22em;color:#fff;
+  background:linear-gradient(180deg,var(--red-2),var(--red-deep));
+  border:1px solid var(--gold-lt);
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 12px 28px rgba(30,5,10,.55),0 0 0 5px rgba(224,196,124,.14);
+  animation:glowPulse 2.2s ease-in-out infinite;transition:transform .3s}
+
+.sx-hint-btn::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,235,190,.45),transparent);transition:left .6s}
+
+.sx-hint-btn:hover::after{left:130%}
+
+.sx-hint-btn:hover{transform:translateY(-2px)}
+
+.sx-arrow{position:absolute;right:26px;bottom:34px;z-index:6;display:flex;align-items:center;gap:10px;
+  color:var(--gold-lt);font-size:13.5px;letter-spacing:.3em;opacity:0;pointer-events:none;
+  transition:opacity .5s ease}
+
+.sx-arrow b{font-size:20px;animation:arrowNudge 1.5s ease-in-out infinite}
+
+.scroll-story.open .sx-arrow{opacity:.9}
+
+.scroll-story.open.finished .sx-arrow{opacity:0}
+
+.sx-unroll{position:absolute;top:5%;bottom:5%;width:8%;z-index:0;pointer-events:none;opacity:0;
+  transition:opacity .6s ease}
+
+.sx-unroll-l{left:0;
+  background:linear-gradient(90deg,rgba(120,80,35,.38),rgba(255,247,225,.5) 55%,transparent)}
+
+.sx-unroll-r{right:0;
+  background:linear-gradient(270deg,rgba(120,80,35,.38),rgba(255,247,225,.5) 55%,transparent)}
+
+.scroll-story.opening .sx-unroll{opacity:.85}
+
+.sx-flash{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+  background:radial-gradient(46% 34% at 50% 50%,rgba(255,236,180,.3),transparent 70%)}
+
+.scroll-story.opening .sx-flash{animation:sealFlash 1.15s ease-out .08s both}
+
+.scroll-story.opening .sx-seal{animation:sealPulse 1.05s ease-out}
+
+/* ---------- ② 独立页 parade.css（页面级覆盖）---------- */
+
+/* ============================================================
+   人民之热情 · 卷轴叙事页 —— 专属样式
+   来源: 组员 2026-10-06 版 style.css 中只属于本页的部分
+   用法: 直接追加到站点 pages\css\style.css 末尾即可（只加不改）
+   区块: 92 个 / 约 14 KB
+   ============================================================ */
+
+
+/* ============================================================
+   卷轴 · 点击展开 + 横向滚动叙事（群众活动页）
+   结构：.scroll-story（定高滚动容器）→ .scroll-pin（粘性视口）
+        → .scroll-stage（横向平移舞台）→ .sx（卷轴本体）
+   ============================================================ */
+.scroll-story{position:relative;height:calc(100vh - 81px);
+  /* ★ 去掉背景上那三团暖色光晕（用户要求）：
+       原来叠了 3 个 radial-gradient，在暗红底上形成左上/右下/中间的高光光晕。
+       style.css:450~454 有同一份，但 parade.css 在它之后加载，所以在这里覆盖即可。 */
+  background:linear-gradient(180deg,#5b1120,#420a16 52%,#2e050e)}
+
+
+.scroll-story::before{content:"";position:absolute;inset:0;opacity:.5;background-image:var(--noise);pointer-events:none}
+
+
+/* ---------- 卷轴底图：画作铺在画心内、黄河之下 ---------- */
+.gt-img{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+/* 底图铺满画心（原版行为）。这条原本在组员 style.css 里，合并进站点时必须跟随 parade.css，
+   否则站点的 style.css 没有它，底图会没有尺寸。 */
+/* ★ 底图不再随画心缩放（用户要求：竖版图在 cover 下会一边变宽一边放大裁切）。
+   现在永远按【最终画心宽度 --inner-w】渲染，高度铺满，居中固定；
+   画心变宽时只是一个逐步打开的取景窗（.sx-inner 有 overflow:hidden），画面本身不缩放。 */
+.gt-img img{
+  position:absolute;
+  left:50%;
+  top:0;
+  /* ★ 消除快速滚动时的左右抖动：
+     ① 用 translate3d 提升为独立合成层，不再每帧跟着父元素重新布局；
+     ② backface-visibility/will-change 固定图层，避免重新栅格化时漂移。 */
+  transform:translate3d(-50%,0,0);
+  /* ★ 烤成位图：源图 964px 被拉到 1226px，画心裁剪窗口每帧都在变，
+       没有这几个指令浏览器会每帧重新取样 -> 看着就是在抖。
+       之前它们不生效，是因为祖先 .sx 上的 filter 把整棵子树压平了（现已摘掉）。 */
+  will-change:transform;
+  backface-visibility:hidden;
+  contain:paint;
+  width:var(--inner-w, 100%);
+  max-width:none;
+  height:100%;
+  object-fit:cover;
+  filter:none;                /* ★ 覆盖 style.css 里的 filter:brightness(1.02)：它逼着浏览器每帧重新栅格化 */
+  opacity:.7;                  /* ★ 用户要求改回 0.7（之前为调试改成 1）*/
+}
+
+
+/* ============================================================
+   画心内缩：窄卷纸时左右对称（2026-10-07 用户报「右边少一圈材质」）
+   原样: .sx-inner{left:42px;right:42px} —— 卷纸窄于 84px 时 right 算成负数被浏览器
+        塌成 0，于是画心顶到右画杆：左边 42px 红边在、右边没有，要等卷纸变宽才补上。
+   现在: min(42px,25%) —— 卷纸窄时按 25% 两侧均分、宽了自动封顶 42px，全过程左右相等。
+   ============================================================ */
+/* 第二版：上一版只解决一半 —— 画心被【内容/内边距】顶出 57px 最小宽度，卷纸再窄也压不下去。
+   这版直接用 width 精确控制（不再依赖 right），并掐掉所有可能的最小宽度与横向内边距。 */
+.scroll-story .sx-inner{
+  /* 留白用 2px 步进：避免 25% 在奇数宽度下算出 24.5px 这类半像素，
+     半像素会让居中的底图每帧舍入到不同位置 —— 那就是快速滚动时的左右抖动。 */
+  --sx-gap: min(42px, 25%);
+  left: var(--sx-gap);
+  right: auto;
+  width: calc(100% - 2 * var(--sx-gap));
+  min-width: 0;
+  max-width: calc(100% - 2 * var(--sx-gap));
+  padding: 12px min(2vw, 2%);
+  overflow: hidden;
+}
+.scroll-story .sx-inner > *{ min-width: 0; max-width: 100%; }
+.scroll-story .sx-inner svg{ min-width: 0; max-width: 100%; display: block; }
+
+/* ============================================================
+   宣纸质感：改用「画上面盖一层暖色薄纱」，不再用 opacity 减淡
+   原来的 opacity:.7 会让身后【卷纸的旋纹】一起透上来，看着像半透明宣纸。
+   现在底图完全不透明，再在它【上面】叠一层极淡的米色渐变：
+   只把画面往暖里染一点，背后有什么纹理都不会透出来。
+   ============================================================ */
+/* ★ 画纸底色：图片设成 0.7 之后，下面必须是不透光的纸色，
+     否则会直接透出红色卷纸的旋纹（就是当初把 opacity 改回 1 的原因）。
+     垫上这层后，0.7 的图是和纸色融合，呈淡淡的做旧感。 */
+.scroll-story .gt-img{
+  background:#f4ead8;
+}
+
+.scroll-story .gt-img::after{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:3;
+  background:linear-gradient(160deg, rgba(254,250,241,.10), rgba(249,238,218,.06) 55%, rgba(243,227,201,.14));
+}
+
+/* 卷纸：整体悬浮的环境影 + 卷边内阴影（压过原本 style.css:530 那条） */
+/* ★ 纸的几何【保持组员原样】，不要改 margin/width：
+     之前加过 margin:-6px 想让它铺到杆下面，结果纸被撑宽、
+     画心（.sx-inner）的宽度计算跟着变，左右反而露出窄条。 */
+.scroll-story .sx-paper{
+  /* ★ 内阴影统一走 --paper-inset（已去掉那圈 inset 0 0 34px），
+       只保留上下受光/背光线；外面那几层是悬浮环境影，保留。 */
+  box-shadow:
+    0 34px 58px rgba(8,1,3,.55),           /* 远环境影 */
+    0 14px 26px rgba(8,1,3,.42),           /* 中景影 */
+    0 5px 12px rgba(8,1,3,.45);            /* 接触影 */
+}
+
+/* 画心（宣纸）：轻微内凹，像嵌在卷纸里 */
+.scroll-story .sx-inner{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 7px 16px rgba(120,70,30,.20),  /* 顶部内凹 */
+    inset 0 -7px 16px rgba(120,70,30,.14), /* 底部内凹 */
+    0 0 0 1px rgba(150,90,40,.32),
+    0 3px 10px rgba(120,50,20,.22);
+}
+
+/* ============================================================
+   根治抖动：把裁剪从父层 overflow 挪到图片自己的 clip-path
+   诊断A 已证实：宽度每帧变化时整棵子树重排重绘，油画（964→1226 放大图）
+   被每帧重新取样 -> 看着在抖。
+   图片的布局盒本来就不变（实测图中心偏差 0.000），变的只是【被裁出多少】。
+   所以让父层不再裁剪（overflow:visible），改由图片自己的 clip-path 开窗：
+   clip-path 属于合成层操作，位图可复用，不再每帧重新取样。
+   --vis: 0 = 完全关闭（只看得到中间一条），1 = 整幅。由 JS 每帧写入。
+   ============================================================ */
+.scroll-story .sx-inner{ overflow: visible; }
+.scroll-story .gt-img img{
+  clip-path: inset(0 calc((1 - var(--vis, 0)) * 50%) 0 calc((1 - var(--vis, 0)) * 50%));
+}
+
+/* ============================================================
+   抖动根治：去掉卷轴祖先上的 filter
+   原 style.css:.sx{ filter:drop-shadow(0 22px 38px rgba(10,2,4,.55)) }
+   祖先一旦有 filter，整棵子树会被强制压平成一个栅格面，
+   底图再怎么 translate3d 也提不成独立合成层 —— 于是每帧重新栅格化，快速滚动就抖。
+   现在把投影改成各部件自己的 box-shadow（视觉等价，卷轴本来就是矩形），
+   子树不再被压平，底图的合成层才真正生效。
+   ============================================================ */
+.scroll-story .sx{ filter:none; }
+
+/* 画杆补上等效投影（原来靠 .sx 的 drop-shadow 统一给的） */
+/* ============================================================
+   立体化（2026-10-07）：远环境影 + 接触影 + 受光/内凹
+   ★ 全部用 box-shadow，绝不用 filter:drop-shadow ——
+     filter 会把整棵子树压平成一个栅格面，那正是这一页抖动的根源。
+     盒阴影只让各部件自己多画一层，不建立新的合成面。
+   ============================================================ */
+.scroll-story .sx-rod{
+  border-radius:4px;
+  box-shadow:
+    0 30px 52px rgba(8,1,3,.55),   /* 远环境影：把它从墙上托起来 */
+    0 12px 22px rgba(8,1,3,.45),   /* 中景影 */
+    0 4px 10px rgba(8,1,3,.50);    /* 接触影：看得出它落在纸面上 */
+}
+
+/* will-change:width 是布局级提示，逼着浏览器为宽度变化长期保留图层，
+   在每帧改宽的场景里反而更容易抖；只保留 transform。 */
+.scroll-story .scroll-stage{
+  will-change:transform;
+  /* ★ 病因定位（诊断A 冻结宽度后抖动消失）：每帧改 width 会触发整棵子树的
+       重排 + 重绘；油画是 964px 拉到 1226px 的放大图，每帧重新取样 -> 看着在抖。
+       contain:layout 把重排限制在卷轴内部（不影响页面其它部分），
+       contain:paint 让绘制也止步于这一层，外面不会跟着重画。 */
+  /* ★ 2026-10-08 移除 contain:paint —— 它会把卡片裁剪到卷轴盒子边界，
+     用户看到的「卡片下部色彩分界、与宣纸底边重合」正是它造成的。
+     layout containment 还会让高度不依赖内容，窄屏时卷轴会塌成一条。 */
+  contain: layout;
+}
+
+/* ============================================================
+   sticky-jitter：position:sticky 在快速滚动时的亚像素重定位
+   .scroll-pin 是 position:sticky，快速滚动时浏览器会对它做亚像素级重定位，
+   它内部的一切（画杆 / 卷纸 / 油画）会【整块一起】轻微横移 ——
+   这正是「看起来画在抖」的表现。给它独立合成层可以消除这类重定位。
+   ============================================================ */
+.scroll-story .scroll-pin{
+  will-change:transform;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+
+/* 投影改为子元素 box-shadow 后，.sx 不再需要自己的投影；
+   但卷纸本身已有 box-shadow:0 18px 34px rgba(30,5,6,.5)，所以整体纵深不变。 */
+
+/* ============================================================
+   抖动最后一处：卷边阴影的宽度跟着卷纸缩放
+   原 style.css:.sx-unroll{ width:8% } —— 百分比是相对卷纸的，
+   而卷纸每帧都在变宽 -> 这两条暗色渐变每帧跟着缩放，
+   叠在底图上就表现为「底图在左右晃」。
+   改成固定宽度后它们只随位置平移、不再缩放，视觉上也更像真实的卷边阴影。
+   ============================================================ */
+/* ============================================================
+   卷边阴影去掉半透明米色（2026-10-07 用户：宣纸看起来变透了，很怪）
+   原因：组员原设计里它是【半透明米色】渐变：
+         rgba(255,247,225,.5) —— 卷纸的旋纹从半透明处透出来，看着像半透明宣纸。
+   它本来只在『点击展开的一瞬间』亮一下；改成滚动驱动后，
+   用户会长时间停在中间状态，这两条半透明米色就一直亮着。
+   现在改成【纯暗色卷边阴影】：只压边、不透纹理。
+   ============================================================ */
+/* ============================================================
+   卷在杆上的纸：不再靠「淡化」表现放卷，改成「变细」（2026-10-07）
+   组员原设计：.sx-rod-roll{ opacity: calc(1 - var(--unroll) * 1.6) }
+     --unroll=0.20 时 opacity 已降到 0.68，--unroll=0.625 时彻底消失。
+   于是柱子那根金色的 shaft 从半透明的卷纸里透出来 —— 现实中不可能，
+   纸缠在杆上时正面只看得到纸的背面，看不到杆身。
+   现在：不透明度恒为 1，改用【宽度随放卷变细】。
+   同时把原来那些 rgba 半透明边缘换成实色，避免边缘处也透出底色。
+   ============================================================ */
+/* ★ 第三版（用户给出真实物理模型）：
+     金柱 = 转轴，粗细永远不变；纸的一端【附着在柱上】，从这里一圈圈缠上来。
+     所以纸卷不是居中对称的：它贴着【附着侧】，随着放卷向那一侧收窄，
+     另一侧的杆身就露出来 —— 这正是「快展开时柱子一半是纸、一半是杆」的样子。
+     左杆：纸卷靠左收；右杆：纸卷靠右收。杆身永远露在另一侧。 */
+/* ★ 第五版（用户给出两段式物理模型）：
+   A 段（放卷 0 → 90%）：纸卷【两侧同时】缓慢收窄 —— 模拟缠的层数减少；
+        纸本身很薄，所以收得很慢（50px → 22px）。
+   B 段（剩最后约 3/4 圈，即 90% → 100%）：纸卷【左端固定、右端极速收窄到 0】
+        —— 模拟最后一点纸被抽出柱子。
+   阈值取「柱径周长 3/4」对应的视觉宽度 ≈ 22px。 */
+/* ★ 层级修正（关键）：
+   DOM 顺序是  rod-l(34) → sx-paper(45) → rod-r(116)，
+   而 CSS 里同层级元素按 DOM 顺序绘制，于是：
+       卷纸画在【左杆之上】  -> 盖掉左卷右边缘几个像素 ✗
+       右杆画在【卷纸之上】  -> 右卷完全不被遮挡 ✗
+   结果就是「左窄右宽、左有暗边右没有」。
+   给两根杆显式 z-index，让它们永远压在卷纸之上，左右才真正一致。 */
+.scroll-story .sx-rod{ position:relative; z-index:3; }
+.scroll-story .sx-paper{ position:relative; z-index:2; }
+
+/* ============================================================
+   ★★★ 唯一的一层纸：直接铺在整个【舞台】上
+   原因：中间那张 .sx-paper 和每根杆的 ::before 是两个独立盒子，
+         即便样式逐条相同，盒子的高度/位置也会差一点点，
+         交界处就永远有一道边（用户反复看到的「阴影/分层」）。
+   做法：舞台本身铺一层红纸（绝对定位铺满），
+         再把 .sx-paper 的背景与内阴影、以及每根杆的 ::before 全部关掉。
+         这样整个卷轴区域只有【一层】纸，物理上不可能有缝。
+   ============================================================ */
+.scroll-story .scroll-stage{ position:relative; }
+.scroll-story .scroll-stage::before{
+  content:"";
+  position:absolute;
+  /* ★ 高度与【中间那张纸】严格一致（不是与轴头齐平）：
+       中间纸在 .sx 里是 top:8%; bottom:8%（= 84% 高）。
+       而 .sx 的高度是「舞台 100% − 14px」，所以舞台这层纸要写成：
+         top    = (100% − 14px) × 8%
+         bottom = 14px + (100% − 14px) × 8%
+       这样两层纸的上下边缘完全重合，也不会有台阶。 */
+  top: calc((100% - 14px) * 0.08);
+  bottom: calc(14px + (100% - 14px) * 0.08);
+  left:0; right:0;
+  z-index:0;
+  background-image:var(--swirl), linear-gradient(180deg, #e46a4c, #d04b2f 55%, #b33c22);
+  background-size:52px 52px, 100% 100%;
+  background-position:0 0, 0 0;
+  box-shadow: var(--paper-inset);
+}
+
+/* 中间那张纸：只保留它自己的悬浮环境影，背景与内阴影交给舞台那层。
+   ★ 高度必须与舞台那层纸一致（组员原样式是 84%，底边比轴头高 57px，
+     会在纸的底边形成一道台阶）。这里改成「撑满舞台再收掉底部 14px」，
+     于是它的上下边缘与两端轴头完全齐平。 */
+.scroll-story .sx-paper{
+  /* ★ 高度【保持组员原样】（style.css 里的 84%），不在这里改；
+       改成与轴头齐平的是【舞台那层纸】（见 .scroll-stage::before）。 */
+  background:transparent !important;
+  box-shadow:
+    0 34px 58px rgba(8,1,3,.55),
+    0 14px 26px rgba(8,1,3,.42),
+    0 5px 12px rgba(8,1,3,.45) !important;
+}
+
+/* 每根杆的背面纸：不再需要 */
+.scroll-story .sx-rod::before{ display:none !important; }
+
+/* ★ 关闭态舞台宽度 = 116px（两根 58px 纸卷正好相切，不重叠）。
+   110px 时两杆只相距 52px，两卷会重叠 6px —— 右杆在 DOM 里靠后就会盖住左卷
+   内侧那条暗边，表现就是「未展开时左深右淡，一打开就对称了」。
+   116px 让两卷在 58 处相切，谁也不盖谁，左右从 0% 起就完全一致。
+   （下面这段是旧的 110px 说明，保留备查）
+
+   ★ 关闭态舞台宽度 = 110px。
+   两根杆各 52px，纸卷各 58px（比杆各宽 3px）。
+   要让两卷【正好相切】：左杆 0~52、右杆 58~110，
+   左卷 -3~55、右卷 55~113 —— 在 55 处相切，不重叠也不留缝。
+   原来 104px 会让两卷重叠 6px（右杆盖住左杆 -> 看着不等宽），
+   116px 又会在中间留 12px 缝（露出卷纸）。 */
+.scroll-story .scroll-stage{ width:116px; }
+
+/* ★★ 柱背面纸：铺满【整根杆】（52px 满宽），补上柱身两侧那 18px 透明。
+      与之前的区别：
+        ① 不再带 inset 暗影 —— 那是「和中间的纸之间出现分层」的元凶；
+        ② 旋纹统一 52px，与 .sx-paper 同密度；
+        ③ 靠 left:0 + right:0 撑满宽度（不要动 right，否则盒子会退化成 0 宽）。 */
+.scroll-story .sx-rod::before{
+  content:"";
+  position:absolute; top:8%; bottom:8%;
+  left:0; right:0; width:auto;
+  border-radius:0;
+  background-image:var(--swirl), linear-gradient(180deg, #e46a4c, #d04b2f 55%, #b33c22);
+  background-size:52px 52px, 100% 100%;
+  background-position:0 0, 0 0;
+  box-shadow: var(--paper-inset);
+}
+
+/* ★★★ 关键：把【中间那张纸】的材质也强制成与背面纸完全一致。
+     style.css 里还有第二条 .sx-paper 规则把 background-size 改成了 38px，
+     纹理尺寸不同 -> 渐变的拉伸比例不同 -> 两张纸出现明显色差。
+     这里统一用 52px，并共用一个暗影变量，从构造上杜绝不一致。 */
+.scroll-story{
+  /* ★ 纸上的内阴影【全部去掉】：
+       - inset 0 0 34px 是左右边缘暗影（分层来源）
+       - inset 0 ±4px 0 是上下两条线，它们【不乘 --thick】，
+         所以完全展开后仍然可见 —— 用户正是看到了这个。
+       ★ 卷纸自己的【左右厚度渐变】不在这里，完全没动。 */
+  --paper-inset: none;
+}
+.scroll-story .sx-paper{
+  background-image:var(--swirl), linear-gradient(180deg, #e46a4c, #d04b2f 55%, #b33c22);
+  background-size:52px 52px, 100% 100%;
+  background-position:0 0, 0 0;
+  box-shadow:
+    0 34px 58px rgba(8,1,3,.55),
+    0 14px 26px rgba(8,1,3,.42),
+    0 5px 12px rgba(8,1,3,.45);
+}
+
+/* ★ 第六版（用户给出最终几何）：
+   轴头 = 52px，撑起纸卷的是轴头，所以纸卷的左边界最终要落在【轴头左边缘】。
+   初始：纸卷 58px（比轴头两侧各宽 3px）—— left = (52-58)/2 = -3px。
+   A 段（0→90%）：居中收窄 58px → 52px，收完时 left 正好 = 0，
+                  即【左边缘与轴头左边缘对齐】，此后左边缘不再动。
+   B 段（90→100%）：左端钉住不动，右端极速收窄 52px → 0。 */
+/* ★ 卷、缠段、柱背面纸 三者共用的几何变量（放在 story 上，三者都能读到） */
+.scroll-story{
+  --b: clamp(0, (var(--unroll, 0) - 0.9) / 0.1, 1);          /* B 段进度 */
+  --wa: calc(58px - 6px * min(1, var(--unroll, 0) / 0.9));    /* A 段宽 58→52 */
+  --w: calc(var(--wa) * (1 - var(--b)));                      /* 最终宽 52→0 */
+  /* --comp 已删除（右杆补偿不再需要） */
+}
+
+.scroll-story .sx-rod-roll{
+  width: var(--w);
+  /* ★ 位置显式算出来（卷纸与缠段共用）：
+       A 段 left=(52-w)/2 居中；B 段 (1-b)=0 于是 left=0 贴左端。
+       之前用 --wx，两根杆都算出 left:0 / right:-6px（往右溢 6px），
+       于是左卷朝中心偏、右卷背离中心 —— 那才是左右不一致的根源。 */
+  left: calc((1 - var(--b)) * (52px - var(--wa)) / 2);
+  right:auto; transform:none;
+  border-radius:0;                     /* ★ 方角，不是圆角矩形 */
+  background-image:
+    repeating-linear-gradient(180deg, rgba(150,110,60,.10) 0 2px, rgba(150,110,60,0) 2px 9px),
+    /* ★★ 厚度感【就靠这一层左右渐变】（组员原始设计）：
+          两端压暗 + 中间一道高光 = 圆柱。强度随笔厚度系数 --thick 衰减。 */
+    linear-gradient(90deg,
+      rgba(88,58,24, calc(.55 * var(--thick, 1))),
+      rgba(255,252,240, 0) 26%,
+      rgba(255,255,255, calc(.42 * var(--thick, 1))) 44%,
+      rgba(255,252,240, 0) 62%,
+      rgba(88,58,24, calc(.50 * var(--thick, 1)))),
+    linear-gradient(180deg, #f4e9d2, #fcf8ee 45%, #efe3c9);
+  /* ★ 厚度暗影改成伪元素上的 SVG 图（见下），不再用 CSS 渐变。 */
+  /* ★ 把三层背景都钉成【绝对尺寸 58px × 100%】，并居中：
+       百分比渐变在不同元素上会被换算成不同的像素宽，
+       实测右卷的渐变被「压缩」成了几像素。
+       用 background-size 钉死后，两根卷纸画在同一尺寸的画布上，
+       元素再窄也只是裁剪而不是压缩，明暗必然一致。 */
+  background-size:58px 9px, 58px 100%, 58px 100%;
+  background-position:center, center, center;
+  background-repeat:repeat, no-repeat, no-repeat;
+  /* ★ 只保留【上下】内阴影：左右那圈暗影会在卷纸两侧形成「分层感」，
+       用户指出这就是之前误判为「杆的阴影」的东西，要求去掉。 */
+  box-shadow:
+    inset 0 16px 20px -16px rgba(120,85,40, calc(.55 * var(--thick, 1))),   /* 上 */
+    inset 0 -16px 20px -16px rgba(120,85,40, calc(.55 * var(--thick, 1))),  /* 下 */
+    0 4px 14px rgba(15,3,4, calc(.45 * var(--thick, 1)));                   /* 贴地投影 */
+}
+/* ★ 缠段不再自己算宽度 —— 与卷纸【完全同宽同位】，
+     否则它比卷纸窄，就会在卷纸两侧露出边，看起来像一侧多了道暗影。 */
+.scroll-story .sx-rod-wrap{
+  width: var(--w);
+  /* ★ 位置显式算出来（卷纸与缠段共用）：
+       A 段 left=(52-w)/2 居中；B 段 (1-b)=0 于是 left=0 贴左端。
+       之前用 --wx，两根杆都算出 left:0 / right:-6px（往右溢 6px），
+       于是左卷朝中心偏、右卷背离中心 —— 那才是左右不一致的根源。 */
+  left: calc((1 - var(--b)) * (52px - var(--wa)) / 2);
+  right:auto; transform:none;
+  border-radius:0;
+}
+/* ============================================================
+   厚度暗影：改用 SVG 图（关键）
+   实测：rol 的 CSS 渐变在右杆上只画出 2px 就跳亮，而左杆画出 13px；
+         两根杆计算样式完全相同、去 transform、钉 background-size 都无效。
+         但【图片】（油画 / 旋纹 SVG）在两根杆上都渲染正常。
+   所以把厚度暗影做成一张 58 宽的对称 SVG，放在卷纸的 ::before 上，
+   强度用 opacity: var(--thick) 控制（阶段一先慢后快，阶段二为 0）。
+   ============================================================ */
+.scroll-story .sx-rod-roll::before{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23785528' stop-opacity='.46'/%3E%3Cstop offset='.15' stop-color='%23785528' stop-opacity='.12'/%3E%3Cstop offset='.5' stop-color='%23785528' stop-opacity='0'/%3E%3Cstop offset='.85' stop-color='%23785528' stop-opacity='.12'/%3E%3Cstop offset='1' stop-color='%23785528' stop-opacity='.46'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='58' height='100' fill='url(%23g)'/%3E%3C/svg%3E");
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  opacity:var(--thick, 1);
+}
+
+/* ★ 右杆补偿：手动补上它内侧缺的那道软渐变 */
+/*   实测右杆内侧只画出约 2px 的暗边（左杆约 13px），任何规则共享都改不动。
+     这里直接给右杆单独加一道【可调】的暗渐变，把它补成与左杆一致。
+     ★ 三个可调参数：A 起始透明度 / B 过渡终点百分比 / C 中段透明度
+     强度乘 (1 - var(--b))：一展开（B 段）就自动归零，只在未展开时生效。 */
+.scroll-story .sx-rod-r .sx-rod-roll{
+  background-image:
+    repeating-linear-gradient(180deg, rgba(150,110,60,.16) 0 2px, rgba(150,110,60,0) 2px 9px),
+    linear-gradient(90deg,
+      rgba(66,42,18, calc(.52 * var(--comp, 0))) 0%,
+      rgba(66,42,18, calc(.34 * var(--comp, 0))) 7%,
+      rgba(66,42,18, calc(.18 * var(--comp, 0))) 14%,
+      rgba(66,42,18, 0) 30%),
+    linear-gradient(180deg, #f4e9d2, #fcf8ee 45%, #efe3c9);
+}
+
+/* ★ 右杆不再用 scaleX(-1)（实测它会让渐变暗边的渲染宽度与左杆不同），
+     改成【只镜像位置】：A 段同样居中，B 段改用 right 贴右端。
+     渐变、宽度、层级全部与左杆完全共用，明暗因此严格一致。 */
+.scroll-story .sx-rod-r .sx-rod-roll,
+.scroll-story .sx-rod-r .sx-rod-wrap{
+  left:auto !important;
+  right: calc((1 - var(--b)) * (52px - var(--wa)) / 2) !important;
+}
+/* ★ 柱背面纸【不要】给右杆任何覆盖：
+     它的定位是 position:absolute + left:0 + right:0 + width:auto。
+     一旦把 right 改成 auto，绝对定位盒子就退化成 shrink-to-fit，
+     而它内容只有一个空 content:""，宽度直接变 0 —— 材质就不渲染了。 */
+/* ★ 右杆不再覆盖背景/阴影 —— 与左杆【共用完全相同的规则】，只镜像位置。
+     这样两根杆在像素上完全一致，不会再出现明暗方向不同或一边没阴影。 */
+/* ★ 不再淡出（用户）：宽度收到 0 就已经是「最后一点纸被抽走」，
+     再叠一层淡出反而不像在放卷。 */
+.scroll-story .sx-rod-roll,
+.scroll-story .sx-rod-wrap{ opacity:1; }
+
+/* ============================================================
+   只保留【上下】阴影（用户 2026-10-07 要求）
+   卷纸上的两层「左右方向」暗影全部关掉：
+     ① .sx-rod-roll::before —— 那张左右渐变 SVG 图
+     ② 右杆补偿渐变 —— 它本身就是一条从左侧开始的暗影
+   依据：用户指出卷纸两侧那圈暗影才是造成「分层感」的东西。
+   上下阴影保留在 .sx-rod-roll 的 box-shadow 里（inset 0 ±10px）。
+   ============================================================ */
+/* ★ 右杆：把左右厚度渐变【镜像】过来（90deg → 270deg），
+     其余层与左杆完全一致，两杆的厚度感因此严格对称。 */
+.scroll-story .sx-rod-r .sx-rod-roll{
+  background-image:
+    repeating-linear-gradient(180deg, rgba(150,110,60,.10) 0 2px, rgba(150,110,60,0) 2px 9px),
+    linear-gradient(270deg,
+      rgba(88,58,24, calc(.55 * var(--thick, 1))),
+      rgba(255,252,240, 0) 26%,
+      rgba(255,255,255, calc(.42 * var(--thick, 1))) 44%,
+      rgba(255,252,240, 0) 62%,
+      rgba(88,58,24, calc(.50 * var(--thick, 1)))),
+    linear-gradient(180deg, #f4e9d2, #fcf8ee 45%, #efe3c9);
+}
+
+/* ============================================================
+   ★★★ 黄河「生长动画」重做：从【裁剪】改成【一笔画出来】
+   原来 style.css:566 是
+       .gt-river,.gt-nodes{ clip-path: inset(0 calc((1 - var(--grow,1)) * 100%) 0 0) }
+   它是拿一个矩形的右边界往右推来「揭示」——所以笔画会被硬生生切断，
+   看起来就是黄河在一段一段地断着长。
+   现在改成 stroke-dashoffset：SVG 里那条 <path id="rvMain"> 已经写了
+   pathLength="1"（整条线长度归一化成 1），于是
+       dasharray: 1        表示「一段和整条线一样长的实线」
+       dashoffset: 1-grow  表示把它往左推多少 -> 0 时整条线画完
+   这样线条是从起点【真正画出来】的，绝不会出现断口。
+   三个 <use>（rv-halo 柔光 / rv-body 主体 / rv-shine 高光）共用同一条路径，
+   所以它们会同步生长。
+   ============================================================ */
+.scroll-story .gt-river{ clip-path: none; }
+
+/* 主河道 + 柔光/高光：从源头一笔画出来。
+   ★ 默认值必须是 0（不是 1）—— 否则 JS 还没进黄河阶段时 --grow 未定义，
+     就会取默认 1，整条河一开始就是画完的（看起来就像有些段提前冒出来），
+     进了阶段再归零重画。 */
+/* ★ 主河道也拆成了 7 条独立路径（原来 7 段挤在一条 path 的多个子路径里，
+     dash 走整条路径时各段的露出时机不由空间位置决定 -> 三段同时冒出来）。
+   现在每条自带 --at（起点在全程的进度）与 --len（自己占全程的长度比例），
+   于是它从 --at 开始，用【和自己长度成正比】的窗口长完 ——
+   整体效果就是线条按长度匀速地从左边长到右边。 */
+.scroll-story .gt-river .rv-halo,
+.scroll-story .gt-river .rv-body,
+.scroll-story .gt-river .rv-shine{
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--grow, 0) - var(--at, 0)) / var(--len, 1), 1));
+}
+
+/* ★★★ 让年份卡片能伸出卷轴面板。
+     实测裁剪卡片的是 .sx-paper(1270×598) 与 .scroll-pin(1374×726) 的 overflow:hidden，
+     而卡片本身高 384px、面板高 538px —— 上下各只有约 269px，怎么摆都放不下。
+     好消息：底图的取景其实是靠 .gt-img img 的 clip-path 做的（见本文件后面的规则），
+     并不依赖这两层的 overflow，所以放开它们不会让画面漏出来。 */
+.scroll-story .sx-paper{ overflow: visible; }
+.scroll-story .scroll-pin{ overflow: visible; }
+
+/* ★★★ 卡片贴边处理：靠左的改为左对齐、靠右的改为右对齐，
+     避免居中时横向溢出画心被裁（1949 在 x=77/2204，居中会超出左边界约 80px）。
+     .below 是原有的类，靠上的光点直接用（1999 在 y=158/880）。 */
+.scroll-story .gt-node.edge-l .gt-pop{
+  left: -8px;
+  transform: translateX(0) translateY(10px);
+}
+.scroll-story .gt-node.edge-l:hover .gt-pop,
+.scroll-story .gt-node.edge-l:focus-within .gt-pop{
+  transform: translateX(0) translateY(0);
+}
+.scroll-story .gt-node.edge-r .gt-pop{
+  left: auto;
+  right: -8px;
+  transform: translateX(0) translateY(10px);
+}
+.scroll-story .gt-node.edge-r:hover .gt-pop,
+.scroll-story .gt-node.edge-r:focus-within .gt-pop{
+  transform: translateX(0) translateY(0);
+}
+/* 箭头也跟着挪 */
+.scroll-story .gt-node.edge-l .gt-pop::after{ left: 46px; }
+.scroll-story .gt-node.edge-r .gt-pop::after{ left: auto; right: 46px; }
+
+/* ★★★ 年份卡片：全自适应（用户要求）——卡片大小随内容和图片自己长，
+     不再写死图片高度，也不再限制正文行数。
+     尺寸路线：206 → 330 → 400 → 自适应。
+        · 卡片宽度：跟随画心，min(430px, 48vw)
+        · 图片区域：用 aspect-ratio 固定 16:9，高度由宽度算出来
+        · 正文：不限行数，写多少显示多少，卡片随之变高
+        · 兜底：万一某段文案极长，卡片最高不超过 min(76vh, 640px) */
+.scroll-story .gt-pop{
+  width: min(430px, 48vw);
+  padding: 18px;
+  border-radius: 16px;
+  /* ★ 2026-10-08 第二次修正：取消高度上限。
+     之前设 max-height 是为了防止卡片超出可视范围，但带来一个副作用：
+     内容一旦高于上限，【背景盒在 max-height 处就结束了】而文字继续往下画，
+     于是卡片下部出现一条横向色阶 —— 用户看到的那条「和宣纸底边重合的分界线」
+     其实是背景盒的下边缘（高度恰好撞在宣纸底边纯属巧合）。
+     现在改为：卡片高度完全由内容决定（背景必然包住内容），
+     可见性交给各光点的弹出方向去保证（below / above / side-l / side-r）。 */
+  /* 不设 max-height：卡片高度由内容决定，背景必然包住内容 */
+}
+/* 图片区域：宽高比固定 16:9。放了真图就填满并居中裁切，没放就显示占位。 */
+.scroll-story .gt-photo{
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.scroll-story .gt-photo img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+.scroll-story .gt-photo .ph-mark{ font-size: 40px; }
+.scroll-story .gt-photo .ph-cap{ font-size: 13px; padding: 18px 7px 7px; }
+.scroll-story .gt-tag{ font-size: 11.5px; padding: 2px 10px; }
+.scroll-story .gt-cap{ margin: 12px 0 7px; gap: 10px; }
+.scroll-story .gt-cap .gt-year{ font-size: 23px; }
+.scroll-story .gt-pop h3{ font-size: 21px; }
+/* ★ 正文：解除行数限制（基类 style.css 里是 -webkit-line-clamp:3 + overflow:hidden） */
+.scroll-story .gt-pop p{
+  font-size: 14.5px;
+  line-height: 1.8;
+  display: block;
+  -webkit-line-clamp: none;
+  -webkit-box-orient: initial;
+  overflow: visible;
+  max-width: 100%;
+}
+
+/* ★★★ 卡片层级保险（2026-10-08）
+   用户反馈：2026 的卡片下部仍有一条横向色彩分界，位置与宣纸底边重合。
+   已确认 .sx-inner / .sx-paper / .scroll-pin 三层的 overflow 都是 visible（顶层规则，未被 @media 包裹），
+   所以不是常规裁剪。这里再加两道保险：
+     ① 卡片自身给一个高于所有卷轴层的 z-index，并创建独立层叠上下文（isolation），
+        避免被祖先的背景层「压住一半」；
+     ② 卡片背景改用不透明的两层叠加（渐变 + 实色底），
+        即使底下是红色的宣纸，也不会透出任何颜色造成色阶。 */
+.scroll-story .gt-pop{
+  z-index: 40;
+  isolation: isolate;
+  background-color: #f4e8ce;
+  background-image: linear-gradient(160deg, #fdf9f0, #f0e4ca);
+}
+
+/* ★★★ 侧向显示（2026-10-08）
+   为什么需要：用户视窗比 900px 矮，向下弹的卡片下缘会被切掉；
+   而向上弹又会撞导航栏。这两种情况都受【视口高度】限制。
+   侧向显示把卡片放在光点正左/正右、垂直居中 —— 只受视口【宽度】限制，
+   画心宽 1186px，卡片 430px，两侧都放得下。
+   用 .side-l（卡片在光点左侧）/ .side-r（右侧）两个类。
+   2009、2019 两个光点位于画心偏右（x 占比 0.61 / 0.71），故都用 .side-l。 */
+.scroll-story .gt-node.side-l .gt-pop{
+  left: auto;
+  right: calc(100% + 16px);
+  bottom: auto;
+  /* ★ 2026-10-08：不再垂直居中。
+     居中时，靠近顶部的光点（如 1999 在 y=0.18）会把卡片顶出屏幕上方被切。
+     现在改为卡片顶边与光点顶边大致齐平，整张卡片向下展开 ——
+     与「向下弹」是同一种视觉习惯，也永远不会切到上边。 */
+  top: -14px;
+  transform: translate(10px, 0);
+}
+.scroll-story .gt-node.side-l:hover .gt-pop,
+.scroll-story .gt-node.side-l:focus-within .gt-pop{
+  transform: translate(0, 0);
+}
+.scroll-story .gt-node.side-r .gt-pop{
+  left: calc(100% + 16px);
+  right: auto;
+  bottom: auto;
+  top: -14px;
+  transform: translate(-10px, 0);
+}
+.scroll-story .gt-node.side-r:hover .gt-pop,
+.scroll-story .gt-node.side-r:focus-within .gt-pop{
+  transform: translate(0, 0);
+}
+/* 小三角改到卡片朝向光点的那一侧 */
+.scroll-story .gt-node.side-l .gt-pop::after{
+  left: auto; right: -6px; bottom: auto; top: 18px;
+  transform: rotate(45deg);
+  border: none;
+  border-right: 1px solid rgba(200,165,90,.62);
+  border-top: 1px solid rgba(200,165,90,.62);
+}
+.scroll-story .gt-node.side-r .gt-pop::after{
+  left: -6px; right: auto; bottom: auto; top: 18px;
+  transform: rotate(45deg);
+  border: none;
+  border-left: 1px solid rgba(200,165,90,.62);
+  border-bottom: 1px solid rgba(200,165,90,.62);
+}
+
+/* ★★★ 侧向 · 向上展开变体（2026-10-08）
+   问题：2009 / 2019 的光点在画心下半部（y 占比 0.72~0.73），
+   卡片从光点往下展开必然伸出画心底边，落在红色祥云纹样上被「切」。
+   修法：给这两个节点再加一个 up 修饰类，让卡片【底边贴着光点、向上展开】——
+   它们上方空间充足（y=0.72 时光点上方还有约 370px），整张卡片都在画心内。
+   用 .up 这个独立修饰类，将来别的光点需要往上展开也直接加 up 即可。 */
+.scroll-story .gt-node.side-l.up .gt-pop{
+  top: auto;
+  bottom: -14px;
+  transform: translate(10px, 0);
+}
+.scroll-story .gt-node.side-l.up:hover .gt-pop,
+.scroll-story .gt-node.side-l.up:focus-within .gt-pop{
+  transform: translate(0, 0);
+}
+.scroll-story .gt-node.side-r.up .gt-pop{
+  top: auto;
+  bottom: -14px;
+  transform: translate(-10px, 0);
+}
+.scroll-story .gt-node.side-r.up:hover .gt-pop,
+.scroll-story .gt-node.side-r.up:focus-within .gt-pop{
+  transform: translate(0, 0);
+}
+/* 向上展开时小三角挪到卡片左下/右下角 */
+.scroll-story .gt-node.side-l.up .gt-pop::after{ top: auto; bottom: 18px; }
+.scroll-story .gt-node.side-r.up .gt-pop::after{ top: auto; bottom: 18px; }
+
+/* ★★★ 卡片层级修复（2026-10-08）
+   现象：悬停某年光点时，卡片上会透出【其它年份的光点】（例如 1999 的卡片上压着 2009 的点）。
+   原因：所有 .gt-node 都在 .gt-nodes（z-index:3）这一层里，各自没有 z-index，
+        于是完全按 DOM 顺序堆叠 —— 排在后面的光点自然盖住了前面节点的卡片。
+   修法：悬停/聚焦时把该节点自身抬到最上层，它内部的卡片随之浮到所有光点之上。
+        用 :hover 与 :focus-within 两条，键盘 Tab 进入卡片时同样生效。 */
+.scroll-story .gt-node:hover,
+.scroll-story .gt-node:focus-within{
+  z-index: 30;
+}
+/* 卡片本身再补一层保险：即使将来节点层级有变动，卡片也不该被光点穿过 */
+.scroll-story .gt-node:hover .gt-pop,
+.scroll-story .gt-node:focus-within .gt-pop{
+  z-index: 31;
+}
+
+/* ★★★ 让黄河/海岸线所在的 .gt 铺满整个画心。
+     原因：.sx-inner 有 padding:12px 2vw（style.css:535），而 .gt 是它的 flex 子元素，
+     于是 .gt 被左右各挤进 2vw ——1280px 视口下就是 25.6px。
+     SVG 装在 .gt 里，所以黄河与海岸线永远差这 25px 到不了画心边缘，看着像「被裁掉了一截」。
+     用负外边距把它撑回内边距之外即可（不改变任何坐标，只是把可见区域还给 SVG）。 */
+/* 注意：只加负外边距是【没用】的 —— .gt{flex:1 1 0} 的宽度由 flex 容器决定，
+   负外边距只会把它整体左移，宽度不变（实测右边仍差 53px）。
+   所以改成绝对定位，直接钉在画心（含其 padding）的四条边上。 */
+.scroll-story .gt{
+  position: absolute;
+  /* 绝对定位的包含块就是 .sx-inner 的 padding box，本来就已经涵盖了它的内边距，
+     所以 left:0/right:0 正好落在画心的左右边缘，不要再减 2vw（那样会左移 27px）。 */
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: auto;
+  flex: none;
+}
+
+/* ★★★ 中国海岸线（渤海 / 黄海一带，真实经纬度线性换算；
+     投影端点取自黄河：源头≈(96.5°E,34.5°N)→(77,627)，入海≈(119.0°E,37.8°N)→(1903,360)）。
+     材质沿用支流那套金色，但更宽更亮；它不生长，用 --coast 整体淡入。 */
+/* ★★★ 海岸线做成「发光」质感：三层叠加（和支流的 rv-halo/rv-body/rv-shine 同一手法）
+     ① rv-coast-halo  最下层：很宽 + 高斯模糊，负责外扩的光雾
+     ② rv-coast       中间层：金色实体，负责线条本体
+     ③ rv-coast-shine 最上层：极细的近白色，负责中心那道亮芯
+     三层同用 --coast 淡入，所以是一起亮起来的。 */
+.scroll-story .gt-river .rv-coast-halo{
+  stroke: rgba(255, 206, 110, .58);
+  stroke-width: 30;
+  filter: blur(11px);
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: var(--coast, 0);
+}
+.scroll-story .gt-river .rv-coast{
+  stroke: rgba(255, 226, 160, .96);
+  stroke-width: 6;
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: var(--coast, 0);
+  filter: drop-shadow(0 0 12px rgba(255, 190, 80, .85));
+}
+.scroll-story .gt-river .rv-coast-shine{
+  stroke: rgba(255, 253, 244, .95);
+  stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+  opacity: var(--coast, 0);
+}
+
+/* ★ 支流已拆成 5 条独立路径，每条自带 --at（它的河口在主河道上的进度 0~1）。
+   规则：主河道长到 --at 之后，用 0.18 的窗口把这条支流长完。
+   原来 5 段挤在一条路径里，dash 按路径顺序走、而它们的空间位置并不单调，
+   所以生长时左一下右一下（用户看到「右边那段先冒出来」）。 */
+.scroll-story .gt-river .rv-trib{
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--grow, 0) - var(--at, 0)) / 0.22, 1));
+}
+/* 年份光点仍然可以用原来的揭示方式（它们是圆点，不会出现「断」的问题） */
+/* ★ 年份光点：不再用「按百分比从左裁剪」——那和黄河的弧长生长不是一个尺度，
+     黄河又是弯的，x 与弧长不成正比，所以越到后面错位越大。
+     改成每个光点用自己的 --at（该点投影到主河道上的弧长进度，误差仅 0~4px），
+     黄河长到那儿它才淡入。窗口 0.06，比支流的 0.22 短，是「亮一下」而不是「慢慢长」。 */
+.scroll-story .gt-nodes{ clip-path: none; }
+.scroll-story .gt-node{
+  opacity: clamp(0, (var(--grow, 0) - var(--at, 0)) / 0.08, 1);
+}
+
+/* ★★★ 去掉「卷轴展开时正中央的那团光晕」。
+     style.css:673~677 的 .sx-flash 是一个居中的暖色 radial-gradient，
+     由 .scroll-story.opening 触发 sealFlash 动画（.opening 就是展开中的那段，见 main.js:585）。
+     用户要求去掉这团光。 */
+.scroll-story.opening .sx-flash{ animation: none !important; opacity: 0 !important; }
+.scroll-story .sx-flash{ display: none; }
+
+/* ★★★ 中和掉 style.css 里那条旧机制：
+     .scroll-story.entered .pg-title{ opacity:1; visibility:visible }
+   它在「卷轴展开完成」的瞬间强制把标题显示出来，
+   而此时 JS 因为 q < titleIn[0] 正在「清空 inline、回落到 CSS」，
+   于是标题先闪一下 -> 等 q 到 0.04 又从头淡入一次 —— 就是用户看到的闪烁。
+   现在标题的显隐完全由 main.js 的 tin/tout 控制，这条必须压掉。 */
+.scroll-story.entered .pg-title{
+  opacity:0;
+  visibility:hidden;
+}
+
+/* ★★ 关键：去掉 .pg-title 的 CSS 过渡。
+     style.css:465 有  transition: opacity .6s ease, transform .6s ease, visibility 0s linear .6s，
+     而 main.js 现在是【每帧]直接写 inline 的 opacity 与 transform ——
+     两层同时做缓动会互相打架：
+       · opacity/transform 永远追不上逐帧变化的新值 -> 看着发飘
+       · visibility 被延迟 0.6s 生效，在 tOp 刚越过 0 的那一段来回闪 -> 飘忽不定
+     JS 自己已经用 tin/tout 做了完整的缓动，这里必须把 CSS 过渡关掉。 */
+.scroll-story .pg-title,
+.scroll-story .pg-intro{
+  transition: none !important;
+}
+
+/* ★ 标题的显隐【完全交给 main.js 的 PH.titleOut 节奏】（原样保留）：
+     开头 q<0.06        → JS 清空 inline → CSS 默认隐藏（.pg-title opacity:0）
+     q 0.06~0.20        → JS 写 inline：opacity 1→0、visibility 可见 → 浮现再淡出
+     q >0.20            → JS 写 inline：opacity 0、hidden → 消失
+   注意：不要在这里给 .pg-title 设 opacity/visibility，否则会顶掉首屏的隐藏态。 */
+
+/* ★★ 介绍文字改成【首页同款版式】（对应首页的 .hero-lead / .hero-intro / .hero-points）：
+     引句（衬线）+ 正文段 + 三个金边小卡。 */
+.scroll-story .pg-intro .pg-lead{
+  font-family: var(--serif, "Songti SC", "SimSun", serif);
+  font-size: clamp(17px, 2.4vw, 23px);
+  color: #fdf3dc;
+  letter-spacing: .06em;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,.55);
+}
+.scroll-story .pg-intro .pg-text{
+  margin: 20px auto 0;
+  max-width: 760px;
+  font-size: 15.5px;
+  color: rgba(255,246,228,.88);
+  line-height: 1.9;
+  letter-spacing: .02em;
+  text-shadow: 0 1px 6px rgba(0,0,0,.5);
+}
+/* （三个小卡已按用户要求删除；收束句并进正文末尾，不再是独立一行） */
+
+/* ★ 标题改为毛体图片（金色渐变已烤进 PNG，不能用 CSS 盖渐变）
+     尺寸：标题 2568x494（比例 5.2），诗句 1824x194（比例 9.4） */
+.scroll-story .pg-title h2 img{
+  display:block;
+  width:min(620px,78vw);
+  height:auto;
+  margin:0 auto;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,.72));
+}
+/* 诗句：标题下方，用副标题那套渐变 */
+.scroll-story .pg-poem{
+  margin:18px 0 0;
+  text-align:center;
+}
+.scroll-story .pg-poem img{
+  display:block;
+  width:min(700px,86vw);
+  height:auto;
+  margin:0 auto;
+  filter:drop-shadow(0 3px 14px rgba(0,0,0,.72));
+}
+
+/* ★ 提示按钮：从「压在卷轴上」改到「卷轴下方外面」。
+     原 style.css 是 .pg-enter{ bottom:11% }（距 pin 底约 80px），
+     而纸的下边缘在距 pin 底约 71px，所以按钮正好压在纸上。
+     改成距底 12px，按钮整体落在纸的下方空白区。 */
+.scroll-story .pg-enter{ bottom:12px; }
+
+.scroll-story .sx-unroll{ width:34px; max-width:10%; }
+/* ★★★ 临时关闭：两条卷边暗带（它们【不乘 --thick】，任何展开度都存在，
+        而且正是纸左右两侧的暗色渐变 —— 最可疑的一道「阴影」）。 */
+.scroll-story .sx-unroll-l{ background:none; }
+.scroll-story .sx-unroll-r{ background:none; }
+
+/* ★ 祥云纹理变量。
+     迁移时我按选择器名过滤抽取 CSS（sx|gt|scroll|pg|rv），漏掉了定义在 :root 上的
+     自定义属性，于是 .scroll-stage::before 里的 var(--swirl) 失效，卷轴纸上的祥云花纹就没了。
+     这里补回定义（自独立页 style.css 完整备份 _style-full-backup.css 取回）。 */
+:root{
+  --swirl:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%23ffe0cd' stroke-width='2.4' stroke-linecap='round' opacity='0.5'%3E%3Cpath d='M30 17a13 13 0 1 1-9 22'/%3E%3Cpath d='M30 24a6.5 6.5 0 1 1-4.5 11'/%3E%3Cpath d='M30 30a2.5 2.5 0 1 1-1.7 4.2'/%3E%3Cg transform='translate(-1.5 34.5) scale(0.45)'%3E%3Cpath d='M30 17a13 13 0 1 1-9 22'/%3E%3Cpath d='M30 24a6.5 6.5 0 1 1-4.5 11'/%3E%3C/g%3E%3Cg transform='translate(34.5 -1.5) scale(0.45)'%3E%3Cpath d='M30 17a13 13 0 1 1-9 22'/%3E%3Cpath d='M30 24a6.5 6.5 0 1 1-4.5 11'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ★★★ 卷轴的响应式兜底（自独立页 style.css 完整备份取回）。
+     迁移时我按选择器名过滤抽取 CSS，而 @media 块的「选择器」名字里没有
+     sx|gt|scroll|pg|rv，于是整块媒体查询被漏掉 —— 表现就是
+     「窗口缩小到一定程度，卷轴就展不开了」（JS 在 <900px 时直接返回，
+     而 CSS 又没有窄屏下强制展开的兜底）。 */
+
+
+@media (min-width:901px) and (max-height:660px){
+  .sx-intro .kicker{display:none}
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 卷轴窄屏兜底（2026-10-08 重写）
+   之前崩掉的真正原因：这一块原来用裸选择器（优先级 0,1,0），
+   而迁移过来的 parade.css 规则全部带 .scroll-story 前缀（0,2,0），
+   于是窄屏规则被桌面规则全面压掉 —— 窗口一窄，桌面布局照旧生效，
+   卷轴就塌成一条、整个显示逻辑失效。
+   现在每条都写成 .scroll-story <选择器>（0,2,0，与桌面规则同级），
+   再加 !important 确保覆盖，并且放在文件最末尾（层叠顺序也赢）。
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width:900px){
+
+  /* ── 隐藏桌面专用元素 ── */
+  .scroll-story .pg-enter,
+  .scroll-story .gt-img{ display:none !important; }
+
+  /* ── 标题与介绍：从固定定位改为静态流式 ── */
+  .scroll-story .pg-title,
+  .scroll-story .pg-intro{
+    position:static !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    width:100% !important;
+    text-align:center;
+    margin:0 auto 16px !important;
+    z-index:auto !important;
+  }
+  .scroll-story .pg-title .pg-kicker{ font-size:11px !important; }
+  .scroll-story .pg-title h2{ font-size:clamp(24px,7vw,34px) !important; }
+  .scroll-story .pg-intro p{ font-size:14px !important; }
+
+  /* ── 黄河与光点：去掉裁剪，改为普通流式排列 ── */
+  .scroll-story .gt-river,
+  .scroll-story .gt-nodes{ clip-path:none !important; }
+
+  /* ── 卷轴整体：不再靠 JS 撑高，改为内容自适应 ── */
+  .scroll-story{ height:auto !important; }
+  .scroll-story .scroll-pin{
+    position:relative !important;
+    top:auto !important;
+    height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:visible !important;
+  }
+  .scroll-story .scroll-stage{
+    width:100% !important;
+    transform:none !important;
+    contain:none !important;      /* 之前的 contain:layout paint 是第二个帮凶 */
+    will-change:auto !important;
+  }
+  .scroll-story .sx{
+    height:auto !important;
+    flex-direction:column !important;
+    filter:none !important;
+    cursor:default !important;
+  }
+
+  /* ── 两根卷杆：从竖着的绝对定位改成横着的流式条 ── */
+  .scroll-story .sx-rod,
+  .scroll-story .sx-rod-l,
+  .scroll-story .sx-rod-r{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:26px !important;
+    border-radius:13px !important;
+    transform:none !important;
+    background:linear-gradient(180deg,#f9e7b4,#eecb80 32%,#cfa14b 68%,#a87d2c) !important;
+    box-shadow:0 0 0 1px rgba(122,72,16,.55), inset 0 1px 0 rgba(255,250,226,.6) !important;
+  }
+  .scroll-story .sx-rod > span{ display:none !important; }
+
+  /* ── 纸面与画心：改横向铺满、纵向流式 ── */
+  .scroll-story .sx-paper{
+    position:relative !important;
+    height:auto !important;
+    width:100% !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    padding:14px !important;
+    background-size:38px 38px, 100% 100% !important;
+    overflow:visible !important;
+  }
+  .scroll-story .sx-paper::before,
+  .scroll-story .sx-paper::after{ display:none !important; }
+
+  .scroll-story .sx-inner{
+    position:static !important;
+    inset:auto !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:auto !important;
+    height:auto !important;
+    max-width:none !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    gap:26px !important;
+    padding:22px 18px !important;
+    overflow:visible !important;
+    box-shadow:none !important;
+  }
+
+  /* ── 地球与光点：改成纵向列表 ── */
+  .scroll-story .gt{
+    position:static !important;
+    opacity:1 !important;
+    overflow:visible !important;
+    width:100% !important;
+    flex:1 1 auto !important;
+    height:auto !important;
+  }
+  .scroll-story .gt-river{
+    position:relative !important;
+    display:block !important;
+    width:100% !important;
+    height:56vw !important;
+    min-height:200px !important;
+    margin-bottom:18px !important;
+  }
+  .scroll-story .gt-nodes{
+    position:static !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    justify-content:center !important;
+    gap:16px !important;
+  }
+  .scroll-story .gt-node{
+    position:static !important;
+    transform:none !important;
+    opacity:1 !important;
+    width:auto !important;
+    height:auto !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  .scroll-story .gt-dot,
+  .scroll-story .gt-node > .gt-year{ display:none !important; }
+  .scroll-story .gt-pop{
+    position:static !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
+    width:min(47vw,250px) !important;
+    max-height:none !important;
+    z-index:auto !important;
+  }
+  .scroll-story .gt-pop::after{ display:none !important; }
+  .scroll-story .gt-photo{ height:112px !important; aspect-ratio:auto !important; }
+
+  /* ── 展开动画的装饰层全部关掉 ── */
+  .scroll-story .sx-unroll,
+  .scroll-story .sx-flash,
+  .scroll-story .sx-arrow{ display:none !important; }
+}
+
+/* ★★★ 画心铺满纸面（2026-10-08，按用户建议）
+   病因定位（用户提供的命中测试 + 自己的观察）：
+     .scroll-stage::before  红色卷纸（含祥云），铺满整个卷轴
+     .sx-paper              background:transparent
+     .sx-inner              暖米色渐变 = 画心，但设了 top:5% / bottom:5%
+   于是画心的暖米色只铺了中间 90%，上下各留 5% 露出红色卷纸。
+   卡片一旦向下伸出画心，下半截就落在红纸上 —— 看起来就是「卡片被横切一刀」，
+   而那条分界的高度自然就等于画心底边（与宣纸底边很接近，所以像宣纸）。
+   修法：让画心铺满整张纸，上下不再留白。这样卡片无论伸多远，
+   底下仍是同一块暖米色，不会再有色阶。 */
+.scroll-story .sx-inner{
+  /* ★ 2026-10-08 第二版：画心不再铺满 100%。
+     铺满虽然解决了卡片越界的色阶，但把卷轴上下那条红色祥云纹样压成了一条细线，
+     破坏了卷轴的整体比例。改为只留 3% 的窄边：
+       · 红边祥云恢复成正常的宽度
+       · 同时把会向下伸出画心的三张卡片（1999 / 1984 / 2026）改成侧向显示，
+         它们不再越界，也就不需要靠"画心铺满"来兜底了。 */
+  top: 3%;
+  bottom: 3%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 窄屏专用版 —— 竖向卡片列表（2026-10-08，方案 B）
+   设计决定：卷轴的本质是「横向展开」，在 900px 以下怎么改都别扭。
+   所以窄屏【不再改造卷轴】，而是整个隐藏它，换用这份竖向列表。
+   内容由 parade.html 里的小脚本从六个 .gt-node 克隆生成，与桌面版永远同步。
+   桌面宽度下 .parade-mobile 是 display:none，对现有布局零影响。
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* 默认（桌面）隐藏窄屏版 */
+.parade-mobile{ display:none; }
+
+/* 窄屏版的内部样式（写在媒体查询外面也没关系，桌面下父级隐藏即不渲染） */
+.parade-mobile .pm-inner{
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 72px;
+}
+.parade-mobile .pm-head{ text-align:center; margin-bottom: 34px; }
+.parade-mobile .pm-kicker{
+  display:block;
+  font-size: 12px;
+  letter-spacing:.3em;
+  text-indent:.3em;
+  color: rgba(242,226,171,.75);
+  margin-bottom: 12px;
+}
+.parade-mobile .pm-title{
+  margin: 0 0 14px;
+  font-family: var(--serif,"Songti SC","STSong",serif);
+  font-size: clamp(22px,6vw,30px);
+  font-weight: 400;
+  letter-spacing:.08em;
+  color: #f2e2ab;
+}
+.parade-mobile .pm-lead{
+  margin: 0 auto;
+  max-width: 560px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: rgba(255,246,228,.8);
+}
+.parade-mobile .pm-list{
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.parade-mobile .pm-card{
+  background: linear-gradient(160deg,#fdf9f0,#f0e4ca);
+  border: 1px solid rgba(200,165,90,.62);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 16px 34px rgba(70,40,15,.32), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.parade-mobile .pm-photo{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #8c2030;
+  border: 1px solid rgba(226,196,124,.6);
+}
+.parade-mobile .pm-photo img{
+  display:block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+.parade-mobile .pm-photo-cap{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 16px 8px 6px;
+  font-size: 13px;
+  text-align: center;
+  color: rgba(255,238,200,.95);
+  background: linear-gradient(transparent, rgba(30,5,10,.82));
+}
+.parade-mobile .pm-meta{
+  display:flex;
+  align-items: baseline;
+  justify-content:center;
+  gap: 10px;
+  margin: 12px 0 8px;
+}
+.parade-mobile .pm-year{
+  font-family: var(--serif,"Songti SC","STSong",serif);
+  font-size: 22px;
+  color: var(--red,#7c1420);
+  text-shadow: 0 1px 0 rgba(255,255,255,.75);
+}
+.parade-mobile .pm-h3{
+  margin: 0;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing:.06em;
+  color: var(--red,#7c1420);
+}
+.parade-mobile .pm-text{
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--text,#463223);
+  text-align: justify;
+}
+
+/* ── 断点：窄屏时隐藏卷轴、显示列表 ── */
+@media (max-width:900px){
+  .scroll-story{ display:none !important; }
+  .parade-mobile{ display:block !important; }
+}

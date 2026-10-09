@@ -1,0 +1,4363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祖国之发展 —— 盛世华章</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta name="description" content="祖国之发展——回望1949年以来关键年份的国庆，记录国家七十余年的发展与重要成就。">
+<style>
+/* ==================================================================
+   祖国之发展 · 滚动叙事
+   板块结构取自 OYLA 版式，配色/字体改回本站红金体系
+   ================================================================== */
+.dev{ --red:#8b1a22; --red-dk:#5e0f16; --gold:#c9a227; --gold-lt:#e8c46a; --ink:#241a14; }
+
+/* ---------- 通用胶囊按钮 ---------- */
+.dev .cap{
+  display:inline-flex; align-items:center; gap:14px;
+  background:#fff; border:1px solid rgba(0,0,0,.10); border-radius:100px;
+  padding:5px 5px 5px 20px; margin-top:14px; text-decoration:none;
+  transition:background .3s, border-color .3s;
+}
+.dev .cap i{
+  position:relative; width:30px; height:30px; flex:0 0 30px; border-radius:50%;
+  background:#2e2e2e; display:block; transition:background .3s;
+}
+.dev .cap i::before, .dev .cap i::after{
+  content:''; position:absolute; left:50%; top:50%; background:#fff;
+  transition:background .3s;
+}
+.dev .cap i::before{ width:11px; height:1.6px; transform:translate(-50%,-50%); }
+.dev .cap i::after{ width:1.6px; height:11px; transform:translate(-50%,-50%); }
+.dev .cap span{ font-size:13px; font-weight:600; letter-spacing:.10em; color:#111; transition:color .3s; }
+.dev .cap:hover{ background:#111; border-color:#111; }
+.dev .cap:hover span{ color:#fff; }
+.dev .cap:hover i{ background:#fff; }
+.dev .cap:hover i::before, .dev .cap:hover i::after{ background:#111; }
+
+/* ---------- 占位图 ---------- */
+.ph{
+  /* 照片已补上，占位符的虚线框和斜纹底不再需要 */
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; border-radius:10px;
+}
+.ph img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center top;
+  border-radius:10px;
+}
+
+.ph::after{ content:'占位图'; font-size:12px; letter-spacing:.22em; color:rgba(139,26,34,.62); }
+.ph::after{content:none}
+
+/* ================= 1. 顶部滚动视频 ================= */
+.dev-hero-scroll{ height:500vh; position:relative; background:#000; }
+.dev-hero{
+  position:sticky; top:0; height:100vh; overflow:hidden; background:#000;
+}
+.dev-hero video{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
+}
+.dev-hero-veil{
+  position:absolute; inset:0; z-index:2;
+  background:linear-gradient(180deg, rgba(10,2,4,.30) 0%, rgba(10,2,4,.10) 40%, rgba(10,2,4,.78) 100%);
+}
+.dev-hero-copy{
+  position:absolute; left:88px; top:36%; transform:translateY(-50%);
+  z-index:3; width:clamp(290px, 37vw, 500px);
+}
+.dev-title-block{ position:relative; }
+.dev-title-mao{
+  width:100%; height:auto; display:block;
+  /* 与首页 .hero-title img 完全一致的落影款式 */
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.62));
+}
+.dev-poem{
+  /* ★ 用 calc 让它在标题块内水平居中 —— 左右突出的距离就自动相等 */
+  width:min(600px, 47vw);
+  margin:18px 0 0 calc(50% - min(600px, 47vw) / 2);
+  max-width:none;                    /* ★ 解除全局 img{max-width:100%} 的限制 */
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 8px 22px rgba(0,0,0,.62));
+}
+.dev-years{
+  margin:20px 0 0; text-align:center;                 /* ★ 移到诗句下方 */
+  font-size:15px; letter-spacing:.42em;
+  color:rgba(232,196,106,.95);
+  text-shadow:0 2px 14px rgba(0,0,0,.85), 0 1px 2px rgba(0,0,0,.9);
+}
+/* 介绍文字：绝对定位在标题块下方，不占流、不推动标题 */
+.dev-intro{
+  /* ★ 块本身左对齐（和标题同一 x 起点），只有块里的文字居中 */
+  position:absolute; left:75px;
+  z-index:4;                              /* ★ 必须高于蒙版(z-index:2)，否则会被盖住 */
+  /* ★ 上移：顶部压在标题下半（标题此时已淡出，不会打架） */
+  top:49%;
+  width:min(720px, 62vw);
+  text-align:center;                      /* ★ 只有文字居中，块不居中 */
+  opacity:0;
+  transition:opacity .95s cubic-bezier(.2,.7,.3,1);
+  pointer-events:none;
+}
+
+/* ---- 大字号：简要 ---- */
+.dev-intro.on{ opacity:1; }      /* ★ 只改透明度，不动 transform，否则会取消居中 */
+
+/* ---- 大字号：简要 ---- */
+.dev-lead{
+  margin:0 0 16px; text-align:center; font-size:clamp(17px,1.75vw,22px); line-height:1.5;
+  letter-spacing:.02em; color:#fff6ea;
+  text-shadow:0 2px 18px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.95);
+}
+/* ---- 小字号：详细 ---- */
+.dev-detail{
+  margin:0 0 22px; text-align:center; font-size:clamp(13px,1.05vw,14.5px); line-height:1.95;
+  color:rgba(255,246,234,.80); letter-spacing:.01em;
+  text-shadow:0 2px 14px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.95);
+}
+/* ---- 方格板块 ---- */
+.dev-points{
+  display:flex; justify-content:center;   /* ★ 居中排列 */
+  gap:14px; margin-top:2px;
+}
+.dev-points .pt{
+  flex:0 0 auto;
+  width:158px;                            /* ★ 变窄（原来是弹性等分） */
+  padding:13px 16px; border-radius:10px;
+  text-align:center;                      /* ★ 框内文字居中 */
+  border:1px solid rgba(232,196,106,.42);
+  background:linear-gradient(180deg, rgba(30,10,14,.55), rgba(30,10,14,.30));
+  backdrop-filter:blur(3px);
+}
+.dev-points .pt b{
+  display:block; font-size:15px; font-weight:700;
+  color:#f0d8a0; letter-spacing:.06em; margin-bottom:5px;
+}
+.dev-points .pt span{
+  display:block; font-size:12.5px; color:rgba(255,246,234,.72); letter-spacing:.04em;
+}
+@media (max-width:1199px){
+  .dev-intro{ width:min(680px, 74vw); top:47%; }
+  .dev-points .pt{ padding:11px 13px; }
+  .dev-points .pt b{ font-size:13.5px; }
+  .dev-points .pt span{ font-size:11.5px; }
+}
+@media (max-width:768px){
+  .dev-intro{ width:94vw; top:45%; }
+  .dev-points{ flex-wrap:wrap; gap:8px; }
+  .dev-points .pt{ width:auto; flex:1 1 28%; padding:9px 10px; }
+  .dev-lead{ font-size:16px; }
+  .dev-detail{ font-size:12.5px; line-height:1.85; }
+}
+/* =========================================================
+   4. 发展数据可视化卡片
+   ========================================================= */
+
+.data-card{
+  position:relative;
+  justify-content:flex-start;
+  padding:38px 48px 34px;
+  min-height:45vh;
+  overflow:hidden;
+}
+
+
+/* ---------- 卡片顶部 ---------- */
+
+.data-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  width:100%;
+  margin-bottom:18px;
+}
+
+.data-card-title{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+
+.data-index{
+  flex:0 0 auto;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:.08em;
+  padding-top:5px;
+}
+
+.data-card-title h3{
+  margin:0;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:clamp(25px,2.4vw,36px);
+  line-height:1;
+  color:var(--ink);
+  letter-spacing:.01em;
+}
+
+.data-card-title p{
+  margin:7px 0 0;
+  font-size:12px;
+  color:rgba(36,26,20,.48);
+  letter-spacing:.04em;
+}
+
+.data-year{
+  flex:0 0 auto;
+  padding-top:6px;
+  font-size:11px;
+  color:rgba(139,26,34,.55);
+  letter-spacing:.08em;
+}
+
+
+/* ---------- 图表总容器 ---------- */
+
+.chart-box{
+  position:relative;
+  width:100%;
+  min-height:178px;
+  margin-bottom:15px;
+}
+
+.chart-caption{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:13px;
+  font-size:11.5px;
+  color:rgba(36,26,20,.55);
+  letter-spacing:.04em;
+}
+
+.chart-caption b{
+  color:var(--red);
+  font-size:14px;
+}
+
+
+/* =========================================================
+   经济民生——柱状图
+   ========================================================= */
+
+.bar-chart{
+  height:125px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  gap:15px;
+  border-bottom:1px solid rgba(36,26,20,.18);
+  padding:0 8px;
+}
+
+.bar-item{
+  position:relative;
+  height:100%;
+  flex:1 1 0;
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  justify-content:flex-end;
+  min-width:30px;
+}
+
+.bar-value{
+  font-size:9px;
+  color:rgba(36,26,20,.48);
+  margin-bottom:4px;
+  opacity:0;
+  transform:translateY(5px);
+  transition:
+    opacity .5s ease .75s,
+    transform .5s ease .75s;
+}
+
+.bar-track{
+  position:relative;
+  width:min(42px,70%);
+  height:92px;
+  display:flex;
+  align-items:flex-end;
+  background:rgba(201,162,39,.08);
+  border-radius:3px 3px 0 0;
+  overflow:hidden;
+}
+
+.bar-fill{
+  width:100%;
+  height:var(--bar-height,0%);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  background:linear-gradient(
+    180deg,
+    var(--gold-lt),
+    var(--gold)
+  );
+  border-radius:3px 3px 0 0;
+  transition:transform 1.15s cubic-bezier(.2,.85,.25,1);
+}
+
+.bar-item > span{
+  display:block;
+  padding-top:7px;
+  font-size:10px;
+  color:rgba(36,26,20,.48);
+}
+
+.data-card.is-visible .bar-fill{
+  transform:scaleY(1);
+}
+
+.data-card.is-visible .bar-value{
+  opacity:1;
+  transform:translateY(0);
+}
+
+
+/* ---------- 经济底部数字 ---------- */
+
+.data-bottom-number{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding-top:13px;
+}
+
+.data-bottom-number small{
+  display:block;
+  font-size:10px;
+  color:rgba(36,26,20,.48);
+  margin-bottom:4px;
+}
+
+.data-bottom-number strong{
+  display:block;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:25px;
+  line-height:1;
+  color:var(--red);
+}
+
+.data-bottom-number em{
+  font-family:inherit;
+  font-size:10px;
+  font-style:normal;
+  margin-left:3px;
+  color:rgba(139,26,34,.65);
+}
+
+.mini-rise{
+  text-align:right;
+}
+
+.mini-rise span{
+  display:block;
+  font-size:10px;
+  color:rgba(36,26,20,.42);
+}
+
+.mini-rise b{
+  font-size:17px;
+  color:var(--red);
+}
+
+
+/* =========================================================
+   基础建设——横向生长条
+   ========================================================= */
+
+.progress-chart{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.progress-row{
+  display:grid;
+  grid-template-columns:38px 1fr 76px;
+  gap:10px;
+  align-items:center;
+}
+
+.progress-year{
+  font-size:10px;
+  color:rgba(36,26,20,.48);
+}
+
+.progress-track{
+  height:7px;
+  overflow:hidden;
+  background:rgba(201,162,39,.12);
+  border-radius:999px;
+}
+
+.progress-fill{
+  width:var(--progress-width,0%);
+  height:100%;
+  transform:scaleX(0);
+  transform-origin:left;
+  background:linear-gradient(
+    90deg,
+    var(--red-dk),
+    var(--red),
+    var(--gold)
+  );
+  border-radius:999px;
+  transition:transform 1.1s cubic-bezier(.15,.8,.25,1);
+}
+
+.progress-row strong{
+  text-align:right;
+  font-size:10px;
+  font-weight:600;
+  color:rgba(36,26,20,.60);
+}
+
+.data-card.is-visible .progress-fill{
+  transform:scaleX(1);
+}
+
+
+/* ---------- 基建数字 ---------- */
+
+.infra-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+  padding-top:13px;
+  border-top:1px dashed rgba(36,26,20,.16);
+}
+
+.infra-number span{
+  display:block;
+  font-size:10px;
+  color:rgba(36,26,20,.45);
+  margin-bottom:4px;
+}
+
+.infra-number strong{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  color:var(--red);
+  font-size:24px;
+  line-height:1;
+}
+
+.infra-number i{
+  font-family:inherit;
+  font-size:12px;
+  font-style:normal;
+  color:rgba(139,26,34,.60);
+}
+
+
+/* =========================================================
+   生态建设——环形饼图
+   ========================================================= */
+
+.eco-layout{
+  display:flex;
+  align-items:center;
+  gap:35px;
+  padding:2px 10px 0;
+}
+
+
+/* ---------- 环形图 ---------- */
+
+.donut-wrap{
+  flex:0 0 125px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.donut{
+    --current-percent:0;
+
+    width:125px;
+    height:125px;
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:
+      conic-gradient(
+        var(--gold) 0deg,
+        var(--gold) calc(var(--current-percent) * 3.6deg),
+        rgba(201,162,39,.10)
+        calc(var(--current-percent) * 3.6deg),
+        rgba(201,162,39,.10) 360deg
+      );
+}
+
+/* 中间白色圆洞 */
+
+.donut::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  background:#fff;
+  border-radius:50%;
+}
+
+.donut-inner{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.donut-inner strong{
+  display:block;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:25px;
+  line-height:1;
+  color:var(--red);
+}
+
+.donut-inner small{
+  display:block;
+  margin-top:5px;
+  font-size:9px;
+  line-height:1.45;
+  color:rgba(36,26,20,.48);
+}
+
+
+/* ---------- 环形图周围数据 ---------- */
+
+.eco-data{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.eco-line{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.eco-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  flex:0 0 7px;
+}
+
+.eco-dot.green{
+  background:#789464;
+}
+
+.eco-dot.gold{
+  background:var(--gold);
+}
+
+.eco-dot.red{
+  background:var(--red);
+}
+
+.eco-line small{
+  display:block;
+  font-size:9.5px;
+  color:rgba(36,26,20,.46);
+  margin-bottom:3px;
+}
+
+.eco-line strong{
+  display:block;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:19px;
+  color:var(--ink);
+}
+
+
+/* ---------- 森林覆盖率条 ---------- */
+
+.eco-growth{
+  margin-top:18px;
+}
+
+.eco-growth-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+  font-size:10px;
+  color:rgba(36,26,20,.46);
+}
+
+.eco-growth-title b{
+  font-size:10px;
+  font-weight:500;
+  color:rgba(36,26,20,.62);
+}
+
+.eco-growth-title b i{
+  margin:0 6px;
+  color:var(--gold);
+  font-style:normal;
+}
+
+.eco-growth-title strong{
+  color:var(--red);
+}
+
+.eco-growth-bar{
+  height:6px;
+  overflow:hidden;
+  background:rgba(120,148,100,.12);
+  border-radius:99px;
+}
+
+.eco-growth-fill{
+  width:100%;
+  height:100%;
+  transform:scaleX(0);
+  transform-origin:left;
+  background:linear-gradient(
+    90deg,
+    #789464,
+    #a9bd7e,
+    var(--gold)
+  );
+  border-radius:99px;
+  transition:transform 1.4s cubic-bezier(.15,.8,.25,1);
+}
+
+.data-card.is-visible .eco-growth-fill{
+  transform:scaleX(1);
+}
+
+.eco-years{
+  display:flex;
+  justify-content:space-between;
+  padding-top:4px;
+  font-size:8px;
+  color:rgba(36,26,20,.35);
+}
+
+
+/* =========================================================
+   科技教育——柱状图
+   ========================================================= */
+
+.tech-bars{
+  height:105px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:35px;
+  border-bottom:1px solid rgba(36,26,20,.16);
+}
+
+.tech-bar-item{
+  height:100%;
+  width:54px;
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.tech-bar-value{
+  margin-bottom:4px;
+  font-size:9px;
+  color:rgba(36,26,20,.50);
+  opacity:0;
+  transform:translateY(5px);
+  transition:
+    opacity .5s ease .7s,
+    transform .5s ease .7s;
+}
+
+.tech-bar-track{
+  width:35px;
+  height:78px;
+  display:flex;
+  align-items:flex-end;
+  background:rgba(201,162,39,.08);
+  overflow:hidden;
+  border-radius:3px 3px 0 0;
+}
+
+.tech-bar-fill{
+  width:100%;
+  height:var(--tech-height,0%);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  background:linear-gradient(
+    180deg,
+    var(--red),
+    var(--gold)
+  );
+  border-radius:3px 3px 0 0;
+  transition:transform 1.1s cubic-bezier(.2,.85,.25,1);
+}
+
+.tech-bar-item > span{
+  padding-top:6px;
+  font-size:10px;
+  color:rgba(36,26,20,.45);
+}
+
+.data-card.is-visible .tech-bar-fill{
+  transform:scaleY(1);
+}
+
+.data-card.is-visible .tech-bar-value{
+  opacity:1;
+  transform:translateY(0);
+}
+
+
+/* ---------- 科技数字 ---------- */
+
+.tech-bottom{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:14px;
+}
+
+.tech-stat{
+  padding-right:10px;
+  border-right:1px solid rgba(36,26,20,.10);
+}
+
+.tech-stat:last-child{
+  border-right:none;
+}
+
+.tech-stat > span{
+  display:block;
+  font-size:9px;
+  line-height:1.4;
+  color:rgba(36,26,20,.43);
+  margin-bottom:5px;
+}
+
+.tech-stat strong{
+  display:block;
+  font-family:'Songti SC','STSong',Georgia,serif;
+  font-size:18px;
+  color:var(--red);
+  line-height:1;
+}
+
+
+/* =========================================================
+   数字动画的基础效果
+   ========================================================= */
+
+.counter{
+  display:inline-block;
+  min-width:.5em;
+  font-variant-numeric:tabular-nums;
+  transition:opacity .2s;
+}
+
+
+/* =========================================================
+   数据卡片移动端
+   ========================================================= */
+
+@media (max-width:1199px){
+
+  .data-card{
+    padding:35px 32px;
+  }
+
+  .data-card-title h3{
+    font-size:27px;
+  }
+
+  .eco-layout{
+    gap:25px;
+  }
+
+}
+
+
+@media (max-width:768px){
+
+  .data-card{
+    min-height:auto;
+    padding:32px 20px;
+  }
+
+  .data-card-head{
+    margin-bottom:15px;
+  }
+
+  .data-card-title h3{
+    font-size:24px;
+  }
+
+  .data-card-title p{
+    font-size:10px;
+  }
+
+  .data-year{
+    font-size:9px;
+  }
+
+  .chart-box{
+    min-height:170px;
+  }
+
+  .bar-chart{
+    height:110px;
+  }
+
+  .progress-row{
+    grid-template-columns:32px 1fr 68px;
+  }
+
+  .eco-layout{
+    gap:15px;
+    padding:0;
+  }
+
+  .donut-wrap{
+    flex:0 0 105px;
+  }
+
+  .donut{
+    width:105px;
+    height:105px;
+  }
+
+  .donut-inner strong{
+    font-size:21px;
+  }
+
+  .infra-stats{
+    gap:8px;
+  }
+
+  .tech-bottom{
+    gap:7px;
+  }
+
+  .tech-stat strong{
+    font-size:16px;
+  }
+
+}
+
+
+/* ★ 每一行用 flex：flex 项目默认绝不换行，逐字 span 就不会竖排了 */
+
+
+
+
+/* ================= 2. 横向卡片 + 展开视频 ================= */
+/* 外层提供滚动距离，内层 sticky 钉住 —— 与顶部视频同一套机制，
+   不用 GSAP 的 pin，因此不会出现"重算位置导致跳页"的问题 */
+.dev-carousel-wrap{ height:320vh; position:relative; background:#fff; }
+.dev-carousel{
+  /* ★ 钉在导航栏下方（78px 导航 + 3px 金线 = 81px）。
+     原来钉在 top:0，卡片会钻进导航栏底下 —— 上方看起来没有留白。
+     高度同步减掉 81px，等于把"下方多出来的留白"削掉，整体仍是满屏。 */
+  position:sticky; top:81px;
+  height:calc(100vh - 81px); overflow:hidden; background:#fff;
+  border-top:1px solid rgba(0,0,0,.85); border-bottom:1px solid rgba(0,0,0,.85);
+}
+.dev-grid{
+  display:flex; flex-direction:row; width:max-content; height:100%; will-change:transform;align-items:flex-start;
+}
+.c-card{
+  width:33.333vw; flex:0 0 33.333vw; height:100%;
+  border-right:1px solid rgba(0,0,0,.85); background:#fff;
+  display:flex; flex-direction:column; justify-content:flex-start;
+  padding:clamp(30px,7vh,70px) 44px; gap:clamp(18px,3.4vh,40px);
+}
+.c-media{ height:clamp(150px, 22vh, 260px); display:flex; }
+.c-meta{ text-align:center; flex:1 1 auto; display:flex; flex-direction:column; min-height:0; }
+.c-year{
+  font-family:'Songti SC','STSong',Georgia,serif; font-size:clamp(26px, 3.6vh, 40px); font-weight:700;
+  color:var(--red); letter-spacing:.02em; line-height:1;
+}
+.c-name{font-size:clamp(14px, 1.65vh, 18px); font-weight:600; margin-top:10px; letter-spacing:.06em; }
+.c-desc{
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Noto Serif SC", "SimSun", serif;
+  font-size:clamp(11px, 1.3vh, 16px);                 /* 16 → 14：矮屏也能从容放下（正文约 250~300 字） */
+  line-height:1.78;
+  letter-spacing:.04em;
+  text-align:left;               /* ★ 长段落左对齐：居中会让每行参差，实际容量少三成 */
+  color:#5a514b;
+  padding:0 24px;                 /* 原来文字贴着卡片边缘 */
+  flex:1 1 auto; min-height:0; /* ★ 安全网：再矮的屏幕也只在框内滚动，不会被切断 */
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(201,162,39,.55) transparent;
+  /* 底部渐隐：提示文字还有下文（滚动条已隐藏） */
+  -webkit-mask-image:linear-gradient(180deg,#000 94%,transparent 100%);
+          mask-image:linear-gradient(180deg,#000 94%,transparent 100%);
+}
+.c-desc::-webkit-scrollbar{ width:4px }
+.c-desc::-webkit-scrollbar-thumb{ background:rgba(201,162,39,.5); border-radius:4px }
+.c-desc::-webkit-scrollbar-track{ background:transparent }
+
+.dev-reveal{
+  position:absolute; left:50%; top:0; transform:translateX(-50%);
+  width:0%; height:100%; overflow:hidden; z-index:5;
+  will-change:width; pointer-events:none;
+}
+.dev-reveal video{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:100vw; height:100vh; object-fit:cover;
+}
+
+/* ================= 3. 两栏统计 ================= */
+.dev-stats{
+  display:grid; grid-template-columns:60% 40%;
+  border-bottom:1px solid rgba(0,0,0,.85); background:#fff;
+}
+.dev-stats-left{
+  /* ★ 钉在导航栏下方（78px 导航 + 3px 金线），高度正好到窗口最下方。
+       放不下的卡片由愿望墙自己的滚动条控制，不把板块撑高。 */
+  position:sticky; top:81px; height:calc(100vh - 81px);
+  display:flex; flex-direction:column; justify-content:flex-start;
+  padding:12px 96px 14px 48px;
+}
+.dev-stats-left h2{
+  font-family:'Songti SC','STSong',Georgia,serif; font-weight:700;
+  font-size:clamp(30px,3.8vw,44px); line-height:1.2; margin:0 0 36px; color:#000;
+}
+/* ★ 左栏标题：实心金色（不用 background-clip:text，
+     它在部分渲染环境下会退化成透明，标题直接看不见） */
+.dev-stats-left h2{
+  margin:0 0 6px;
+  font-size:26px;                    /* 比上一版大一号 */
+  color:#b58f1e;
+  text-shadow:0 1px 0 rgba(255,255,255,.65);
+}
+.stats-sub{
+  margin:0 0 6px;font-size:12px;line-height:1.48;color:rgba(36,26,20,.68);
+  max-width:none;   /* 放开宽度 → 整段压成两行 */
+}
+
+
+/* ---- 祝福墙 ---- */
+/* ★ 卡片制作区：占祝福墙板块上方 30% —— 左边写字，右边实时预览成卡 */
+.wish-make{
+  flex:0 0 30%;   /* 制作区 : 愿望墙 = 3 : 7 */ min-height:0;          /* ★ 固定比例：制作区 32% / 愿望墙 68% */
+  display:flex; gap:12px; align-items:center;   /* 高度变高时内容居中，不散架 */
+  padding-bottom:6px; border-bottom:1px dashed rgba(160,134,60,.38);
+}
+.wish-make .wish-form{
+  flex:1 1 auto; min-width:0; height:100%;       /* 撑满制作区，文本框自动长高 */
+  display:flex; flex-direction:column; gap:8px; align-items:stretch;
+}
+/* ★ 第一行：署名在左，三个按钮靠右 —— 省下一整行给下面的文本框 */
+.wish-make .form-top{
+  flex:0 0 auto; display:flex; gap:8px; align-items:stretch; min-height:34px;
+}
+.wish-make .form-top input{ flex:1 1 auto; min-width:0; }   /* 占满按钮左侧的全部空位 */
+.wish-make .form-top .make-btns{ flex:0 0 auto; }
+.wish-make .wish-form input{ font-size:12.5px; padding-top:6px; padding-bottom:6px; }
+.wish-make .form-top input{ flex:0 1 auto; width:132px; }   /* ★ 署名框限宽，不再撑满整行 */
+.wish-make .wish-inputs{
+  flex:1 1 auto; min-height:0;
+  display:flex; gap:8px; align-items:stretch;   /* ★ 8px 空隙，不紧贴 */
+}
+.wish-make .wish-inputs textarea{
+  flex:1 1 50%; min-width:0; min-height:42px; max-height:none; font-size:12px;
+  /* ★ 和手写板统一：同边框、同圆角、同底色 */
+  border:1px solid rgba(160,134,60,.42); border-radius:9px;
+  background:#fffdf7; padding:8px 10px; resize:none; font-family:inherit;
+  color:#3a2f28; line-height:1.6;
+  box-shadow:inset 0 1px 3px rgba(120,100,60,.06);
+}
+/* 手写栏：和文本框等高等宽，可鼠标书写 */
+.wish-make .wish-hand{
+  position:relative; flex:1 1 50%; min-width:0;
+  border:1px solid rgba(160,134,60,.42); border-radius:9px;
+  background:#fffdf7; overflow:hidden;
+}
+.wish-make .wish-hand canvas{
+  display:block; width:100%; height:100%; touch-action:none;
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><g transform='rotate(38 13 13)'><rect x='10.6' y='1.5' width='4.8' height='15' rx='1.4' fill='%23f4d06a' stroke='%237a5c14' stroke-width='1.1'/><rect x='10.6' y='1.5' width='4.8' height='4' rx='1.2' fill='%23c9a227' stroke='%237a5c14' stroke-width='1'/><path d='M10.6 16.5 L15.4 16.5 L13 23.2 Z' fill='%23fef3d6' stroke='%237a5c14' stroke-width='1.1' stroke-linejoin='round'/><path d='M12.1 20.4 L13.9 20.4 L13 23.2 Z' fill='%23241a14'/></g></svg>") 13 22, crosshair;
+}
+.wish-make .wish-hand .hand-hint{
+  position:absolute; left:50%; top:44%; transform:translate(-50%,-50%); pointer-events:none;
+  font-size:11.5px; color:rgba(120,100,60,.42); letter-spacing:.04em;
+}
+.wish-make .wish-hand.dirty .hand-hint{ display:none; }
+.wish-make .wish-hand .hand-tools{
+  position:absolute; left:6px; bottom:5px; z-index:3;
+  display:flex; gap:5px; align-items:center;
+}
+/* ★ 三个制作按钮：手写框右上角 */
+/* ★ 三个按钮就在第一行最右侧，和署名框、取色器等高等高 */
+.wish-make .form-top .make-btns{
+  flex:0 0 auto; display:flex; gap:5px; align-items:stretch; margin-left:auto;
+}
+.wish-make .form-top .make-btns button{
+  flex:0 0 auto; font-size:12px; padding:0 12px; border-radius:9px; line-height:1.15;
+}
+.wish-make .form-top .make-btns #wishDone{ padding:0 16px; }
+.wish-make .wish-hand .make-btns{
+  position:absolute; right:6px; top:5px; z-index:3;
+  display:flex; gap:4px; align-items:center;
+}
+.wish-make .wish-hand .make-btns button{
+  flex:0 0 auto; font-size:10px; padding:3px 7px; border-radius:7px; letter-spacing:0;
+}
+.wish-make .wish-hand .make-btns #wishDone{ padding:3px 12px; }
+.wish-make .wish-hand .make-btns #wishForce{ font-size:10px; padding:3px 7px; }
+.wish-make .wish-hand .hand-tools button{
+  font:inherit; font-size:10.5px; padding:1px 8px; border-radius:999px; cursor:pointer;
+  color:rgba(90,60,30,.75); background:rgba(255,253,247,.92);
+  border:1px solid rgba(160,134,60,.5); opacity:.35; transition:opacity .18s, background .18s, color .18s;
+}
+.wish-make .wish-hand:hover .hand-tools button,
+.wish-make .wish-hand.dirty .hand-tools button{ opacity:1; }
+.wish-make .wish-hand .hand-tools button.on{
+  background:var(--gold, #c9a227); border-color:var(--gold, #c9a227); color:#fff; opacity:1;
+}
+/* ★ 取色器：去掉外层形状，只保留内部色块；方角矩形 */
+.wish-make .form-top #handColorBtn{
+  flex:0 0 auto; align-self:center; padding:1px; margin:0; line-height:0; cursor:pointer;
+  background:none; border:1px solid rgba(160,134,60,.55); border-radius:3px;   /* ★ 很窄的外边框 */
+}
+.wish-make .form-top #handColorBtn:hover{ opacity:.85; }
+.wish-make .form-top #handColorDot{
+  display:inline-block; width:20px; height:14px; border-radius:0; vertical-align:top;   /* 方角矩形 */
+  background:#000000; box-shadow:0 0 0 1px rgba(120,100,60,.55);
+}
+/* 取色面板 */
+/* ★ 取色面板：挂到 body 上，用固定定位 —— 不受任何板块裁剪与层叠影响 */
+.hand-pop{
+  position:fixed; z-index:99999; display:none;
+  padding:9px; border-radius:10px; background:#fffdf7;
+  border:1px solid rgba(160,134,60,.5); box-shadow:0 14px 34px rgba(70,55,25,.28);
+}
+.hand-pop.on{ display:block; }
+.hand-pop .hp-body{ display:flex; gap:7px; align-items:stretch; }
+.hand-pop #hpVal{
+  writing-mode:vertical-lr; direction:rtl;
+  width:14px; height:86px; margin:0; padding:0; cursor:pointer;
+  -webkit-appearance:none; appearance:none; background:transparent;
+}
+.hand-pop #hpVal::-webkit-slider-runnable-track{
+  width:10px; border-radius:5px;
+  background:linear-gradient(0deg, #000 0%, var(--hp-h, #c9a227) 100%);
+  box-shadow:inset 0 0 0 1px rgba(120,100,60,.5);
+}
+.hand-pop #hpVal::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:14px; height:8px; border-radius:2px;
+  background:#fff; border:1.5px solid rgba(120,100,60,.9); margin-left:-2px;
+}
+.hand-pop .hp-presets{ display:flex; gap:5px; margin-bottom:7px; }
+.hand-pop .hp-presets{ gap:6px; }
+.hand-pop .hp-presets i{
+  width:15px; height:15px; border-radius:2px; cursor:pointer;   /* ★ 方形色块 */
+  box-shadow:0 0 0 1px rgba(120,100,60,.55);
+}
+.hand-pop #hpSquare{
+  display:block; border-radius:4px;
+  cursor:crosshair;
+}
+.hand-pop #hpHue{ display:block; margin-top:6px; border-radius:4px; cursor:pointer; }
+.hand-pop #hpTry{
+  display:block; margin-top:7px; border-radius:5px;
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><path d='M6 2 V10 M2 6 H10' stroke='black' stroke-width='1.2'/></svg>") 6 6, crosshair;
+  background:#fffdf7; box-shadow:inset 0 0 0 1px rgba(160,134,60,.45);
+}
+.hand-pop .hp-row{ display:flex; gap:6px; align-items:center; margin-top:6px; }
+.hand-pop #hpHex{
+  flex:1 1 auto; min-width:0; font:inherit; font-size:11px; padding:3px 6px;
+  border:1px solid rgba(160,134,60,.5); border-radius:6px; background:#fff;
+}
+.hand-pop #hpPreview{
+  width:16px; height:16px; border-radius:4px; background:#000000;
+  box-shadow:inset 0 0 0 1.5px #fff, 0 0 0 1px rgba(120,100,60,.45);
+}
+
+/* 按钮的定位交给 .hand-tools 统一排布（原来每个按钮都被绝对定位钉在同一处，会重叠） */
+
+/* 实时预览卡：和真实纸片同一套材质 */
+.wish-preview{
+  position:relative; flex:0 0 auto;
+  /* ★ 与真实卡片完全同一尺寸、同一字号 —— 所见即所得 */
+  /* ★ 制作区有 zoom，这里反向除回来，预览卡才和墙上的真实卡片一样大 */
+  width:calc(var(--wish-w, 160px) / var(--ui, 1));
+  height:calc(var(--wish-w, 160px) / var(--ui, 1) / 1.5);
+  font-size:calc(var(--wish-w, 160px) / var(--ui, 1) * 0.085);
+  /* 编辑时放大显示，方便在卡面上调文字；点完成后加 .actual 回到真实卡片大小。
+     zoom 会影响布局，所以不会遮住左边的文本框与手写栏。 */
+  zoom:var(--pvk, 1.75);
+  display:flex; flex-direction:column; visibility:hidden;   /* 始终占位，输入框宽度才恒定 */
+  background-color:#fdfbf4;
+  background-image:
+    var(--noise),
+    repeating-linear-gradient(96deg, rgba(160,132,80,.05) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(8deg,  rgba(160,132,80,.04) 0 1px, transparent 1px 9px),
+    linear-gradient(180deg,#fffdf7 0%,#f6eeda 100%);
+  background-blend-mode:multiply, normal, normal, normal;
+  border-radius:.62em .84em .56em .9em / .84em .56em .9em .62em;
+  padding:1.9em 1em .95em;
+  box-shadow:
+     .07em  .07em 0 #e3dfd5, .14em  .14em 0 #d6d1c5, .21em  .21em 0 #c7c1b3,
+     .55em  .85em 1.5em rgba(70,62,48,.24), .12em .18em .3em rgba(70,62,48,.14);
+}
+.wish-preview.on{ visibility:visible; }
+.wish-preview .pv-hole{
+  position:absolute; top:.96em; left:50%; transform:translateX(-50%);
+  width:.66em; height:.66em; border-radius:50%; background:#96876a;
+  box-shadow:inset 0 .07em .12em rgba(55,35,5,.75), 0 .04em 0 rgba(255,255,255,.85);
+}
+.wish-preview .pv-nail{
+  position:absolute; top:.3em; left:50%; transform:translateX(-50%);
+  width:1.1em; height:1.1em; border-radius:50%; z-index:2;
+  background:radial-gradient(circle at 34% 30%, #fffdf0 0%, #f0d99f 36%, #c5a35a 72%, #8d7031 100%);
+  box-shadow:0 .12em .24em rgba(60,40,10,.45), 0 0 0 1px rgba(115,90,35,.5);
+}
+.wish-preview .pv-layer,
+.card-obj-layer{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+
+/* —— 卡面上的对象（预览卡与真卡片共用同一套样式）—— */
+.card-obj{
+  position:absolute; left:0; top:0; transform-origin:50% 50%;
+  white-space:pre-wrap; word-break:break-word; pointer-events:none;
+}
+.card-obj.text{ color:#000000; font-size:11px; line-height:1.6; max-width:74%; }
+.card-obj.ink{ width:58%; }
+.card-obj.ink img{ display:block; width:100%; height:auto; }
+
+/* —— 编辑态：虚线外框 + 手柄 —— */
+.pv-layer.editing .card-obj{ pointer-events:auto; cursor:move; }
+/* ★ 选中框：金色圆角 + 柔光，比之前的绿色虚线好看 */
+.card-obj.sel{
+  outline:1px solid rgba(201,162,39,.9);
+  outline-offset:3px; border-radius:2px;
+  box-shadow:0 0 0 3px rgba(201,162,39,.08), 0 0 8px rgba(201,162,39,.16);
+}
+.card-obj .h{
+  position:absolute; width:7px; height:7px; margin:-3.5px;
+  background:#fff; border:1px solid var(--gold, #c9a227); border-radius:50%;
+  display:none; box-sizing:border-box;
+  box-shadow:0 1px 3px rgba(70,55,25,.28);
+  transform:scale(var(--hinv, 1));   /* ★ 不管对象放多大，手柄始终同样大小 */
+}
+.card-obj .h:hover{ background:var(--gold, #c9a227); }
+.card-obj.sel .h{ display:block; }
+.card-obj .h.nw{ left:0;  top:0;    cursor:nwse-resize; }
+.card-obj .h.ne{ right:0; top:0;    cursor:nesw-resize; }
+.card-obj .h.sw{ left:0;  bottom:0; cursor:nesw-resize; }
+.card-obj .h.se{ right:0; bottom:0; cursor:nwse-resize; }
+.card-obj .h.rot{
+  left:50%; top:0; margin:-22px 0 0 -4px; border-radius:50%;
+  background:var(--gold, #c9a227); border-color:#fff; cursor:grab;
+  border-width:1.5px; width:8px; height:8px; margin-left:-4px;
+}
+.card-obj .h.rot::after{
+  content:""; position:absolute; left:50%; top:100%; width:1px; height:18px;
+  background:rgba(201,162,39,.55); transform:translateX(-50%);
+}
+.card-obj .h.del{
+  right:-11px; top:-27px; margin:0; width:11px; height:11px; border-radius:50%;   /* 抬到右上角点上方，避免重合 */
+  background:rgba(190,40,50,.95); border-color:#fff; color:#fff;
+  font-size:9px; line-height:10px; text-align:center; cursor:pointer;
+}
+.card-obj .h.del::before{ content:"\00d7"; }
+
+.wish-preview .pv-t{
+  flex:1 1 auto; min-height:0; overflow:hidden; margin:0;
+  font-size:1em; line-height:1.72; color:#3a2f28;
+  word-break:break-word; white-space:pre-wrap;
+}
+ .wish-preview .pv-m{ flex:0 0 auto; margin-top:auto;
+  padding-top:.7em; display:flex; justify-content:space-between;
+  align-items:baseline; font-size:.64em; color:rgba(90,60,30,.5); }
+ .wish-preview .pv-who{ color:var(--red); font-weight:600; font-size:1em; }
+.make-btns{ display:flex; gap:8px; }
+.make-btns button{
+  flex:1 1 auto; font:inherit; font-size:12.5px; padding:8px 10px; border-radius:9px; cursor:pointer;
+  letter-spacing:.02em; transition:transform .16s, box-shadow .16s, background .16s, color .16s;
+}
+.make-btns #wishDone{
+  flex:0 0 auto; padding:8px 22px; font-weight:600; color:#fff;
+  background:linear-gradient(180deg,var(--red-2),var(--red)); border:1px solid rgba(124,20,32,.9);
+}
+.make-btns #wishDone:hover{ transform:translateY(-1px); box-shadow:0 8px 18px rgba(124,20,32,.22); }
+.make-btns .ghost{
+  color:rgba(90,60,30,.85); background:transparent; border:1px dashed rgba(160,134,60,.6);
+}
+.make-btns .ghost:hover{ color:var(--red); border-color:var(--red); }
+.make-btns button:disabled{ opacity:.42; cursor:not-allowed; transform:none; box-shadow:none; }
+.wish{ position:relative; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:9px; }
+.wish-form{ display:flex; gap:8px; align-items:stretch; }
+.wish-form input, .wish-form textarea{
+  font:inherit;font-size:13px;color:#2b211b;background:#fff;
+  border:1px solid rgba(160,134,60,.42);border-radius:9px;padding:9px 12px;outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.wish-form input{ flex:0 0 88px; }
+.wish-form textarea{ flex:1 1 auto; min-height:40px; max-height:86px; resize:none; line-height:1.6; }
+.wish-form input:focus, .wish-form textarea:focus{
+  border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,39,.16);
+}
+.wish-form button{
+  flex:0 0 auto; font:inherit; font-size:13px; letter-spacing:.06em; cursor:pointer;
+  padding:0 20px; border-radius:9px; font-weight:600;
+  color:#fff; background:linear-gradient(180deg,var(--red-2),var(--red));
+  border:1px solid rgba(124,20,32,.9);
+  transition:transform .16s, box-shadow .16s;
+}
+.wish-form button:hover{ transform:translateY(-1px); box-shadow:0 8px 18px rgba(124,20,32,.22); }
+
+.wish-list{
+  flex:1 1 auto; min-height:0; overflow-y:auto;
+  /* ★ 纸片由 JS 绝对定位；墙自己撑出高度（占制作区以下的 70%）*/
+  position:relative;
+  /* ★ 左边抵消左栏内边距（贴到窗口左边）；
+       右边不再外扩 —— 原来多伸出 96px 会压到右栏下面，
+       右栏在 DOM 里更靠后、盖在上面，卡片就被"切"掉一块。 */
+  margin:0 0 0 -48px;
+  padding:6px 10px 8px 10px;
+  scrollbar-width:thin; scrollbar-color:rgba(201,162,39,.5) transparent;
+}
+.wish-list::-webkit-scrollbar{ width:4px }
+.wish-list::-webkit-scrollbar-thumb{ background:rgba(201,162,39,.45); border-radius:4px }
+.wish-list::-webkit-scrollbar-track{ background:transparent }
+.wish-item{
+  /* ★ 绝对定位：钉点由 JS 算，绕"顶部中心"旋转（钉子就在那里，不会动） */
+  position:absolute; left:0; top:0; transform-origin:50% 0;
+  /* ★ 宽度由 JS 按「板块面积 × 5%」算出，写进 --wish-w；高度固定 3:2，所有纸片等大 */
+  width:var(--wish-w, 160px);
+  height:calc(var(--wish-w, 160px) / 1.5);
+  /* 不裁切：文字由 .t 自己裁；否则底下那张纸露不出来 */
+  overflow:visible;
+  /* ★ 字号跟着卡片宽度走 —— 卡片变小，字自动变小 */
+  font-size:calc(var(--wish-w, 160px) * 0.085);
+  /* ★ 纸面：暖白底 + 站内噪点（feTurbulence 细颗粒）。
+       之前还叠了两道 96 度 / 8 度的纤维斜纹，交叉织成网格，看着像亚麻布或木纹 —— 去掉了。 */
+  background-color:#fefdfb;
+  background-image:
+    var(--noise),                                                        /* 细颗粒 */
+    repeating-linear-gradient(92deg, rgba(150,132,100,.035) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(182deg, rgba(150,132,100,.022) 0 1px, transparent 1px 11px),
+    linear-gradient(180deg,#fefdfb 0%,#f3f1ea 100%);
+  background-blend-mode:normal, normal, normal, normal;
+  border-radius:.62em .84em .56em .9em / .84em .56em .9em .62em;
+  padding:1.9em 1em .95em;
+  display:flex; flex-direction:column;
+  box-shadow:
+     .16em  .24em 0 .02em #e0dcd2,            /* ★ 底纸第一层：跟随轮廓，不会错位 */
+     .26em  .36em 0 .02em #d2ccc0,            /* ★ 底纸第二层 */
+     .07em  .07em 0 #e3dfd5,                  /* 厚度三层全部改中性灰（原来偏暖黄） */
+     .14em  .14em 0 #d6d1c5,
+     .21em  .21em 0 #c7c1b3,
+     .55em  .85em 1.5em rgba(70,62,48,.24),   /* 投影改中性灰，不再暖棕 */
+     .12em  .18em  .3em  rgba(70,62,48,.14);
+  transition:transform .1s linear;      /* 挤压过程平滑 */
+}
+/* 孔与钉子（全部按 em，随卡片缩放） */
+.wish-item .hole{
+  position:absolute; top:.96em; left:50%; transform:translateX(-50%);
+  width:.66em; height:.66em; border-radius:50%; z-index:1;
+  background:#96876a;                                   /* 压深的孔底，不是灰贴片 */
+  box-shadow:inset 0 .07em .12em rgba(55,35,5,.75), 0 .04em 0 rgba(255,255,255,.85);
+}
+.wish-item .nail{
+  position:absolute; top:.3em; left:50%; transform:translateX(-50%);
+  width:1.1em; height:1.1em; border-radius:50%; z-index:2;
+  background:radial-gradient(circle at 34% 30%, #fffdf0 0%, #f0d99f 36%, #c5a35a 72%, #8d7031 100%);
+  box-shadow:0 .12em .24em rgba(60,40,10,.45), 0 0 0 1px rgba(115,90,35,.5), 0 -.06em .12em rgba(255,255,255,.6) inset;
+}
+.wish-item .t{ flex:1 1 auto; min-height:0; overflow:hidden; font-size:1em; line-height:1.72; color:#3a2f28; word-break:break-word; white-space:pre-wrap; }
+ .wish-item .m{ flex:0 0 auto; margin-top:auto;   /* margin-top:auto 把署名行压到底部 */
+                padding-top:.7em; display:flex; justify-content:space-between; align-items:baseline;
+                font-size:.64em; color:rgba(90,60,30,.5); letter-spacing:.02em; }
+.wish-item .who{ color:var(--red); font-weight:600; font-size:1em; }
+.wish-item .del{
+  position:absolute; top:.36em; right:.6em; opacity:0; cursor:pointer; z-index:3;
+  border:none; background:none; color:rgba(90,60,30,.35); font-size:1.1em; line-height:1; padding:0 .2em;
+  transition:opacity .18s,color .18s;
+}
+.wish-item:hover .del{ opacity:1 }
+.wish-item .del:hover{ color:var(--red) }
+.wish-item.flash{
+  /* ★ 用 outline 而不是 box-shadow：
+       原来整体替换了 box-shadow，把"纸张厚度"三层也一并抹掉，看着像另一种材质。 */
+  outline:2px solid rgba(201,162,39,.8);
+  outline-offset:2px;
+}
+
+.wish-item:hover .del{ opacity:1 }
+.wish-item .del:hover{ color:var(--red) }
+.wish-item.flash{ box-shadow:0 0 0 3px rgba(201,162,39,.28), 0 2px 10px rgba(90,60,30,.09); }
+
+.wish-foot{ display:flex; justify-content:space-between; align-items:center; font-size:11px; color:rgba(90,60,30,.5); }
+.wish-foot b{ color:var(--ink); }
+.wish-list.rebuilding .wish-item{ transition:none !important; }
+
+.wish-space{ position:absolute; left:0; top:0; width:1px; pointer-events:none; }
+
+.wish-item[data-layer="1"]{
+  /* 第二层：离墙更远 —— 纸张侧边更厚、投影更大更散 */
+  box-shadow:
+     .2em  .3em  0 .02em #ddd0b2,
+     .32em .46em 0 .02em #cfc0a0,
+     .46em .68em 0 .02em #c0b08c,
+     .95em 1.35em 2.3em rgba(70,62,48,.34),
+     .22em .32em  .58em rgba(70,62,48,.20);
+}
+.wish-item[data-layer="2"],
+.wish-item[data-layer="3"]{
+  /* 第三层及以上：再远一档 */
+  box-shadow:
+     .26em .38em 0 .02em #ddd0b2,
+     .42em .6em  0 .02em #cfc0a0,
+     .6em  .86em 0 .02em #c0b08c,
+    1.35em 1.95em 3.1em rgba(70,62,48,.40),
+     .3em  .45em  .82em rgba(70,62,48,.24);
+}
+
+.wish-legend{
+  position:absolute; right:12px; top:calc(30% + 10px); z-index:940;   /* 落在制作区下方的墙上 */
+  display:flex; align-items:center; gap:6px;
+  padding:7px 13px; border-radius:999px; cursor:pointer;
+  background:rgba(255,253,247,.95); border:1px dashed rgba(160,134,60,.62);
+  color:rgba(90,60,30,.85); font-size:12.5px; letter-spacing:.02em;
+  box-shadow:0 6px 16px rgba(70,55,25,.16);
+  transition:border-color .18s, color .18s, transform .18s;
+}
+/* 强制钉层按钮：就排在「完成」旁边，跟随 .make-btns 的样式 */
+#wishForce{ flex:0 0 auto; font-size:12px; padding:8px 12px; }
+.wish-force:hover{ color:#fff; background:linear-gradient(180deg,var(--red-2),var(--red)); border-color:rgba(124,20,32,.9); }
+
+.wish-legend .plus{ font-size:15px; font-weight:700; color:var(--red); line-height:1; }
+.wish-legend:hover{ border-color:var(--red); color:var(--red); transform:translateY(-1px); }
+
+.wish-draft{
+  cursor:grab; touch-action:none; user-select:none;
+  z-index:900 !important;
+  outline:2px dashed rgba(160,134,60,.55); outline-offset:3px;
+}
+.wish-draft.dragging{ cursor:grabbing; }
+.wish-draft.picked{ cursor:grabbing; outline-color:rgba(52,150,80,.95); }
+.wish-draft.valid{ outline:2px solid rgba(52,150,80,.85); }
+.wish-draft.invalid{ outline:2px solid rgba(190,40,50,.9); }
+.wish-draft .t{ color:rgba(70,55,30,.55); }
+
+.wish-foot-btns{ display:inline-flex; gap:6px; }
+.wish-foot button{
+  font:inherit; font-size:11.5px; cursor:pointer; padding:4px 12px; border-radius:999px;
+  background:transparent; color:rgba(90,60,30,.55); border:1px solid rgba(160,134,60,.35);
+}
+.wish-foot button:hover{ color:var(--red); border-color:rgba(124,20,32,.5); }
+.dev-copy p{
+  font-size:19px; line-height:1.55; margin:0; color:rgba(36,26,20,.86); letter-spacing:.01em;
+}
+.dev-stats-right{ border-left:1px solid rgba(0,0,0,.85); }
+.s-card{
+  padding:52px 48px; min-height:45vh;
+  border-bottom:1px solid rgba(0,0,0,.85);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.s-card:last-child{ border-bottom:none; }
+.stomp-a{ display:none; }
+.stomp h3{
+  font-family:'Songti SC','STSong',Georgia,serif; font-weight:700;
+  font-size:clamp(46px,5.4vw,72px); line-height:.98; letter-spacing:-.01em;
+  margin:0; color:var(--ink);
+}
+.s-detail{ font-size:19px; line-height:1.6; padding-top:36px; margin:0; max-width:520px; color:rgba(36,26,20,.82); }
+.s-sub{ font-size:13px; margin-top:12px; color:rgba(139,26,34,.72); letter-spacing:.06em; }
+.s-ch,.s-word{ display:inline-block; }
+.stat-mask{ overflow:hidden; }
+
+/* ================= 响应式 ================= */
+@media (max-width:1199px){
+  .c-card{ width:50vw; flex:0 0 50vw; }
+  .dev-stats-left{ padding:40px 32px; }
+  .dev-copy p{ font-size:16px; }
+  .s-card{ padding:40px 32px; }
+  .s-detail{ font-size:16px; }
+}
+@media (max-width:768px){
+  .c-card{ width:85vw; flex:0 0 85vw; padding:28px 22px; }
+  .c-media{ height:190px; }
+  .dev-hero-copy{ padding:30px 20px; }
+  .dev-stats{ grid-template-columns:1fr; }
+  .dev-stats-left{ position:relative; height:auto; padding:40px 20px; }
+  .dev-stats-right{ border-left:none; border-top:1px solid rgba(0,0,0,.85); }
+  .s-card{ padding:34px 20px; min-height:auto; }
+  .s-detail{ font-size:15px; padding-top:24px; }
+  .dev-copy p{ font-size:15px; }
+}
+</style>
+</head>
+<body class="dev"><header class="site-header">
+  <nav class="navbar container">
+    <a href="../index.html" class="brand">
+      <img class="brand-logo" src="assets/logo.png" alt="盛世华章标志">
+      
+      <span class="brand-sub">1949—2026</span>
+    </a>
+    <button class="nav-toggle" aria-label="打开菜单">☰</button>
+    <div class="nav-links"><a href="../index.html">首页</a><a href="speeches.html" class="active">祖国之发展</a><a href="parade.html">人民之热情</a><a href="gallery.html">你我之见证</a><a href="submit.html">投稿</a></div>
+  </nav>
+</header>
+
+<div id="dbg" style="display:none;position:fixed;right:18px;bottom:18px;z-index:9999;
+  background:rgba(0,0,0,.82);color:#e8c46a;font:600 15px/1.7 ui-monospace,Consolas,monospace;
+  padding:12px 16px;border-radius:10px;border:1px solid rgba(232,196,106,.45);pointer-events:none;
+  white-space:pre;text-align:left;line-height:1.75"></div>
+
+<main id="top">
+
+<!-- ========== 1. 顶部：滚动驱动视频（序列 01）========== -->
+<section class="dev-hero-scroll" id="heroScroll">
+  <div class="dev-hero">
+    <video id="heroVideo" src="assets/video-hero.mp4" playsinline muted preload="auto"></video>
+    <div class="dev-hero-veil"></div>
+    <div class="dev-hero-copy" id="heroCopy">
+      <!-- 只淡出这一层（年份+标题），介绍文字在外面不受影响 -->
+      <div class="dev-title-block" id="titleBlock">
+        <img class="dev-title-mao" src="assets/title-dev-mao.png" alt="七十余载 伟大征程">
+        <img class="dev-poem" src="assets/subtitle-dev-mao.png" alt="雄关漫道真如铁，而今迈步从头越">
+        <div class="dev-years">1949 &mdash; 2026</div>
+      </div>
+
+    </div>
+
+    <!-- 标题淡出后，在下方错开的位置淡入（三部分，同首页结构） -->
+    <div class="dev-intro" id="heroIntro">
+      <p class="dev-lead">从开国大典的礼炮，到新时代的钢铁洪流</p>
+      <p class="dev-detail">
+        这一页以 1949、1959、1984、1999、2009、2019 六个关键年份为节点 ——
+        从开国大典与十周年阅兵，到改革开放后的首次大阅兵、世纪大阅兵，
+        再到新时代的七十周年盛典。横向翻阅这些节点，就能看清装备、方阵与步伐是如何一路走到今天的。
+      </p>
+      <div class="dev-points">
+        <div class="pt"><b>影像</b><span>升旗 · 阅兵</span></div>
+        <div class="pt"><b>年份</b><span>六个关键节点</span></div>
+        <div class="pt"><b>数据</b><span>七十七载成就</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 2. 横向卡片 + 滚动展开视频 ========== -->
+<section class="dev-carousel-wrap" id="carouselWrap">
+  <div class="dev-carousel" id="carousel">
+  <div class="dev-grid" id="devGrid">
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-1949.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">1949</div>
+          <div class="c-name">开国大典</div>
+          <div class="c-desc">1949年10月1日下午3时，开国大典在北京天安门广场举行。毛泽东在天安门城楼上宣读中央人民政府公告，随后按动电钮，升起第一面五星红旗。54门礼炮齐鸣28响，28这个数字对应中国共产党从1921年成立到建国的28年。长安街上，工人、农民、学生、市民的游行队伍一直走到深夜。
+建国时的家底并不厚：全国钢产量15.8万吨，原油12万吨，发电量43亿度，人均预期寿命35岁上下，文盲率超过八成，能通车的铁路只有两万多公里。新政权接手的是长期战乱留下的局面，还有尚未结束的解放战争——西南、华南大片地区仍在作战，直到1951年西藏和平解放，大陆才基本统一。
+1949年9月，中国人民政治协商会议第一届全体会议通过《共同纲领》，起临时宪法的作用。10月中央人民政府成立，政务院下设各部委；同年底到1950年初，全国财经工作会议决定统一财政收支、稳定物价，人民币开始站住脚。</div>
+        </div>
+      </article>
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-1959.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">1959</div>
+          <div class="c-name">十周年</div>
+          <div class="c-desc">1959年10月1日，建国十周年庆典在天安门广场举行，阅兵之后是群众游行，晚上放焰火。这是新中国成立后第一次大规模的十年大庆。
+这十年，中国从一个连钉子都要进口的农业国，搭起了工业的骨架。1953年到1957年的第一个五年计划，苏联援建的156项重点工程陆续落地：鞍山钢铁、长春第一汽车制造厂、沈阳机床、武汉长江大桥。1956年7月，第一辆解放牌卡车在长春下线；1957年10月，武汉长江大桥通车，京广铁路从此贯通。1958年大庆油田开始勘探，1959年9月松基三井喷油，中国摘掉了“贫油国”的帽子。
+制度上，1954年第一届全国人民代表大会召开，通过第一部宪法；1956年对农业、手工业和资本主义工商业的社会主义改造基本完成。外交上，1954年中国首次以五大国身份出席日内瓦会议，1955年周恩来在万隆会议上提出“求同存异”，到1959年，与新中国建交的国家已有三十多个。
+这十年也有代价。1958年开始的“大跃进”和人民公社化运动急于求成，加上随后连年严重的自然灾害，1959年之后国民经济进入困难时期。</div>
+        </div>
+      </article>
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-1984.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">1984</div>
+          <div class="c-name">改革开放</div>
+          <div class="c-desc">1984年10月1日，建国三十五周年阅兵在天安门广场举行。邓小平检阅部队，受阅官兵齐声喊“同志们好”“首长好”。这是1959年之后第一次大型国庆阅兵，中间隔了25年。群众游行中，北京大学的方阵打出了“小平您好”的横幅。
+这25年，中国走得并不平坦。1959年到1961年国民经济严重困难，其后又经历十年动乱。1976年10月粉碎“四人帮”，国家开始拨乱反正。1978年12月，中共十一届三中全会在北京召开，确定把工作重心转移到经济建设上来，改革开放由此开始。
+农业上，1978年冬天，安徽凤阳小岗村18户农民按下红手印，搞起“包产到户”；到1984年，家庭联产承包责任制已在全国推开，粮食产量从1978年的3亿吨增加到4亿吨。工业上，1980年深圳、珠海、汕头、厦门设立经济特区；1984年，大连、天津、上海等14个沿海城市进一步开放。
+科技和国防上，1964年第一颗原子弹爆炸，1967年氢弹试验成功，1970年“东方红一号”卫星上天，1971年恢复在联合国的合法席位。1984年，中国运动员在洛杉矶奥运会上拿到第一枚奥运金牌。</div>
+        </div>
+      </article>
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-1999.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">1999</div>
+          <div class="c-name">世纪大阅兵</div>
+          <div class="c-desc">1999年10月1日，建国五十周年阅兵在天安门广场举行，被称为“世纪大阅兵”。受阅装备绝大多数是首次公开亮相，战略导弹方队第一次出现在国庆阅兵中。同年12月20日，澳门回归祖国。
+这15年，中国的经济体制发生了根本变化。1984年提出“有计划的商品经济”；1992年邓小平南方谈话之后，中共十四大明确建立社会主义市场经济体制；1993年宪法修正案写入“国家实行社会主义市场经济”。1994年分税制改革、汇率并轨。这些词今天听起来枯燥，但正是它们把价格、税收、外汇这些基础制度重新搭了一遍。1997年7月1日，香港回归。
+老百姓能感觉到的变化更直接：粮票、布票陆续取消；1994年中国接入互联网，1995年第一家网吧在上海开张；1998年长江、松花江流域发生特大洪水，全国抗洪，数十万军民上堤。
+科技上，1999年11月20日，神舟一号无人试验飞船发射成功，中国载人航天工程迈出第一步。</div>
+        </div>
+      </article>
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-2009.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">2009</div>
+          <div class="c-name">六十周年</div>
+          <div class="c-desc">2009年10月1日，建国六十周年阅兵在天安门广场举行。受阅装备全部为国产，其中九成是首次亮相。这一年国际金融危机还在蔓延，中国推出了四万亿投资计划。
+这十年，中国加入世界贸易组织的效应全面释放。2001年12月11日，中国正式成为WTO成员，此后出口连年高速增长，2009年成为世界第一大出口国。2003年，神舟五号把杨利伟送上太空，中国成为第三个独立掌握载人航天技术的国家；2008年9月，神舟七号航天员翟志刚完成首次太空行走；2007年“嫦娥一号”绕月飞行。
+这十年也经历了严峻考验。2003年“非典”疫情；2008年5月12日汶川大地震，近七万人遇难；同年8月，北京举办第29届夏季奥运会，中国代表团拿到51枚金牌，位居第一。2008年下半年起，国际金融危机冲击出口，沿海一批工厂停工，大批农民工提前返乡。
+基础设施上，2006年青藏铁路通车；到2009年，全国高速公路通车里程超过6万公里，居世界第二。</div>
+        </div>
+      </article>
+      <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-2019.jpeg"></div></div>
+        <div class="c-meta">
+          <div class="c-year">2019</div>
+          <div class="c-name">新时代</div>
+          <div class="c-desc">2019年10月1日，建国七十周年阅兵在天安门广场举行，是近几次规模最大的一次。受阅装备中四成为首次亮相，包括东风-41洲际导弹、无侦-8无人机等。
+这十年，中国经济总量从2009年的约34万亿元增长到2019年的99万亿元，人均GDP突破1万美元。2013年提出“一带一路”倡议；2015年人民币被纳入国际货币基金组织特别提款权货币篮子；2016年G20峰会在杭州举行；2017年中共十九大召开，提出“两步走”战略安排。
+科技上，2012年“蛟龙号”下潜7062米；2016年“墨子号”量子卫星发射；2017年首艘国产航母下水；2018年港珠澳大桥开通；2019年1月，“嫦娥四号”在月球背面软着陆，这是人类第一次。移动支付、共享单车、高铁成了日常——到2019年，中国高铁运营里程超过3.5万公里，占全世界的三分之二以上。
+民生上，2013年提出“精准扶贫”，到2019年，全国农村贫困人口从2012年的9899万减少到551万。</div>
+        </div>
+      </article>
+        <article class="c-card">
+        <div class="c-media"><div class="ph"><img src="assets/img-2026.jpeg" alt="2026 · 新的起点"></div></div>
+        <div class="c-meta">
+          <div class="c-year">2026</div>
+          <div class="c-name">新的起点</div>
+          <div class="c-desc">2026年是新中国成立七十七周年。
+这七年，中国完成了脱贫攻坚。2021年2月25日，全国脱贫攻坚总结表彰大会宣布：现行标准下9899万农村贫困人口全部脱贫，832个贫困县全部摘帽。这是2015年提出的目标，比联合国2030年可持续发展议程的减贫目标提前了十年。
+2020年初，新冠疫情暴发并蔓延全球。武汉封城76天；此后三年，全国实行“动态清零”；2022年12月，“新十条”发布，防控转入“乙类乙管”。这三年对经济、就业、服务业的影响持续至今。
+2021年7月1日，中国共产党成立一百周年；2022年2月，北京举办第24届冬奥会，成为第一个“双奥之城”；同年10月，中共二十大召开，提出“以中国式现代化全面推进中华民族伟大复兴”；2024年，中共二十届三中全会对进一步全面深化改革作出部署。
+科技上，2020年“嫦娥五号”带回月球样品；2021年“天问一号”着陆火星；2022年中国空间站建成；2023年国产大飞机C919投入商业运营；2024年“嫦娥六号”从月球背面采样返回，也是人类第一次。到2025年底，中国高铁运营里程超过4.8万公里。“十四五”规划2025年收官，“十五五”规划2026年开局。</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="dev-reveal" id="devReveal">
+    <video id="revealVideo" src="assets/video-reveal.mp4" playsinline muted preload="auto"></video>
+  </div>
+  </div>
+</section>
+
+<!-- ========== 3. 两栏：左侧文案 + 右侧统计 ========== -->
+<section class="dev-stats" id="stats">
+  <div class="dev-stats-left">
+    <h2 data-fade>发展，从未停步</h2>
+    <p class="stats-sub">回望祖国过去七十七载伟大征程，在党的领导下，中国人民取得了从站起来，富起来到强起来的伟大成就。新时代的我们现在正处于百年未有之大变局中，而发展，从未止步 —— 在这个国庆，把你对祖国的祝福，对未来的展望，对美好生活的期许写下来，让这面墙共同承载我们的愿望。</p>
+
+    <div class="wish">
+      <!-- ★ 上方 30%：卡片制作区 -->
+      <div class="wish-make">
+        <div class="wish-form">
+          <div class="form-top">
+            <input id="wishWho" type="text" maxlength="12" placeholder="署名">
+            <button id="handColorBtn" type="button" title="选择颜色"><i id="handColorDot"></i></button>
+            <!-- ★ 三个制作按钮：手写框外侧的右上角（输入区上方，右对齐） -->
+          <div class="make-btns">
+            <button id="wishNew" type="button" class="ghost">制作新贺卡</button>
+            <button id="wishPaste" type="button" class="ghost">贴上</button>
+            <button id="wishDone" type="button">完成</button>
+            <button id="wishForce" type="button" class="ghost" style="display:none">可以试试钉到第二层</button>
+            </div>
+            </div>
+          <!-- ★ 下面并排：左半写字，右半手写 -->
+          <div class="wish-inputs">
+            <textarea id="wishTxt" maxlength="80" placeholder="写一句祝福…（最多 80 字）"></textarea>
+            <div class="wish-hand">
+              <canvas id="wishPad"></canvas>
+              <span class="hand-hint" id="handHint">手写</span>
+              <div class="hand-tools">
+                <button id="handEraser" type="button" title="橡皮：擦掉部分笔迹">橡皮</button>
+                <button id="handClear" type="button">清空</button>
+              </div>
+              <div class="hand-pop" id="handPop">
+                <div class="hp-presets" id="hpPresets"></div>
+                <div class="hp-body">
+                  <input id="hpVal" type="range" min="0" max="100" value="0" title="明度">
+                  <canvas id="hpSquare" width="136" height="86"></canvas>
+                </div>
+                <canvas id="hpHue" width="152" height="10"></canvas>
+                <canvas id="hpTry" width="152" height="30" title="试色区：在这里随手画两笔看效果"></canvas>
+                <div class="hp-row">
+                  <input id="hpHex" type="text" maxlength="7" spellcheck="false" placeholder="#c9a227">
+                  <span id="hpPreview"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="wish-preview" id="wishPreview">
+          <span class="pv-hole"></span><span class="pv-nail"></span>
+          <div class="pv-layer" id="pvLayer"></div>
+          <div class="pv-m"><span class="pv-who" id="pvWho">匿名</span></div>
+        </div>
+      </div>
+      <div class="wish-list" id="wishList"></div>
+      <div class="wish-count"><b id="wishCnt">0</b> 条 · 只存在你的浏览器里</div>
+    </div>
+  </div>
+  <div class="dev-stats-right">
+
+  <!-- ================= 01 经济民生 ================= -->
+  <div class="s-card data-card" data-chart="economy">
+
+    <div class="data-card-head">
+      <div class="data-card-title">
+        <span class="data-index"></span>
+        <div>
+          <h3>经济民生</h3>
+          <p>发展成果不断转化为生活品质</p>
+        </div>
+      </div>
+      <span class="data-year">1952 — 2025</span>
+    </div>
+
+    <div class="chart-box economy-chart">
+
+      <div class="chart-caption">
+        <span>国内生产总值 GDP</span>
+        <b><span class="counter"
+                 data-value="1401879"
+                 data-format="trillion">0</span> 亿元</b>
+      </div>
+
+      <div class="bar-chart">
+
+        <div class="bar-item">
+          <div class="bar-value">679</div>
+          <div class="bar-track">
+            <div class="bar-fill"
+                 data-height="1.2"></div>
+          </div>
+          <span>1952</span>
+        </div>
+
+        <div class="bar-item">
+          <div class="bar-value">3679</div>
+          <div class="bar-track">
+            <div class="bar-fill"
+                 data-height="4"></div>
+          </div>
+          <span>1978</span>
+        </div>
+
+        <div class="bar-item">
+          <div class="bar-value">100280</div>
+          <div class="bar-track">
+            <div class="bar-fill"
+                 data-height="17"></div>
+          </div>
+          <span>2000</span>
+        </div>
+
+        <div class="bar-item">
+          <div class="bar-value">1401879</div>
+          <div class="bar-track">
+            <div class="bar-fill"
+                 data-height="100"></div>
+          </div>
+          <span>2025</span>
+        </div>
+
+      </div>
+
+      <div class="data-bottom-number">
+        <div>
+          <small>2025年居民人均可支配收入</small>
+          <strong>
+            <span class="counter" data-value="43377">0</span>
+            <em>元</em>
+          </strong>
+        </div>
+
+        <div class="mini-rise">
+          <span>同比</span>
+          <b>+5.0%</b>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="s-detail">
+      从经济总量跨越式增长，到居民收入持续提升，发展的成果越来越多地体现为人民生活水平的改善。
+    </p>
+
+  </div>
+
+
+  <!-- ================= 02 基础建设 ================= -->
+  <div class="s-card data-card" data-chart="infrastructure">
+
+    <div class="data-card-head">
+      <div class="data-card-title">
+        <span class="data-index"></span>
+        <div>
+          <h3>基础建设</h3>
+          <p>铁路、高铁与电力织就现代中国</p>
+        </div>
+      </div>
+      <span class="data-year">1949 — 2025</span>
+    </div>
+
+    <div class="chart-box infra-chart">
+
+      <div class="chart-caption">
+        <span>全国铁路营业里程</span>
+        <b>
+          <span class="counter"
+                data-value="16.5"
+                data-decimal="1">0</span>
+          万公里
+        </b>
+      </div>
+
+      <div class="progress-chart">
+
+        <div class="progress-row">
+          <span class="progress-year">1949</span>
+
+          <div class="progress-track">
+            <div class="progress-fill"
+                 data-width="13.2"></div>
+          </div>
+
+          <strong>2.18万 km</strong>
+        </div>
+
+
+        <div class="progress-row">
+          <span class="progress-year">1978</span>
+
+          <div class="progress-track">
+            <div class="progress-fill"
+                 data-width="31.3"></div>
+          </div>
+
+          <strong>5.17万 km</strong>
+        </div>
+
+
+        <div class="progress-row">
+          <span class="progress-year">2025</span>
+
+          <div class="progress-track">
+            <div class="progress-fill"
+                 data-width="100"></div>
+          </div>
+
+          <strong>16.5万 km</strong>
+        </div>
+
+      </div>
+
+
+      <div class="infra-stats">
+
+        <div class="infra-number">
+          <span>高铁营业里程</span>
+          <strong>
+            <span class="counter"
+                  data-value="5.0"
+                  data-decimal="1">0</span>
+            <i>万公里</i>
+          </strong>
+        </div>
+
+        <div class="infra-number">
+          <span>发电装机容量</span>
+          <strong>
+            <span class="counter"
+                  data-value="38.9"
+                  data-decimal="1">0</span>
+            <i>亿千瓦</i>
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="s-detail">
+      从1949年的2.18万公里铁路，到2025年的16.5万公里；高铁营业里程达到5万公里，能源基础设施也迈入更大规模。
+    </p>
+
+  </div>
+
+
+  <!-- ================= 03 生态建设 ================= -->
+  <div class="s-card data-card" data-chart="ecology">
+
+    <div class="data-card-head">
+      <div class="data-card-title">
+        <span class="data-index"></span>
+        <div>
+          <h3>生态建设</h3>
+          <p>从增绿山河到绿色能源转型</p>
+        </div>
+      </div>
+      <span class="data-year"> — 2025</span>
+    </div>
+
+    <div class="chart-box ecology-chart">
+
+      <div class="eco-layout">
+
+        <!-- 环形图 -->
+        <div class="donut-wrap">
+
+          <div class="donut"
+               data-percent="60">
+
+            <div class="donut-inner">
+              <strong>
+                <span class="counter"
+                      data-value="60"
+                      data-decimal="0">0</span>%
+              </strong>
+              <small>可再生能源<br>装机占比</small>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- 数据说明 -->
+        <div class="eco-data">
+
+          <div class="eco-line">
+            <span class="eco-dot green"></span>
+
+            <div>
+              <small>可再生能源装机</small>
+              <strong>
+                <span class="counter"
+                      data-value="23.4"
+                      data-decimal="1">0</span>
+                亿千瓦
+              </strong>
+            </div>
+          </div>
+
+
+          <div class="eco-line">
+            <span class="eco-dot gold"></span>
+
+            <div>
+              <small>风电 + 光伏装机</small>
+              <strong>
+                <span class="counter"
+                      data-value="18.4"
+                      data-decimal="1">0</span>
+                亿千瓦
+              </strong>
+            </div>
+          </div>
+
+
+          <div class="eco-line">
+            <span class="eco-dot red"></span>
+
+            <div>
+              <small>森林覆盖率</small>
+              <strong>超25%</strong>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="eco-growth">
+
+        <div class="eco-growth-title">
+          <span>森林覆盖率</span>
+          <b>
+            8.6%
+            <i>→</i>
+            <strong>24.02%</strong>
+          </b>
+        </div>
+
+        <div class="eco-growth-bar">
+          <div class="eco-growth-fill"></div>
+        </div>
+
+        <div class="eco-years">
+          <span>新中国成立初期</span>
+          <span>近年数据</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="s-detail">
+      绿色发展正在成为发展的重要底色。森林资源持续增长，可再生能源快速扩张，生态建设与经济发展更加协调。
+    </p>
+
+  </div>
+
+
+  <!-- ================= 04 科技教育 ================= -->
+  <div class="s-card data-card" data-chart="technology">
+
+    <div class="data-card-head">
+      <div class="data-card-title">
+        <span class="data-index"></span>
+        <div>
+          <h3>科技教育</h3>
+          <p>创新成为发展的重要动能</p>
+        </div>
+      </div>
+      <span class="data-year">2020 — 2025</span>
+    </div>
+
+
+    <div class="chart-box tech-chart">
+
+      <div class="chart-caption">
+        <span>全国 R&D 经费投入</span>
+        <b>
+          <span class="counter"
+                data-value="39262">0</span>
+          亿元
+        </b>
+      </div>
+
+
+      <!-- 柱状图 -->
+      <div class="tech-bars">
+
+        <div class="tech-bar-item">
+
+          <div class="tech-bar-value">
+            2.44万亿
+          </div>
+
+          <div class="tech-bar-track">
+            <div class="tech-bar-fill"
+                 data-height="62"></div>
+          </div>
+
+          <span>2020</span>
+
+        </div>
+        <div class="tech-bar-item">
+          <div class="tech-bar-value">
+            3.93万亿
+          </div>
+          <div class="tech-bar-track">
+            <div class="tech-bar-fill"
+                 data-height="100"></div>
+          </div>
+          <span>2025</span>
+        </div>
+      </div>
+      <div class="tech-bottom">
+        <div class="tech-stat">
+          <span>研发经费投入强度</span>
+          <strong>
+            <span class="counter"
+                  data-value="2.8"
+                  data-decimal="2">0</span>%
+          </strong>
+      </div>
+        <div class="tech-stat">
+          <span>高等教育毛入学率</span>
+          <strong>
+            <span class="counter"
+                  data-value="61.3"
+                  data-decimal="1">0</span>%
+          </strong>
+        </div>
+        <div class="tech-stat">
+          <span>研发人员全时当量</span>
+          <strong>
+            <span class="counter"
+                  data-value="795"
+                  data-decimal="0">0</span>
+            万人年
+          </strong>
+        </div>
+      </div>
+    </div>
+    <p class="s-detail">
+      研发投入规模持续扩大，教育普及程度不断提高，越来越多的人才与知识资源成为推动社会发展的长期力量。
+    </p>
+    <p class="s-sub"></p>
+
+  </div>
+
+</div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="f-brand"><img class="f-logo" src="assets/logo.png" alt=""></div>
+    <div class="f-line"></div>
+    <p>新中国国庆纪事 &middot; 1949&mdash;2026</p>
+    <p style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.6)">本网站为「全国大学生数字编辑创新大赛」参赛作品</p>
+    <p style="margin-top:10px;color:rgba(255,255,255,.6)">© <span id="year"></span> 盛世华章 &middot; 资料仅供学习交流，图片与讲话原文如有版权或出处问题请联系修正</p>
+    <p style="margin-top:8px;font-size:13px;color:rgba(255,255,255,.6)">版权说明：本页首段滚动视频（天安门升旗镜头）由「即梦 AI」生成</p>
+    <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,.6)">页面标题与诗句使用的「书体坊毛泽东字体」为作者自费购买的正版商业授权，非盗版侵权</p>
+    <p style="margin-top:4px;font-size:13px;color:rgba(255,255,255,.6)">历史照片素材（1949&mdash;2026 共七个年份）来源于「人民网」；中部展开视频素材来源于「共青团中央」抖音号。以上均用于本作品展示，非商业用途，版权归原作者所有</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+/* ============================================================
+   祖国之发展 · 滚动逻辑
+   全部用「CSS sticky + 自己的 requestAnimationFrame」实现，
+   不依赖 GSAP / ScrollTrigger —— 在 file:// 下最稳，
+   也不会有"重算 pin 位置导致跳页"的问题。
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var LERP = 0.08, MIN_DELTA = 0.01;
+
+  /* ★ 标题开始消失的时机（按视频秒数） */
+  var TITLE_FADE_AT_SEC = 9.72;
+  /* 介绍文字淡入的时机：等标题彻底淡完（9.72 + 1.2 ≈ 10.92）后再开始 */
+  var INTRO_AT_SEC = 10.9;
+  var TITLE_FADE_MS = 1200;
+
+  /* 实时读数：文件名后加 #showtime 即可显示 */
+  var SHOW_DBG = location.hash === '#showtime';
+  var dbgEl = document.getElementById('dbg');
+  if (SHOW_DBG && dbgEl) dbgEl.style.display = 'block';
+
+  var scrollArea = document.getElementById('heroScroll');
+  var heroVideo  = document.getElementById('heroVideo');
+  var revealVid  = document.getElementById('revealVideo');
+  var heroCopy   = document.getElementById('heroCopy');
+  var titleBlock = document.getElementById('titleBlock');
+  var heroIntro  = document.getElementById('heroIntro');
+  var grid       = document.getElementById('devGrid');
+  var wrap       = document.getElementById('devReveal');
+  var carWrap    = document.getElementById('carouselWrap');
+
+  var vHero = { el: heroVideo, cur: 0, target: 0, dur: 0 };
+  var vRev  = { el: revealVid, cur: 0, target: 0, dur: 0 };
+  var lastDbg = 0;
+
+  if (vHero.el) vHero.el.addEventListener('loadedmetadata', function(){ vHero.dur = vHero.el.duration || 0; });
+  if (vRev.el)  vRev.el.addEventListener('loadedmetadata',  function(){ vRev.dur  = vRev.el.duration  || 0; });
+
+  function clamp01(v){ return Math.min(1, Math.max(0, v)); }
+
+  function heroProgress(){
+    if (!scrollArea) return 0;
+    var range = scrollArea.offsetHeight - window.innerHeight;
+    if (range <= 0) return 0;
+    return clamp01(window.scrollY / range);
+  }
+
+  /* 轮播进度：外层容器进入视口到离开视口的比例 */
+  function carouselProgress(){
+    if (!carWrap) return 0;
+    var r = carWrap.getBoundingClientRect();
+    /* 卡片钉在导航栏下方，所以进度从"容器顶到达 81px"开始 ——
+       那一刻上一个板块（顶部视频）已完整滚出视口 ✓ */
+    var stickyH = Math.max(1, window.innerHeight - NAV_H);
+    var range = carWrap.offsetHeight - stickyH;
+    if (range <= 0) return 0;
+    return clamp01((NAV_H - r.top) / range);
+  }
+
+  var overflow = 0;
+
+  /* ★ 滚动高度跟着"横向距离"走。
+     卡片从 6 张变 7 张后横向距离变长；若滚动区高度不变，
+     同样的滚动量会把卡片推得更快，手感会发飘。
+     这里按横向距离反推高度，保持"每滚 1px 推 1.25px"的稳定比例。 */
+  /* 导航栏实测高度：.navbar 78px + .site-header::after 金线 3px */
+  var NAV_H = 81;
+
+  function syncWrapHeight(){
+    if (!carWrap || !grid) return;
+    var ov = Math.max(0, grid.scrollWidth - window.innerWidth);
+    var base  = Math.max(0, window.innerHeight - NAV_H) * 1.2;   // 给展开视频那一段留的高度
+    var track = ov * 1.32;                  // 横向距离 × 比例（1.25→1.32，抵消相位调整带来的加速）
+    carWrap.style.height = Math.round(base + track) + 'px';
+  }
+
+  function measure(){
+    if (grid) overflow = Math.max(0, grid.scrollWidth - window.innerWidth);
+    syncWrapHeight();
+  }
+
+  var frames = 0;
+  function tick(){
+    /* ★ 每帧校验横向总长：卡片宽度是响应式的（33.3vw / 50vw / 85vw），
+       窗口一变总长就变；若 overflow 还是旧值，推到底时右侧会露一大块空白。
+       差异超过 8px 就自动纠正。 */
+    /* 注意：读 scrollWidth 会强制浏览器重算布局，
+       所以不要每帧都读 —— 每约 32 帧（半秒）校验一次即可。 */
+    if (grid && (frames & 31) === 0) {
+      var realOv = Math.max(0, grid.scrollWidth - window.innerWidth);
+      if (Math.abs(realOv - overflow) > 8) { overflow = realOv; syncWrapHeight(); }
+    }
+    var nowMs = performance.now();
+    frames++;
+
+    /* ---------- ① 顶部视频：滚动进度 × 时长 ---------- */
+    vHero.target = heroProgress() * vHero.dur;
+
+    /* ---------- ② 横向卡片 + 视频展开 ---------- */
+    var cp = carouselProgress();
+
+    /* ★ 三段式节奏：横移 → 停顿 → 展开
+       以前横移一结束就立刻展开，视觉上像"猛地弹开"。
+       中间留 8% 的停顿（约 190px 滚动量），形成顿挫感；
+       展开用 smoothstep(t²(3-2t))，起手慢、收尾稳。 */
+    var MOVE_END  = 0.58;    // 0    → 0.58  横移
+    var DWELL_END = 0.66;    // 0.58 → 0.66  停顿（什么都不动）
+    var moveP = Math.min(1, cp / MOVE_END);
+    var eraw  = clamp01((cp - DWELL_END) / (1 - DWELL_END));
+    var exP   = eraw * eraw * (3 - 2 * eraw);   // smoothstep
+
+    if (grid) grid.style.transform = 'translate3d(' + (-overflow * moveP).toFixed(2) + 'px,0,0)';
+    if (wrap) wrap.style.width = (exP * 100).toFixed(2) + '%';
+    vRev.target = exP * vRev.dur;
+
+    /* ---------- ③ 视频 seek（带守卫） ---------- */
+    [vHero, vRev].forEach(function (v) {
+      if (!v.el) return;
+      v.cur += (v.target - v.cur) * LERP;
+      if (!v.el.seeking && Math.abs(v.el.currentTime - v.cur) > MIN_DELTA) {
+        v.el.currentTime = v.cur;
+      }
+    });
+
+    /* ---------- ④ 标题淡出 ---------- */
+    if (titleBlock) {
+      var t = (vHero.el && vHero.el.currentTime) || 0;
+      var fadeP = clamp01((t - TITLE_FADE_AT_SEC) / (TITLE_FADE_MS / 1000));
+      /* 只淡这一层 —— 介绍文字在它外面，不会被一起淡掉 */
+      titleBlock.style.opacity = String(1 - fadeP);
+      titleBlock.style.transform = 'translateY(' + (-fadeP * 26).toFixed(2) + 'px)';
+      titleBlock.style.visibility = fadeP >= 1 ? 'hidden' : 'visible';
+    }
+
+    /* ---------- ⑤ 介绍文字：跟着标题的淡出/淡入双向切换 ---------- */
+    if (heroIntro) {
+      var tv = (vHero.el && vHero.el.currentTime) || 0;
+      var showIntro = (tv >= INTRO_AT_SEC) ||
+                      (titleBlock && titleBlock.style.visibility === 'hidden');
+      heroIntro.classList.toggle('on', !!showIntro);
+    }
+
+    /* ---------- ⑥ 读数 ---------- */
+    if (SHOW_DBG && dbgEl && nowMs - lastDbg > 120) {
+      lastDbg = nowMs;
+      dbgEl.textContent = '视频时间 ' + (((vHero.el && vHero.el.currentTime) || 0)).toFixed(2) + ' s' +
+        String.fromCharCode(10) + '总时长 ' + (vHero.dur || 0).toFixed(2) + ' s' +
+        String.fromCharCode(10) + '滚动进度 ' + (heroProgress() * 100).toFixed(1) + '%' +
+        String.fromCharCode(10) + '轮播进度 ' + (cp * 100).toFixed(1) + '%';
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- 入场动画（用 IntersectionObserver，简单可靠） ---------- */
+  function setupReveal(){
+    var els = document.querySelectorAll('[data-fade]');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (e){ e.style.opacity = 1; e.style.transform = 'none'; });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en, i) {
+        if (en.isIntersecting) {
+          setTimeout(function () {
+            en.target.style.transition = 'opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1)';
+            en.target.style.opacity = '1';
+            en.target.style.transform = 'none';
+          }, i * 130);
+          io.unobserve(en.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -18% 0px' });
+
+    els.forEach(function (e) {
+      e.style.opacity = '0';
+      e.style.transform = 'translateY(22px)';
+      io.observe(e);
+    });
+
+    /* 统计卡：逐字 / 逐词 */
+    document.querySelectorAll('.s-card').forEach(function (card) {
+      var h = card.querySelector('.stomp h3');
+      if (h && !h.dataset.split) {
+        h.dataset.split = '1';
+        var txt = h.textContent; h.textContent = '';
+        for (var i = 0; i < txt.length; i++) {
+          var s = document.createElement('span');
+          s.className = 's-ch'; s.textContent = txt[i];
+          s.style.display = 'inline-block';
+          s.style.opacity = '0'; s.style.transform = 'translateY(.34em)';
+          s.style.transition = 'opacity .7s cubic-bezier(.2,.7,.3,1) ' + (i * 0.04) + 's, transform .7s cubic-bezier(.2,.7,.3,1) ' + (i * 0.04) + 's';
+          h.appendChild(s);
+        }
+      }
+      var dp = card.querySelector('.s-detail');
+      if (dp && !dp.dataset.split) {
+        dp.dataset.split = '1';
+        var words = dp.textContent.split(/(\s+)/);
+        dp.textContent = '';
+        words.forEach(function (w, i) {
+          if (!w) return;
+          var s = document.createElement('span');
+          s.className = 's-word'; s.textContent = w;
+          s.style.display = 'inline-block';
+          s.style.opacity = '0'; s.style.transform = 'translateY(14px)';
+          s.style.transition = 'opacity .7s cubic-bezier(.2,.7,.3,1) ' + (i * 0.02) + 's, transform .7s cubic-bezier(.2,.7,.3,1) ' + (i * 0.02) + 's';
+          dp.appendChild(s);
+        });
+      }
+
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          en.target.querySelectorAll('.s-ch, .s-word').forEach(function (s) {
+            s.style.opacity = '1'; s.style.transform = 'none';
+          });
+          io2.unobserve(en.target);
+        });
+      }, { rootMargin: '0px 0px -22% 0px' });
+      io2.observe(card);
+    });
+  }
+
+  /* ---------- 启动 ---------- */
+  function boot(){
+    if (boot.done) return;
+    boot.done = true;
+
+    /* 关掉浏览器滚动位置还原：否则"第一次进来"可能被还原到旧位置 */
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+    measure();
+    setupReveal();
+
+    /* 尺寸变化时重算横向溢出量（只在没滚动时才重算，避免跳页） */
+    var rt = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(measure, 200);              /* ★ 窗口一变就重测，否则横向总长对不上会露空白 */
+    });
+    /* 字体就绪后再量一次（字宽会影响卡片内容宽度） */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure);
+    }
+    setTimeout(measure, 800);
+
+    requestAnimationFrame(tick);
+  }
+
+  if (document.readyState === 'complete') boot();
+  else {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+    window.addEventListener('load', boot);
+  }
+})();
+</script>
+<script>
+/* ============================================================
+   祝福墙 —— 左栏互动模块（纯原生，无依赖，可离线）
+   数据存在 localStorage，仅本机浏览器可见
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var KEY = 'speeches_wishes_v5';   /* 升版：让新的默认排版对所有人生效 */   /* v2：旧键里可能是用户清空后的空数组，忽略它 */
+
+  /* ★ 默认排版的"设计宽度"：排版是在多宽的墙上做的。
+       改这一个数字就能让整套排布贴合某个屏幕；界面实际会按 当前墙宽 / 这个值 等比缩放。 */
+  var LAYOUT_REF = 1071;      /* 你屏幕上左栏的真实可用宽（实测，别改错） */
+
+  var SEED = [
+    { who:'王',       txt:'祝祖国繁荣昌盛！',                                    t:'10月1日', slot:0, sample:true, nx:257, ny:84,  rot:0.02  },
+    { who:'小陈',     txt:'希望明年能去天安门看一次升旗。',                        t:'10月1日', slot:1, sample:true, nx:733, ny:244, rot:-0.07 },
+    { who:'匿名',     txt:'山河无恙，烟火寻常。',                                  t:'10月2日', slot:2, sample:true, nx:703, ny:29,  rot:0     },
+    { who:'李',       txt:'我爷爷参加过 1999 年的阅兵方队，他现在还留着那张照片。', t:'10月2日', slot:3, sample:true, nx:503, ny:192, rot:-0.15 },
+    { who:'匿名',     txt:'国泰民安，就够了。',                                    t:'10月3日', slot:4, sample:true, nx:302, ny:248, rot:0.2   },
+    { who:'一个学生', txt:'历史课上学过的东西，今天在照片里看见了。',               t:'10月3日', slot:5, sample:true, nx:478, ny:2,   rot:0     }
+  ];
+
+  /* SEED 的深拷贝 —— 直接 slice 会共享对象，改一条会污染整个 SEED */
+  function copySeed() {
+    return SEED.map(function (o) {
+      var it = { who:o.who, txt:o.txt, t:o.t, slot:o.slot, sample: !!o.sample };
+      /* ★ 默认排版里的坐标和角度也要带上 */
+      if (o.nx != null && o.ny != null) {
+        it.nx = o.nx; it.ny = o.ny;
+        it.rot = o.rot || 0;
+      }
+      return it;
+    });
+  }
+
+  /* ★ 给还没有槽位的留言分配槽位：
+       取"当前没人占用的最小整数"。这样删掉某张后，
+       它的槽位空出来给下一条新留言，而其余留言的钉点一个都不动。 */
+  function assignSlots() {
+    var used = {};
+    /* 先登记不重复的 slot；重复的（例如恢复示例时撞车）一律重排 */
+    list.forEach(function (it) {
+      if (it.slot != null && it.slot >= 0 && !used[it.slot]) { used[it.slot] = 1; return; }
+      it.slot = null;
+    });
+    var k = 0;
+    list.forEach(function (it) {
+      if (it.slot != null) return;
+      while (used[k]) k++;
+      it.slot = k; used[k] = 1;
+    });
+  }
+
+  var list = [], wall = document.getElementById('wishList');
+  if (!wall) return;
+
+  function load() {
+    var a = null;
+    try {
+      var raw = localStorage.getItem(KEY);
+      a = raw ? JSON.parse(raw) : null;
+    } catch (e) { a = null; }
+    var arr = (Array.isArray(a) && a.length) ? a : copySeed();
+    /* ★ 自动补回缺失的示例留言：
+         示例是不可删除的，任何原因（误删 / 旧版本 / 清空）丢失都在加载时补齐。
+         只按 who|txt 比对，绝不动你自己写的留言，也不改已有示例的位置。 */
+    var seed = copySeed();
+    var seedKey = {};
+    seed.forEach(function (s) { seedKey[(s.who || '') + '|' + s.txt] = 1; });
+    var added = false;
+    /* ★ 给"老数据"补 sample 标记：
+         早先版本存进 localStorage 的示例没有 sample 字段，
+         于是删除按钮会显示出来。这里按 署名|内容 对回种子，一律标成示例。 */
+    arr.forEach(function (it) {
+      if (seedKey[(it.who || '') + '|' + it.txt] && !it.sample) { it.sample = true; added = true; }
+    });
+    /* ★ 再补回彻底缺失的示例 */
+    var have = {};
+    arr.forEach(function (it) { have[(it.who || '') + '|' + it.txt] = 1; });
+    seed.forEach(function (s) {
+      if (have[(s.who || '') + '|' + s.txt]) return;
+      arr.push(s); added = true;   /* 保留示例原本的 slot，回到原位 */
+    });
+    if (added) { try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch (e) {} }
+    return arr;
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+
+  function makeCardEl(it, flashKeys) {
+    var key = (it.who || '') + '|' + it.txt + '|' + (it.t || '');
+    var d = document.createElement('div');
+    d.className = 'wish-item' + (flashKeys && flashKeys.indexOf(key) >= 0 ? ' flash' : '');
+    d.dataset.seed = key;
+    d.dataset.slot = (it.slot != null ? it.slot : 0);
+    if (it.sample) d.dataset.sample = '1';
+    if (it.nx != null && it.ny != null) {
+      d.dataset.nx = it.nx; d.dataset.ny = it.ny;
+      if (it.rot != null) d.dataset.rot = it.rot;
+      if (it.layer != null) d.dataset.layer = it.layer;
+    }
+    var t = document.createElement('p');
+    t.className = 't';
+    if (it.objects && it.objects.length) { t.style.display = 'none'; }   /* 有排版对象就不画纯文本 */
+    else { t.textContent = it.txt; }
+    var m = document.createElement('div');
+    m.className = 'm';
+    var who = document.createElement('span');
+    who.className = 'who';
+    who.textContent = it.who || '匿名';
+    var dt = document.createElement('span');
+    dt.textContent = it.t || '';
+    m.appendChild(who); m.appendChild(dt);
+    /* ★ 示例留言：根本不创建删除按钮（不是隐藏，是压根不生成） */
+    var del = null;
+    if (!it.sample) {
+      del = document.createElement('button');
+      del.className = 'del';
+      del.type = 'button';
+      del.title = '删除';
+      del.textContent = '\u00d7';
+      del.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        /* ★ 只摘掉这一张，不重建整个墙 —— 重建会让所有纸片闪一下 */
+        var at = -1;
+        for (var q = 0; q < list.length; q++) {
+          if (((list[q].who || '') + '|' + list[q].txt + '|' + (list[q].t || '')) === key) { at = q; break; }
+        }
+        if (at >= 0) list.splice(at, 1);
+        save();
+        if (d.parentNode) d.parentNode.removeChild(d);
+        syncFoot();
+        fitText();
+        layoutCards();
+      });
+    }
+    var hole = document.createElement('span');
+    hole.className = 'hole';
+    var nail = document.createElement('span');
+    nail.className = 'nail';
+    d.appendChild(hole); d.appendChild(nail);
+    if (del) d.appendChild(del);          /* ★ 示例没有 del，直接不挂 */
+    d.appendChild(t); d.appendChild(m);
+    if (it.objects && it.objects.length) {
+      var layer = document.createElement('div');
+      layer.className = 'card-obj-layer';
+      paintObjects(layer, it.objects, false);
+      d.appendChild(layer);
+    }
+    return d;
+  }
+
+  /* 底栏数字 + "恢复示例"按钮显隐 */
+  function syncFoot() {
+    document.getElementById('wishCnt').textContent = list.length;
+    var foot = wall.parentNode.querySelector('.wish-foot');
+    if (foot) foot.classList.toggle('restorable', list.length === 0);
+  }
+
+  function render(flashKeys) {
+    /* 重建期间挂起过渡：新元素先停在 left:0/top:0，不该被画出来 */
+    wall.classList.add('rebuilding');
+    wall.innerHTML = '';
+    for (var i = 0; i < list.length; i++) wall.appendChild(makeCardEl(list[i], flashKeys));
+    syncFoot();
+    if (flashKeys && flashKeys.length) {
+      var sel = wall.querySelector('.wish-item.flash');
+      if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: 'nearest' });
+      setTimeout(function () {
+        var arr = wall.querySelectorAll('.wish-item.flash');
+        for (var q = 0; q < arr.length; q++) arr[q].classList.remove('flash');
+      }, 1600);
+    }
+    fitText();
+    layoutCards();
+    /* 首帧已摆正 → 强制回流，让浏览器以"已定位"状态绘制，再恢复过渡 */
+    void wall.offsetHeight;
+    wall.classList.remove('rebuilding');
+  }
+
+  function today() {
+    var d = new Date();
+    return (d.getMonth() + 1) + '\u6708' + d.getDate() + '\u65e5';
+  }
+
+  /* ★ 卡片制作区：边写边看预览 */
+  (function () {
+    var pvT = document.getElementById('pvTxt');
+    var pvW = document.getElementById('pvWho');
+    var who = document.getElementById('wishWho');
+    var txt = document.getElementById('wishTxt');
+    /* 不再要求 pvT 存在：预览卡的纯文本层已被对象层取代，缺它不该让整段失效 */
+    if (!who || !txt) return;
+    function sync() {
+      if (pvT) pvT.textContent = txt.value.trim() || '写一句祝福…';
+      pvW.textContent = who.value.trim() || '匿名';
+      /* 署名要实时写回 makeWho，否则贴上/完成后卡片仍用旧名字 */
+      makeWho = who.value.trim();
+    }
+    who.addEventListener('input', sync);
+    txt.addEventListener('input', sync);
+    window.__syncPreview = sync;
+  })();
+
+  /* ============================================================
+       卡片制作区流程
+       制作新贺卡 → 右边出现预览卡（与真实卡片同尺寸）
+       贴上       → 把输入框的文字贴到预览卡上（不钉到墙上）
+       完成       → 预览卡变成一张真实卡片，可自由拖动放置
+       ============================================================ */
+  var makeWho = '', makeTxt = '';
+
+  function setPreview(on) {
+    var pv = document.getElementById('wishPreview');
+    if (pv) pv.classList.toggle('on', !!on);
+    var done = document.getElementById('wishDone');
+    if (done) done.disabled = !on;
+  }
+  function paintPreview() {
+    var b2 = document.getElementById('pvWho'), d2 = document.getElementById('pvDate');
+    if (b2) b2.textContent = makeWho || '匿名';
+    if (d2) d2.textContent = (makeObjects && makeObjects.length) ? '已贴上' : '预览';
+    if (typeof paintStage === 'function') paintStage();
+  }
+
+  document.getElementById('wishNew').addEventListener('click', function () {
+    /* ★ 开一张全新的卡：把上一张的对象和输入区都清干净，
+         否则新卡片上会带着上一张的文字 / 笔迹。 */
+    makeWho = ''; makeTxt = '';
+    makeObjects = [];
+    selId = null;
+    document.getElementById('wishWho').value = '';
+    document.getElementById('wishTxt').value = '';
+    makeWho = '';
+    if (window.__padClear) window.__padClear();
+    setPreview(true);
+    paintPreview();
+  });
+
+  document.getElementById('wishPaste').addEventListener('click', function () {
+    if (!pasteInputs()) document.getElementById('wishTxt').focus();
+  });
+
+  /* ★ 文本框里改字 → 选中的那个文字对象实时跟着变 */
+  document.getElementById('wishTxt').addEventListener('input', function () {
+    var o = window.__selObj ? window.__selObj() : null;
+    if (!o || o.type !== 'text') return;
+    o.text = this.value;
+    if (window.__refreshObj) window.__refreshObj(o);
+  });
+
+  /* ★ 手写栏重画 → 选中的那个手写对象实时跟着变（没选中就等贴上时新建） */
+  window.__padCommit = function (src) {
+    var o = window.__selObj ? window.__selObj() : null;
+    if (!o || o.type !== 'ink') return;
+    if (!src) {
+      /* ★ 擦干净了：这个手写对象就该消失（以前直接 return，卡片上什么都不变） */
+      var id = o.id;
+      makeObjects = makeObjects.filter(function (x) { return x.id !== id; });
+      selId = null;
+      paintStage();
+      return;
+    }
+    o.src = src;
+    if (window.__refreshObj) window.__refreshObj(o);
+  };
+
+  /* ★ 点卡面上"对象之外"的地方 → 结束当前编辑（取消选中） */
+  (function () {
+    var pv = document.getElementById('wishPreview');
+    if (!pv) return;
+    pv.addEventListener('pointerdown', function (ev) {
+      if (ev.target.closest && ev.target.closest('.card-obj')) return;   /* 点在对象上，交给编辑器 */
+      if (selId === null) return;
+      selId = null;
+      applySel();
+      /* ★ 退出编辑：输入区也一起退出（清空文本框与手写栏） */
+      exitEditing();
+      ev.stopPropagation();
+    });
+  })();
+
+  /* ★ 把输入区的内容变成卡面对象；返回这次新增了几个。「贴上」和「完成」共用。 */
+  function pasteInputs() {
+    makeWho = document.getElementById('wishWho').value.trim();
+    makeTxt = document.getElementById('wishTxt').value.trim();
+    var pv = document.getElementById('wishPreview');
+    var dd0 = draftDims();
+    var W = dd0.w || 160, H = dd0.h || 107;
+    var added = 0;
+    if (makeTxt) {
+      makeObjects.push({ id: 'o' + (++objSeq), type: 'text', text: makeTxt,
+                         x: W / 2, y: H * 0.30, rot: 0, s: 1,
+                         color: (window.__penColor ? window.__penColor() : '#000000') });
+      added++;
+    }
+    if (window.__padHasInk && window.__padHasInk()) {
+      var src = window.__padDataURL ? window.__padDataURL() : '';
+      if (src) {
+        makeObjects.push({ id: 'o' + (++objSeq), type: 'ink', src: src,
+                         x: W / 2, y: H * 0.68, rot: 0, s: 1 });
+        added++;
+      }
+    }
+    if (!added) return 0;
+    selId = makeObjects[makeObjects.length - 1].id;
+    /* ★ 贴上去之后，把输入区的字和笔迹清空，等待下一次创作 */
+    document.getElementById('wishTxt').value = '';
+    makeTxt = '';
+    if (window.__padClear) window.__padClear();
+    setPreview(true);
+    paintPreview();
+    return added;
+  }
+
+
+  document.getElementById('wishDone').addEventListener('click', function () {
+    /* ★ 还没贴过但输入区里已经有东西 → 先自动贴上（文本、手写有一个就算） */
+    if (!makeObjects.length) pasteInputs();
+    if (!makeObjects.length) { document.getElementById('wishTxt').focus(); return; }
+    makeWho = document.getElementById('wishWho').value.trim();   /* 完成前再读一次署名 */
+    selId = null;
+    setPreview(false);              /* 完成后预览卡区域留空，输入框宽度不变 */
+    takeCard();                     /* 预览卡 → 变成可拖动的真卡片 */
+  });
+
+  setPreview(false);
+
+  var __wr = document.getElementById('wishRestore');
+  if (__wr) __wr.addEventListener('click', function () {
+    /* ★ 只补回"当前没有的"示例留言，不动你自己的留言。
+         新补的留言不预设 slot，交给 assignSlots 占空位。 */
+    var have = {};
+    list.forEach(function (it) { have[(it.who || '') + '|' + it.txt] = 1; });
+    var keys = [];
+    copySeed().forEach(function (s) {
+      if (have[(s.who || '') + '|' + s.txt]) return;
+      list.push(s);   /* 保留示例原本的 slot，才能回到原位 */
+      keys.push((s.who || '') + '|' + s.txt + '|' + (s.t || ''));
+    });
+    if (!keys.length) return;
+    assignSlots();
+    save();
+    /* ★ 只追加缺的那几张，不重建整个墙 */
+    for (var q2 = 0; q2 < keys.length; q2++) {
+      var kk = keys[q2];
+      for (var w2 = 0; w2 < list.length; w2++) {
+        if (((list[w2].who || '') + '|' + list[w2].txt + '|' + (list[w2].t || '')) === kk) {
+          wall.appendChild(makeCardEl(list[w2], keys));
+          break;
+        }
+      }
+    }
+    syncFoot();
+    fitText();
+    layoutCards();
+    setTimeout(function () {
+      var arr = wall.querySelectorAll('.wish-item.flash');
+      for (var q3 = 0; q3 < arr.length; q3++) arr[q3].classList.remove('flash');
+    }, 1600);
+  });
+
+  var __wc = document.getElementById('wishClear');
+  if (__wc) __wc.addEventListener('click', function () {
+    if (!confirm('清空自己写的留言？（示例留言会保留）')) return;
+    /* ★ 只清空自己写的，示例不可删除 */
+    list = list.filter(function (it) { return it.sample; });
+    save(); render();
+  });
+
+  /* ★ 随机工具：用"留言内容"做种子 —— 同一条留言永远在同一位置、同一角度，
+       贴新留言时不会导致整面墙重新跳位。 */
+  function hashStr(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function prng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ★ 杂乱排列：随机平移 + 随机倾斜 + 随机层叠
+       平移量大于间距时 → 纸片挤压重叠；小于间距时 → 留出缝隙。 */
+  /* ============================================================
+   纸片排版引擎
+   · 每张纸片 = 一个可旋转矩形；钉点是旋转轴心（钉点永不移动）
+   · 同一层不允许重叠，但可以彼此贴住（挤压）
+   · 重叠时靠"各自绕钉旋转"让位；让不出来就升到上一层
+   ============================================================ */
+
+  /* 矩形的四个角（含旋转） */
+  function corners(cd) {
+    var hw = cd.w / 2, cos = Math.cos(cd.rot), sin = Math.sin(cd.rot);
+    var p = [[-hw, 0], [hw, 0], [hw, cd.h], [-hw, cd.h]], out = [];
+    for (var i = 0; i < 4; i++) {
+      out.push([cd.nx + p[i][0] * cos - p[i][1] * sin,
+                cd.ny + p[i][0] * sin + p[i][1] * cos]);
+    }
+    return out;
+  }
+
+  /* SAT 分离轴定理：两个可旋转矩形是否相交 */
+  function hit(a, b) {
+    var A = corners(a), B = corners(b);
+    var axes = [
+      [A[1][0] - A[0][0], A[1][1] - A[0][1]], [A[3][0] - A[0][0], A[3][1] - A[0][1]],
+      [B[1][0] - B[0][0], B[1][1] - B[0][1]], [B[3][0] - B[0][0], B[3][1] - B[0][1]]
+    ];
+    for (var i = 0; i < 4; i++) {
+      var n = axes[i], L = Math.hypot(n[0], n[1]);
+      if (L < 1e-6) continue;
+      n = [n[0] / L, n[1] / L];
+      var aM = 1e9, aX = -1e9, bM = 1e9, bX = -1e9;
+      for (var k = 0; k < 4; k++) {
+        var pa = A[k][0] * n[0] + A[k][1] * n[1];
+        var pb = B[k][0] * n[0] + B[k][1] * n[1];
+        if (pa < aM) aM = pa; if (pa > aX) aX = pa;
+        if (pb < bM) bM = pb; if (pb > bX) bX = pb;
+      }
+      if (aX < bM || bX < aM) return false;   // 找到分离轴 → 不相交
+    }
+    return true;
+  }
+
+  function overlapCount(list) {
+    var n = 0;
+    for (var i = 0; i < list.length; i++)
+      for (var j = i + 1; j < list.length; j++)
+        if (hit(list[i], list[j])) n++;
+    return n;
+  }
+
+  /* 松弛：同层重叠时，左边的往左转、右边的往右转，直到互不重叠 */
+  /* 第一层在网格里，角度受间距约束；第二层及以上是自由钉的，可以转得更狠。
+     把角度上限做成参数，两处各用各的。 */
+  function layerLimit(L) { return (L === 0) ? 0.28 : 0.62; }   /* ±16° / ±35° */
+
+  function settle(list, LIM) {
+    if (LIM == null) LIM = 0.28;
+    for (var it = 0; it < 140; it++) {
+      var moved = false;
+      for (var i = 0; i < list.length; i++) {
+        for (var j = i + 1; j < list.length; j++) {
+          var a = list[i], b = list[j];
+          if (!hit(a, b)) continue;
+          /* 轴心在顶部中心：顺时针(+θ)让底边左移，逆时针(−θ)让底边右移。
+             所以左卡片要"+θ"、右卡片要"−θ"才能把两张分开。
+             （之前符号写反了，越转越挤，旋转永远失败。） */
+          if (a.nx <= b.nx) {
+            a.rot = Math.min( LIM, a.rot + 0.01);
+            b.rot = Math.max(-LIM, b.rot - 0.01);
+          } else {
+            a.rot = Math.max(-LIM, a.rot - 0.01);
+            b.rot = Math.min( LIM, b.rot + 0.01);
+          }
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+    return overlapCount(list) === 0;
+  }
+
+  /* 排版：先给每张纸片一个钉点，再逐张判断能否留在第一层 */
+  function layoutCards() {
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    /* ★ 绝不给墙设 min-height：那会顶开 footer。
+         改用墙内部一个 1px 宽的绝对定位元素来撑出滚动高度。 */
+    function setSpace(h) {
+      var sp = wall.querySelector('.wish-space');
+      if (!sp) { sp = document.createElement('div'); sp.className = 'wish-space'; wall.appendChild(sp); }
+      sp.style.height = h + 'px';
+    }
+    if (!els.length) { setSpace(0); return; }
+    var cw = parseFloat(getComputedStyle(wall).getPropertyValue('--wish-w')) || 160;
+    var ch = cw / 1.5;
+    var nw = wall.clientWidth;
+
+    var padL = 6, padT = 8;
+    /* ★ 统一角度上限，并让间距由它推导出来：
+         一张 w×h 的纸片转 θ 后占的包围盒是
+           宽 = w·cosθ + h·sinθ   高 = h·cosθ + w·sinθ
+         以前间距写死，转起来后纸片变"高"就会撞到下一行，
+         于是越挤越歪、越歪越撞，最后谁都挤不开。 */
+    var LIMIT = 0.28;                                  /* ±16° */
+    var stepX = cw * Math.cos(LIMIT) + ch * Math.sin(LIMIT) + 5;
+    var stepY = ch * Math.cos(LIMIT) + cw * Math.sin(LIMIT) + 7;
+    var cols = Math.max(1, Math.floor((nw - padL - 6) / stepX));
+
+    var cards = [], pinned = [];
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var slot = parseInt(el.dataset.slot, 10);
+      if (isNaN(slot) || slot < 0) slot = i;
+      var mnx = parseFloat(el.dataset.nx), mny = parseFloat(el.dataset.ny);
+      var manual = !isNaN(mnx) && !isNaN(mny);
+      /* ★ 方案A：整套排布按"设计宽度"等比缩放。
+           默认排版是在约 936px 宽的墙上排的（最右一张 nx=837，卡片宽 182）。
+           这里用 当前墙宽 / 936 当缩放系数，任何窗口下都完整落在墙内，
+           且相对位置、彼此间距完全一致。 */
+      /* 用父容器宽度，和 sizeCards 里算卡片尺寸时完全一致 */
+      var boxW = (wall.parentNode || wall).getBoundingClientRect().width || wall.clientWidth;
+      var KL = boxW / LAYOUT_REF;        /* 与卡片尺寸同一个系数 */
+      var mlyr = parseInt(el.dataset.layer, 10);
+      cards.push({
+        el: el, w: cw, h: ch, slot: slot, layer: 0, manual: manual,
+        nx: manual ? mnx * KL : padL + (slot % cols) * stepX + cw / 2,
+        ny: manual ? mny * KL : padT + Math.floor(slot / cols) * stepY,
+        /* ★ 起始角 = 这张卡片"自带的"角度（默认排版里写死的），没有就 0。
+             注意：这里取自 data-rot（固定值），不是"当前渲染角度"——
+             所以删掉挤压它的那张之后，它仍会回到自己该在的角度，不会永远歪着。 */
+        rot: (function () {
+          var rr = parseFloat(el.dataset.rot);
+          return isNaN(rr) ? 0 : rr;
+        })(),
+        forcedLayer: (manual && !isNaN(mlyr)) ? mlyr : null
+      });
+    }
+
+    /* 手动钉上去的卡片层号固定，不参与自动分层 */
+    cards.forEach(function (cd) { if (cd.forcedLayer != null) pinned.push(cd); });
+    var auto = cards.filter(function (cd) { return cd.forcedLayer == null; });
+
+    /* 先"瞬时"跑一遍松弛，只用来决定谁留在第几层 */
+    auto.sort(function (a, b) { return a.slot - b.slot; });
+    var layers = [];
+    auto.forEach(function (cd) {
+      var L = 0;
+      for (; L < 4; L++) {
+        if (!layers[L]) layers[L] = [];
+        var snap = layers[L].map(function (x) { return x.rot; });
+        layers[L].push(cd);
+        if (settle(layers[L])) break;
+        layers[L].pop();
+        layers[L].forEach(function (x, k2) { x.rot = snap[k2]; });
+      }
+      cd.layer = Math.min(L, 3);
+    });
+    pinned.forEach(function (cd) { cd.layer = Math.min(cd.forcedLayer, 3); });
+
+    /* ★ 分层定下来之后，按层对"所有卡片"（含手动钉上去的）再跑一次挤压。
+         之前 settle 只作用于自动排布的卡片，手动钉的那些没人挤，
+         于是同层的好几张就平着叠在一起了。 */
+    var byL = [];
+    cards.forEach(function (cd) {
+      if (!byL[cd.layer]) byL[cd.layer] = [];
+      byL[cd.layer].push(cd);
+    });
+    byL.forEach(function (arr, L) { settle(arr, layerLimit(L)); });
+
+    cards.forEach(function (cd) { cd.el.__c = cd; });
+
+    /* 按层分组，供逐帧挤压用 */
+    var byLayer = [];
+    cards.forEach(function (cd) {
+      if (!byLayer[cd.layer]) byLayer[cd.layer] = [];
+      byLayer[cd.layer].push(cd);
+    });
+
+    var maxYSeen = 0;
+    function apply() {
+      var mY = 0;
+      cards.forEach(function (cd) {
+        cd.el.style.transform = 'translate(' + (cd.nx - cd.w / 2).toFixed(1) + 'px,' +
+                                cd.ny.toFixed(1) + 'px) rotate(' + cd.rot.toFixed(4) + 'rad)';
+        cd.el.dataset.layer = cd.layer;                 /* 供 CSS 按层换阴影 */
+      cd.el.style.zIndex = String(10 + cd.layer * 10);
+        if (cd.ny + cd.h * 1.55 > mY) mY = cd.ny + cd.h * 1.55;
+      });
+      maxYSeen = mY;
+      setSpace(mY + 24);
+    }
+
+    /* ★ 实时挤压：每帧做一轮"让位"，肉眼能看到纸片被一点点挤开。
+         以前是一次算完直接跳到终态，看不到过程。 */
+    /* ★ 一次性写终值。
+         CSS transition 会自动从"当前显示的角度"平滑过渡到终值 ——
+         所以既没有"先弹回 0 再转开"的闪动，
+         删到只剩一张时它也会自然地立正回来。 */
+    /* 松弛算完后 cd.rot 就是终值，直接落位即可 */
+    apply();
+  }
+
+  /* ★ 文字自适应：卡片尺寸固定，放不下就缩小字号（缩到 0.62em 为止） */
+  function fitText() {
+    var items = wall.querySelectorAll('.wish-item');
+    for (var i = 0; i < items.length; i++) {
+      var t = items[i].querySelector('.t');
+      if (!t) continue;
+      t.style.fontSize = '';                                  // 复位到 1em
+      var base = parseFloat(getComputedStyle(t).fontSize) || 12;
+      for (var pass = 0; pass < 4; pass++) {                  // 迭代几次收敛
+        if (t.scrollHeight <= t.clientHeight + 1) break;
+        var ratio = t.clientHeight / t.scrollHeight;
+        var next = Math.max(base * 0.62, parseFloat(getComputedStyle(t).fontSize) * ratio * 0.98);
+        if (next < 8) next = 8;
+        t.style.fontSize = next.toFixed(2) + 'px';
+      }
+    }
+  }
+
+  /* ★ 卡片尺寸 = 墙面积 × 5%，按 3:2 反推宽度；字号用 calc 跟着走 */
+  function sizeCards() {
+    /* 从父容器取面积：墙的宽度由卡片尺寸决定，若从墙自身取会形成放大死循环 */
+    var box = (wall.parentNode || wall).getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    var w;
+    if (SEED.length && SEED[0].nx != null) {
+      /* ★ 已有默认排版：卡片尺寸必须和坐标用同一把尺子 —— 否则
+           位置按墙宽"线性"缩放、卡片按面积"开平方"缩放，
+           窗口一大两者就对不上，排布就散了。 */
+      w = box.width / LAYOUT_REF * 214;
+    } else {
+      var cardArea = box.width * box.height * 0.05;
+      w = Math.sqrt(cardArea * 1.5);
+    }
+    w = Math.max(122, Math.min(w, box.width * 0.62));   /* 上限：父容器宽的 62% */
+    wall.style.setProperty('--wish-w', w.toFixed(1) + 'px');
+    /* ★ 同时设到 .wish（墙的父级）：图例和草稿卡挂在 .wish 下，
+       只设墙上的话它们读不到，会退回 160px 兜底值 —— 尺寸就和真实卡片不一致了。 */
+    if (wall.parentNode) wall.parentNode.style.setProperty('--wish-w', w.toFixed(1) + 'px');
+    /* ★ 制作区 UI 的缩放 = 卡片相对"原始基准(200)"的放大倍数。
+         卡片从 200 涨到 240 时，按钮/输入框同步涨 20%，整体比例始终一致。 */
+    var uiK = Math.max(0.62, Math.min(1.6, w / 214));
+    var mk = document.querySelector('.wish-make');
+    if (mk) {
+      mk.style.zoom = uiK.toFixed(3);
+      mk.style.setProperty('--ui', uiK.toFixed(4));   /* 给预览卡反向补偿用 */
+    }
+  }
+
+  var rt2 = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt2);
+    rt2 = setTimeout(sizeCards, 160);
+  });
+
+  list = load();
+  assignSlots();          /* 迁移：老数据没有 slot，按顺序补齐 */
+  save();
+  /* ============================================================
+       卡面排版编辑器
+       贴上 = 把文字 / 手写各变成一个对象放到预览卡上，
+              每个对象都有虚线外框和手柄，可以缩放、移动、旋转。
+       ============================================================ */
+  var makeObjects = [];      /* { id, type, x, y, rot, s, text, src } */
+  var selId = null;
+  var objSeq = 0;
+
+  function stageEl() { return document.getElementById('pvLayer'); }
+
+  /* 把一组对象画到宿主容器里；editing = 是否带编辑手柄 */
+  function paintObjects(host, objs, editing) {
+    if (!host) return;
+    host.innerHTML = '';
+    (objs || []).forEach(function (o) {
+      var d = document.createElement('div');
+      d.className = 'card-obj ' + o.type + (editing && o.id === selId ? ' sel' : '');
+      d.dataset.id = o.id;
+      d.style.setProperty('--hinv', 1 / (o.s || 1));   /* 手柄不随缩放变大 */
+      d.style.transform = 'translate(' + o.x + 'px,' + o.y + 'px) ' +
+                          'translate(-50%,-50%) rotate(' + o.rot + 'rad) scale(' + o.s + ')';
+      if (o.type === 'text') {
+        var sp = document.createElement('span');
+        sp.className = 'obi-txt';
+        sp.textContent = o.text;
+        sp.style.color = o.color || '#000000';   /* 文字跟随取色器 */
+        d.appendChild(sp);
+      } else {
+        var im = document.createElement('img');
+        im.src = o.src;
+        im.alt = '';
+        d.appendChild(im);
+      }
+      if (editing) {
+        ['nw', 'ne', 'sw', 'se', 'rot', 'del'].forEach(function (k) {
+          var h = document.createElement('span');
+          h.className = 'h ' + k;
+          h.dataset.h = k;
+          d.appendChild(h);
+        });
+      }
+      host.appendChild(d);
+    });
+  }
+
+  function paintStage() {
+    var host = stageEl();
+    if (host) host.classList.add('editing');
+    paintObjects(host, makeObjects, true);
+  }
+
+  /* ★ 轻量更新：只改 class / transform，绝不重建 DOM。
+       重建会把正在拖动的那个节点换掉，后续 pointermove 就断了。 */
+  function applySel() {
+    var host = stageEl();
+    if (!host) return;
+    var kids = host.querySelectorAll('.card-obj');
+    for (var i = 0; i < kids.length; i++) {
+      if (kids[i].dataset.id === selId) kids[i].classList.add('sel');
+      else kids[i].classList.remove('sel');
+    }
+  }
+  function applyTransforms() {
+    var host = stageEl();
+    if (!host) return;
+    var kids = host.querySelectorAll('.card-obj');
+    for (var i = 0; i < kids.length; i++) {
+      var o = findObj(kids[i].dataset.id);
+      if (o) kids[i].style.transform = 'translate(' + o.x + 'px,' + o.y + 'px) ' +
+        'translate(-50%,-50%) rotate(' + o.rot + 'rad) scale(' + o.s + ')';
+        kids[i].style.setProperty('--hinv', 1 / (o.s || 1));
+    }
+  }
+
+  /* ★ 只改某条文字的颜色，不重建节点 */
+  function refreshTextColor(id, color) {
+    var host = stageEl();
+    if (!host) return;
+    var kids = host.querySelectorAll('.card-obj');
+    for (var i = 0; i < kids.length; i++) {
+      if (kids[i].dataset.id === id) {
+        var sp = kids[i].querySelector('.obi-txt');
+        if (sp) sp.style.color = color;
+      }
+    }
+  }
+
+  function findObj(id) {
+    for (var i = 0; i < makeObjects.length; i++) if (makeObjects[i].id === id) return makeObjects[i];
+    return null;
+  }
+
+  /* —— 拖动 / 缩放 / 旋转 —— */
+  (function () {
+    var host = stageEl();
+    if (!host) return;
+    var mode = null, o0 = null, h0 = null, sx = 0, sy = 0, d0 = 0, a0 = 0, s0 = 1, cx = 0, cy = 0;
+
+    function cardRect() { return host.getBoundingClientRect(); }
+    host.addEventListener('pointerdown', function (ev) {
+      window.__pevDown = (window.__pevDown || 0) + 1;
+      var hEl = ev.target.closest ? ev.target.closest('.h') : null;
+      var oEl = ev.target.closest ? ev.target.closest('.card-obj') : null;
+      if (!oEl) { selId = null; applySel(); return; }
+      var id = oEl.dataset.id;
+      var o = findObj(id);
+      if (!o) return;
+      if (hEl && hEl.dataset.h === 'del') {           /* 删除对象 */
+        makeObjects = makeObjects.filter(function (x) { return x.id !== id; });
+        selId = null; paintStage();
+        exitEditing();                 /* ★ 输入区同步退出（文本框与手写栏一起清空） */
+        ev.preventDefault(); return;
+      }
+      selId = id;
+      applySel();                    /* ★ 只切 class，不重建节点 */
+      loadIntoInputs(o);             /* ★ 把它的内容灌回文本框 / 手写栏 */
+      var cr = cardRect();
+      sx = ev.clientX; sy = ev.clientY;
+      cx = o.x; cy = o.y;
+      if (hEl) {
+        h0 = hEl.dataset.h;
+        if (h0 === 'rot') {
+          mode = 'rot';
+          a0 = Math.atan2(ev.clientY - (o.cy || 0), ev.clientX - (o.cx || 0));
+          /* 以卡片坐标里的对象中心为基准算角度 */
+        var pc = { x: cr.left + o.x, y: cr.top + o.y };
+          a0 = Math.atan2(ev.clientY - pc.y, ev.clientX - pc.x);
+          o0 = o.rot;
+        } else {
+          mode = 'scale';
+          var pc2 = { x: cr.left + o.x, y: cr.top + o.y };
+          d0 = Math.hypot(ev.clientX - pc2.x, ev.clientY - pc2.y) || 1;
+          s0 = o.s;
+        }
+      } else {
+        mode = 'move';
+      }
+      try { host.setPointerCapture(ev.pointerId); } catch (e) {}
+      ev.preventDefault();
+    });
+
+    host.addEventListener('pointermove', function (ev) {
+      if (mode) window.__pevMove = (window.__pevMove || 0) + 1;
+      if (!mode || !selId) return;
+      var o = findObj(selId);
+      if (!o) return;
+      var cr = cardRect();
+      if (mode === 'move') {
+        o.x = cx + (ev.clientX - sx);
+        o.y = cy + (ev.clientY - sy);
+      } else if (mode === 'scale') {
+        var pc = { x: cr.left + o.x, y: cr.top + o.y };
+        var d = Math.hypot(ev.clientX - pc.x, ev.clientY - pc.y) || 1;
+        o.s = Math.max(0.25, Math.min(6, s0 * d / d0));
+      } else if (mode === 'rot') {
+        var pc3 = { x: cr.left + o.x, y: cr.top + o.y };
+        var a = Math.atan2(ev.clientY - pc3.y, ev.clientX - pc3.x);
+        o.rot = o0 + (a - a0);
+      }
+      applyTransforms();             /* ★ 只改 transform，不重建节点 */
+      ev.preventDefault();
+    });
+    function stop() { mode = null; h0 = null; }
+    window.__pevState = function () {
+      return { down: window.__pevDown || 0, move: window.__pevMove || 0, mode: mode, sel: selId };
+    };
+    host.addEventListener('pointerup', stop);
+    host.addEventListener('pointercancel', stop);
+  })();
+
+  window.__cardObjects = function () { return makeObjects; };
+  window.__selObj = function () { return findObj(selId); };
+
+  /* 内容变了（改了文字 / 重画了笔迹）→ 只更新那个节点的内容 */
+  window.__refreshObj = function (o) {
+    if (!o) return;
+    var host = stageEl();
+    if (!host) return;
+    var node = host.querySelector('[data-id="' + o.id + '"]');
+    if (!node) return;
+    if (o.type === 'text') {
+      node.firstChild && node.firstChild.nodeType === 3 ? (node.firstChild.nodeValue = o.text) : null;
+      /* 简单可靠：把文字节点单独放一个 span */
+      var sp = node.querySelector('.obi-txt');
+      if (sp) sp.textContent = o.text;
+      else if (!node.querySelector('img')) node.textContent = o.text;
+    } else {
+      var im = node.querySelector('img');
+      if (im) im.src = o.src;
+    }
+  };
+
+  /* ★ 选中对象后，把它的内容灌回输入区（文本框 / 手写栏） */
+  /* ★ 退出编辑：输入区同步清空，避免"卡片上已取消选中，输入框里还留着内容" */
+  function exitEditing() {
+    var ta = document.getElementById('wishTxt');
+    if (ta) ta.value = '';
+    if (window.__padClear) window.__padClear();
+  }
+
+  function loadIntoInputs(o) {
+    if (!o) return;
+    if (o.type === 'text') {
+      document.getElementById('wishTxt').value = o.text || '';
+    } else if (o.type === 'ink' && window.__padLoad) {
+      window.__padLoad(o.src);
+    }
+  }
+  window.__loadIntoInputs = loadIntoInputs;
+
+  /* ============================================================
+       手写栏：鼠标 / 触摸直接书写
+       ============================================================ */
+  (function () {
+    var pad = document.getElementById('wishPad');
+    if (!pad) return;
+    var box = pad.parentNode;
+    var ctx = pad.getContext('2d');
+    var drawing = false;
+    var penColor = '#000000';      /* ★ 当前笔色 */
+    var eraser = false;            /* ★ 橡皮模式 */
+    window.__penColor = function () { return penColor; };
+
+    function fit() {
+      var r = pad.getBoundingClientRect();
+      var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+      var dpr = window.devicePixelRatio || 1;
+      /* 尺寸没变就别动，避免把已写的内容擦掉 */
+      if (pad.width === Math.round(w * dpr) && pad.height === Math.round(h * dpr)) return;
+      var old = null;
+      try { if (pad.width > 1 && pad.height > 1) old = pad.toDataURL(); } catch (e) {}
+      pad.width = Math.round(w * dpr);
+      pad.height = Math.round(h * dpr);
+      strokeSetup(dpr);
+      if (old) { var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0, w, h); }; im.src = old; }
+    }
+
+    /* ★ 画笔设定：任何时候改了 canvas.width 都会重置变换，必须重新套一次 */
+    function strokeSetup(dpr) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = penColor;
+    }
+    function ensureSize() {
+      var r = pad.getBoundingClientRect();
+      var dpr = window.devicePixelRatio || 1;
+      var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+      if (pad.width !== Math.round(w * dpr) || pad.height !== Math.round(h * dpr)) {
+        pad.width = Math.round(w * dpr);
+        pad.height = Math.round(h * dpr);
+      }
+      strokeSetup(dpr);                 /* 尺寸变过就重设变换，保证笔和内容对齐 */
+      return { w: w, h: h, dpr: dpr };
+    }
+    /* ★ 布局完成后才知道真实尺寸：用 ResizeObserver 跟着走 */
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(box);
+    window.addEventListener('resize', fit);
+    setTimeout(fit, 0);
+    setTimeout(fit, 300);
+
+    function pos(ev) {
+      var r = pad.getBoundingClientRect();
+      return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+    }
+    pad.addEventListener('pointerdown', function (ev) {
+      drawing = true;
+      box.classList.add('dirty');
+      try { pad.setPointerCapture(ev.pointerId); } catch (e) {}
+      var p = pos(ev);
+      /* ★ 每次起笔都重新套一遍：颜色可能刚改过，橡皮也可能刚切换 */
+      ctx.globalCompositeOperation = eraser ? 'destination-out' : 'source-over';
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = eraser ? 14 : 2.2;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      if (eraser) { ctx.lineTo(p.x + 0.01, p.y + 0.01); ctx.stroke(); }   /* 点一下就擦一下 */
+      ev.preventDefault();
+    });
+    pad.addEventListener('pointermove', function (ev) {
+      if (!drawing) return;
+      var p = pos(ev);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      ev.preventDefault();
+    });
+    function stop() {
+      if (drawing) {
+        drawing = false;
+        ctx.globalCompositeOperation = 'source-over';   /* 收笔还原，免得影响后面的贴图 */
+        if (window.__padOnCommit) window.__padOnCommit();
+      } else {
+        drawing = false;
+      }
+    }
+    pad.addEventListener('pointerup', stop);
+    pad.addEventListener('pointercancel', stop);
+    pad.addEventListener('pointerleave', stop);
+
+    /* 给"贴上"用：有没有写过 / 取笔迹图 */
+    window.__padHasInk = function () { return box.classList.contains('dirty'); };
+    /* ★ 导出笔迹：裁到实际笔迹的外接矩形。
+       以前直接导出整块画布，空白也算进去，卡面上那个选择框就比笔迹大一大圈。 */
+  window.__padDataURL = function () { try { return pad.toDataURL('image/png'); } catch (e) { return ''; } };
+
+    function clearPad() {
+      var s = ensureSize();
+      ctx.clearRect(0, 0, s.w, s.h);
+      box.classList.remove('dirty');
+    }
+    window.__padClear = clearPad;
+    /* ★ 把某张笔迹图载回手写板（点卡片上的手写对象时用） */
+    window.__padLoad = function (src) {
+      /* ★ 以前这里写了 pad.width = pad.width —— 给 canvas.width 赋值会把变换矩阵重置成单位阵，
+           之后画笔按 CSS 像素落点、画布却是 DPR 尺寸，笔迹整体缩小并偏移。
+           现在统一走 ensureSize：尺寸不动，变换重新套上。 */
+      var s = ensureSize();
+      ctx.clearRect(0, 0, s.w, s.h);
+      if (!src) { box.classList.remove('dirty'); return; }
+      var im = new Image();
+      im.onload = function () {
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);            /* 贴图用物理像素 */
+        ctx.clearRect(0, 0, pad.width, pad.height);
+        ctx.drawImage(im, 0, 0, pad.width, pad.height);
+        ctx.restore();                                  /* 恢复 DPR 变换，画笔才对得上 */
+      };
+      im.src = src;
+      box.classList.add('dirty');
+    };
+    /* 手写结束 → 通知"正在编辑的那个对象"更新它的图 */
+    function commitInk() {
+        if (window.__padCommit) window.__padCommit(pad.toDataURL('image/png'));
+    }
+    window.__padOnCommit = commitInk;
+
+    /* ===== 橡皮开关 ===== */
+    var eraserBtn = document.getElementById('handEraser');
+    if (eraserBtn) eraserBtn.addEventListener('click', function () {
+      eraser = !eraser;
+      eraserBtn.classList.toggle('on', eraser);
+      pad.style.cursor = eraser
+        ? 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\'><rect x=\'5\' y=\'8\' width=\'14\' height=\'9\' rx=\'2\' fill=\'%23f3e6c8\' stroke=\'%237a5c14\' stroke-width=\'1.3\'/><rect x=\'5\' y=\'8\' width=\'14\' height=\'4\' rx=\'2\' fill=\'%23b98e5a\' stroke=\'%237a5c14\' stroke-width=\'1.2\'/></svg>") 12 20, cell'
+        : '';
+    });
+
+    /* ===== 取色器（预选色 / 色板自由定位 / 色码输入）===== */
+    (function () {
+      var btn = document.getElementById('handColorBtn');
+      var pop = document.getElementById('handPop');
+      var dot = document.getElementById('handColorDot');
+      var pre = document.getElementById('hpPresets');
+      var sq = document.getElementById('hpSquare');
+      var hue = document.getElementById('hpHue');
+      var hex = document.getElementById('hpHex');
+      var pv = document.getElementById('hpPreview');
+      if (!btn || !pop || !sq || !hue) return;
+
+      /* ★ 把面板搬到 body 下：这样它不再受 .wish-hand / .wish-make 等的
+           overflow 与层叠上下文影响，永远浮在最上层。 */
+      document.body.appendChild(pop);
+      function place() {
+        var r = btn.getBoundingClientRect();
+        var pw = pop.offsetWidth || 200, ph = pop.offsetHeight || 200;
+        var left = Math.min(r.left, window.innerWidth - pw - 8);
+        var top = r.top - ph - 8;                       /* 优先放在按钮上方 */
+        if (top < 8) top = Math.min(r.bottom + 8, window.innerHeight - ph - 8);
+        pop.style.left = Math.max(8, left) + 'px';
+        pop.style.top = Math.max(8, top) + 'px';
+      }
+
+      var h = 0, s = 0, v = 0;      /* 初始接近金色 */
+      var valEl = document.getElementById('hpVal');
+      var PRESETS = ['#3a2f28', '#8b1a22', '#c9a227', '#1f6f43', '#1b4f8a', '#7a4bb5', '#d2691e', '#0f8a8a'];
+      var sqCtx = sq.getContext('2d'), hueCtx = hue.getContext('2d');
+
+      function hex2rgb(x) {
+        x = (x || '').replace('#', '');
+        if (x.length === 3) x = x[0]+x[0]+x[1]+x[1]+x[2]+x[2];
+        if (!/^[0-9a-fA-F]{6}$/.test(x)) return null;
+        return [parseInt(x.slice(0,2),16), parseInt(x.slice(2,4),16), parseInt(x.slice(4,6),16)];
+      }
+      function toHex(r, g, b) {
+        return '#' + [r,g,b].map(function (n) {
+          var t = Math.max(0, Math.min(255, Math.round(n))).toString(16);
+          return t.length === 1 ? '0' + t : t;
+        }).join('');
+      }
+      function hsv2rgb(H, S, V) {
+        var C = V * S, X = C * (1 - Math.abs((H / 60) % 2 - 1)), m = V - C, r = 0, g = 0, b2 = 0;
+        if (H < 60) { r = C; g = X; } else if (H < 120) { r = X; g = C; }
+        else if (H < 180) { g = C; b2 = X; } else if (H < 240) { g = X; b2 = C; }
+        else if (H < 300) { r = X; b2 = C; } else { r = C; b2 = X; }
+        return [(r + m) * 255, (g + m) * 255, (b2 + m) * 255];
+      }
+      function rgb2hsv(r, g, b2) {
+        r /= 255; g /= 255; b2 /= 255;
+        var mx = Math.max(r, g, b2), mn = Math.min(r, g, b2), d = mx - mn, H = 0;
+        if (d) {
+          if (mx === r) H = 60 * (((g - b2) / d) % 6);
+          else if (mx === g) H = 60 * ((b2 - r) / d + 2);
+          else H = 60 * ((r - g) / d + 4);
+        }
+        if (H < 0) H += 360;
+        return [H, mx ? d / mx : 0, mx];
+      }
+      function cur() { return toHex.apply(null, hsv2rgb(h, s, v)); }
+
+      function paintSquare() {
+        var w = sq.width, ht = sq.height;
+        sqCtx.fillStyle = 'hsl(' + h + ',100%,50%)';
+        sqCtx.fillRect(0, 0, w, ht);
+        var gw = sqCtx.createLinearGradient(0, 0, w, 0);
+        gw.addColorStop(0, 'rgba(255,255,255,1)'); gw.addColorStop(1, 'rgba(255,255,255,0)');
+        sqCtx.fillStyle = gw; sqCtx.fillRect(0, 0, w, ht);
+        var gb = sqCtx.createLinearGradient(0, 0, 0, ht);
+        gb.addColorStop(0, 'rgba(0,0,0,0)'); gb.addColorStop(1, 'rgba(0,0,0,1)');
+        sqCtx.fillStyle = gb; sqCtx.fillRect(0, 0, w, ht);
+        /* ★ 画一个"本来就存在"的小圆点：拖动它取色，而不是让鼠标变成圆点 */
+        var cx = s * w, cy = (1 - v) * ht;
+        sqCtx.beginPath();
+        sqCtx.arc(cx, cy, 5, 0, Math.PI * 2);
+        sqCtx.lineWidth = 2.2;
+        sqCtx.strokeStyle = 'rgba(0,0,0,.7)';
+        sqCtx.stroke();
+        sqCtx.beginPath();
+        sqCtx.arc(cx, cy, 5, 0, Math.PI * 2);
+        sqCtx.lineWidth = 1.3;
+        sqCtx.strokeStyle = 'rgba(255,255,255,.95)';
+        sqCtx.stroke();
+      }
+      function paintHue() {
+        var w = hue.width, ht = hue.height;
+        var g = hueCtx.createLinearGradient(0, 0, w, 0);
+        for (var i = 0; i <= 6; i++) g.addColorStop(i / 6, 'hsl(' + (i * 60) + ',100%,50%)');
+        hueCtx.fillStyle = g; hueCtx.fillRect(0, 0, w, ht);
+      }
+      function apply(silent) {
+        var x = cur();
+        dot.style.background = x;
+        if (pv) pv.style.background = x;
+        if (hex && !silent) hex.value = x.toUpperCase();
+        if (valEl && !silent) valEl.value = Math.round(v * 100);
+        penColor = x;
+      /* ★ 取色器的颜色也应用到文字对象：选中哪条文字就改哪条 */
+      var selT = window.__selObj ? window.__selObj() : null;
+      if (selT && selT.type === 'text') {
+        selT.color = x;
+        refreshTextColor(selT.id, x);
+      }
+        pop.style.setProperty('--hp-h', 'hsl(' + h + ',100%,50%)');
+        paintSquare();
+        if (window.__tryClear) window.__tryClear();   /* 换色就清掉试色区，看到的就是新颜色 */
+      }
+      apply();
+
+      /* 预选色 */
+      PRESETS.forEach(function (col) {
+        var i = document.createElement('i');
+        i.style.background = col;
+        i.title = col;
+        i.addEventListener('click', function () {
+          var rgb = hex2rgb(col);
+          var hsv = rgb2hsv(rgb[0], rgb[1], rgb[2]);
+          h = hsv[0]; s = hsv[1]; v = hsv[2];
+          apply();
+        });
+        pre.appendChild(i);
+      });
+
+      /* 色板：点 / 拖都能定位 */
+      function pickSquare(ev) {
+        var r = sq.getBoundingClientRect();
+        s = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
+        v = 1 - Math.max(0, Math.min(1, (ev.clientY - r.top) / r.height));
+        apply();
+      }
+      sq.addEventListener('pointerdown', function (ev) {
+        try { sq.setPointerCapture(ev.pointerId); } catch (e) {}
+        pickSquare(ev); ev.preventDefault();
+      });
+      sq.addEventListener('pointermove', function (ev) { if (ev.buttons) pickSquare(ev); });
+
+      /* 色相条 */
+      function pickHue(ev) {
+        var r = hue.getBoundingClientRect();
+        h = Math.max(0, Math.min(359.9, (ev.clientX - r.left) / r.width * 360));
+        apply();
+      }
+      hue.addEventListener('pointerdown', function (ev) {
+        try { hue.setPointerCapture(ev.pointerId); } catch (e) {}
+        pickHue(ev); ev.preventDefault();
+      });
+      hue.addEventListener('pointermove', function (ev) { if (ev.buttons) pickHue(ev); });
+
+      /* 明度滑钮（色板左侧的竖条） */
+      if (valEl) valEl.addEventListener('input', function () {
+        v = Math.max(0, Math.min(1, (+this.value || 0) / 100));
+        apply(true);
+        if (hex) hex.value = cur().toUpperCase();
+        if (pv) pv.style.background = cur();
+        dot.style.background = cur();
+        penColor = cur();
+      });
+
+      /* 颜色代码输入 */
+      if (hex) hex.addEventListener('input', function () {
+        var rgb = hex2rgb(this.value);
+        if (!rgb) return;
+        var hsv = rgb2hsv(rgb[0], rgb[1], rgb[2]);
+        h = hsv[0]; s = hsv[1]; v = hsv[2];
+        apply(true);
+      });
+
+      /* ===== 试色区：用当前颜色随手画两笔，换色即清空 ===== */
+      var tryC = document.getElementById('hpTry');
+      if (tryC) {
+        var tryCtx = tryC.getContext('2d');
+        var trying = false;
+        function trySetup() {
+          tryCtx.lineWidth = 2.4; tryCtx.lineCap = 'round'; tryCtx.lineJoin = 'round';
+          tryCtx.strokeStyle = penColor;
+        }
+        function tryClear() { tryCtx.clearRect(0, 0, tryC.width, tryC.height); }
+        function tryPos(ev) {
+          var tr = tryC.getBoundingClientRect();
+          return { x: (ev.clientX - tr.left) * tryC.width / tr.width,
+                   y: (ev.clientY - tr.top) * tryC.height / tr.height };
+        }
+        tryC.addEventListener('pointerdown', function (ev) {
+          trying = true;
+          try { tryC.setPointerCapture(ev.pointerId); } catch (e) {}
+          trySetup();
+          var p = tryPos(ev);
+          tryCtx.beginPath(); tryCtx.moveTo(p.x, p.y);
+          tryCtx.lineTo(p.x + 0.01, p.y + 0.01); tryCtx.stroke();
+          ev.preventDefault();
+        });
+        tryC.addEventListener('pointermove', function (ev) {
+          if (!trying) return;
+          var p = tryPos(ev);
+          tryCtx.lineTo(p.x, p.y); tryCtx.stroke();
+          ev.preventDefault();
+        });
+        var tryStop = function () { trying = false; };
+        tryC.addEventListener('pointerup', tryStop);
+        tryC.addEventListener('pointercancel', tryStop);
+        tryC.addEventListener('pointerleave', tryStop);
+        window.__tryClear = tryClear;
+      }
+
+      /* 开关面板 */
+      btn.addEventListener('click', function (ev) {
+        var on = pop.classList.toggle('on');
+        if (on) place();
+        ev.stopPropagation();
+      });
+      window.addEventListener('resize', function () { if (pop.classList.contains('on')) place(); });
+      document.addEventListener('pointerdown', function (ev) {
+        if (!pop.classList.contains('on')) return;
+        if (pop.contains(ev.target) || btn.contains(ev.target)) return;
+        pop.classList.remove('on');
+      });
+    })();
+
+    var clr = document.getElementById('handClear');
+    if (clr) clr.addEventListener('click', function () {
+      clearPad();
+      /* ★ 立即通知：卡片上那个手写对象马上消失，不用再点一次才生效 */
+      if (window.__padCommit) window.__padCommit('');
+    });
+  })();
+
+
+  sizeCards();
+  render();                                  /* render 内部已含 fitText + layoutCards */
+  setTimeout(function () { sizeCards(); fitText(); layoutCards(); }, 300);
+
+  /* ============================================================
+     右上角的空白卡片：拖着试试"钉卡片"
+     · 按住拖动，松手（或再点一下）即尝试钉住
+     · 校验：钉子必须在墙内，且卡片不与墙上任何纸片重叠
+     · 不通过 → 实时红框提示，松手弹回，不钉上去
+     ============================================================ */
+  var legend = null, draft = null, drag = null, picked = false;
+  var targetLayer = 0, forceTry = 1;   /* 拖动目标层 / 强制按钮下一次尝试的层 */
+  var draftNx = 0, draftNy = 0, snapRots = null;
+
+  function draftDims() {
+    var w = parseFloat(getComputedStyle(wall).getPropertyValue('--wish-w')) || 160;
+    return { w: w, h: w / 1.5 };
+  }
+
+  /* ★ 把草稿卡当作墙上的一员，跑挤压演算，结果直接写进真实卡片。
+       这就是"拿真卡片去顶旧卡片"——拖动过程中每帧调用，肉眼可见。 */
+  /* 点 (px,py) 是否落在某张卡片的纸面内。
+     卡片绕"顶部中心"旋转，所以先把点变换到卡片自身的坐标系里。
+     卡面范围：横向 ±w/2，纵向 0..h（0 = 钉子那一行）。 */
+  function pointOnCard(px, py, cd) {
+    var dx = px - cd.nx, dy = py - cd.ny;
+    var co = Math.cos(-cd.rot), si = Math.sin(-cd.rot);
+    var lx = dx * co - dy * si;
+    var ly = dx * si + dy * co;
+    return lx >= -cd.w / 2 && lx <= cd.w / 2 && ly >= 0 && ly <= cd.h;
+  }
+
+  /* ★ 钉子不能扎在下层已有卡片身上：钉子总得钉在"墙"上。
+       强制钉层以前只检查同层，于是会把钉子直接扎进第一层的卡片里。 */
+  function nailBusy(x, y, L) {
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      if (!cd || cd.layer >= L) continue;          /* 只看下面的层 */
+      if (pointOnCard(x, y, cd)) return true;
+    }
+    return false;
+  }
+
+  /* 第 L 层内部还有没有互相压着的（钉下后复检用） */
+  function layerHasOverlap(L) {
+    var arr = [];
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      if (cd && cd.layer === L) arr.push(cd);
+    }
+    for (var a = 0; a < arr.length; a++) {
+      for (var b = a + 1; b < arr.length; b++) {
+        if (hit(arr[a], arr[b])) return true;
+      }
+    }
+    return false;
+  }
+
+  /* 判断挤不开的根因：同层卡片里，有没有"钉子横向挨太近"的。
+     旋转轴在顶部，钉子横向距离 < 卡片宽时，顶部永远咬着，转多少度都没用。 */
+  function tooCloseNails(x, y, L) {
+    var d = draftDims();
+    var probe = { w: d.w, h: d.h, nx: x, ny: y, rot: 0 };
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      if (!cd || cd.layer !== L) continue;
+      if (!hit(probe, cd)) continue;                 /* ★ 只算真正重叠的那些 */
+      if (Math.abs(cd.nx - x) < d.w) return true;    /* 钉子横向不足一张卡宽 → 顶部咬死 */
+    }
+    return false;
+  }
+
+  /* 落点 (x,y) 上，新卡片会不会跟第 L 层的卡片重叠 */
+  function overlapsAt(x, y, L) {
+    var d = draftDims();
+    var test = { w: d.w, h: d.h, nx: x, ny: y, rot: 0 };
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      if (cd && cd.layer === L && hit(test, cd)) return true;
+    }
+    return false;
+  }
+
+  /* ★ 降层的两个缓冲，避免在卡片边缘来回蹭时反复横跳：
+       FALLBACK_GAP  —— 要离当前层卡片多远才算"真的走开了"
+       FALLBACK_HOLD —— 这个状态要持续多久才允许降层 */
+  var FALLBACK_GAP = 22;      /* px */
+  var FALLBACK_HOLD = 420;    /* ms */
+  var fallbackSince = 0, fallbackTimer = 0;
+
+  /* 把探测卡放大 gap 圈，如果不碰到这一层任何卡片，说明周围确实空了 */
+  function clearOfLayer(x, y, L, gap) {
+    var d = draftDims();
+    var test = { w: d.w + gap * 2, h: d.h + gap * 2, nx: x, ny: y, rot: 0 };
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      if (cd && cd.layer === L && hit(test, cd)) return false;
+    }
+    return true;
+  }
+
+  function liveRelax(L) {
+    if (!draft) return false;
+    if (L == null) L = targetLayer;
+    /* ★ 自动降层，但带两个缓冲：
+         ① 要离当前层的卡片足够远（clearOfLayer 用放大的框判定）
+         ② 这个状态要连续保持 FALLBACK_HOLD 毫秒
+       以前是"一不重叠就立刻降层"，在卡片边缘蹭一下就来回跳，太敏感。 */
+    if (L > 0 && clearOfLayer(draftNx, draftNy, L, FALLBACK_GAP) &&
+        clearOfLayer(draftNx, draftNy, 0, 0)) {
+      if (!fallbackSince) {
+        fallbackSince = Date.now();
+        /* ★ 定时器：鼠标停住不动时也要有一次复查机会，
+             否则"保持一段时间"这个条件永远等不到下一次判定。 */
+        clearTimeout(fallbackTimer);
+        fallbackTimer = setTimeout(function () {
+          /* ★ 这里不能重置 fallbackSince！
+               重置了的话复查时"已等待 0 毫秒"，永远等不满，降层永远不触发。 */
+          if (draft) liveRelax();
+        }, FALLBACK_HOLD + 40);
+      }
+      if (Date.now() - fallbackSince >= FALLBACK_HOLD) {
+        targetLayer = 0;
+        forceTry = 1;
+        updateForceLabel();
+        fallbackSince = 0;
+        L = 0;
+      }
+    } else {
+      fallbackSince = 0;          /* 一旦回到边缘就重新计时 */
+      clearTimeout(fallbackTimer);
+    }
+    draft.dataset.layer = L;      /* ★ 草稿卡实时换阴影，一眼看出现在在第几层 */
+    var d = draftDims();
+    /* ★ 每帧都从"取卡那一刻的快照角度"重新算，而不是在上一次结果上累积。
+         这样新卡片移开、不再重叠时，旧卡片会自动回到原样。 */
+    if (snapRots) {
+      for (var s = 0; s < snapRots.length; s++) {
+        var se = snapRots[s].el;
+        if (se && se.__c) se.__c.rot = snapRots[s].rot;      /* 取"当前"对象，避免陈旧引用 */
+      }
+    }
+    var probe = { w: d.w, h: d.h, nx: draftNx, ny: draftNy, rot: 0 };
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    var arr = [probe], real = [];
+    for (var i = 0; i < els.length; i++) {
+      var cd = els[i].__c;
+      /* ★ 只跟"同一层（第 0 层）"的卡片互相挤压。
+           以前不分层，第一层的探测卡会去顶第二层的卡片，
+           两层互相干扰，越弄越乱，最后到处都放不下。 */
+      if (cd && cd.layer === L) { arr.push(cd); real.push(cd); }
+    }
+    var LIM = layerLimit(L);                          /* 第一层 ±16°，更高层 ±35° */
+    for (var it = 0; it < 80; it++) {
+      var moved = false;
+      for (var a = 0; a < arr.length; a++) {
+        for (var b = a + 1; b < arr.length; b++) {
+          var A = arr[a], B = arr[b];
+          if (!hit(A, B)) continue;
+          if (A.nx <= B.nx) {
+            A.rot = Math.min( LIM, A.rot + 0.025);
+            B.rot = Math.max(-LIM, B.rot - 0.025);
+          } else {
+            A.rot = Math.max(-LIM, A.rot - 0.025);
+            B.rot = Math.min( LIM, B.rot + 0.025);
+          }
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+    /* 结果写进真实卡片（草稿卡自己的旋转不提交） */
+    for (var k = 0; k < real.length; k++) {
+      var r0 = real[k];
+      r0.el.style.transform = 'translate(' + (r0.nx - r0.w / 2).toFixed(1) + 'px,' +
+                              r0.ny.toFixed(1) + 'px) rotate(' + r0.rot.toFixed(4) + 'rad)';
+    }
+    draft.style.transform = 'translate(' + (wall.offsetLeft + draftNx - d.w / 2).toFixed(1) + 'px,' +
+                            (wall.offsetTop + draftNy).toFixed(1) + 'px) rotate(' + probe.rot.toFixed(4) + 'rad)';
+    /* 判定：还重叠 → 挤不开；出界 → 放墙内 */
+    var clash = false;
+    /* ★ 钉子不能扎在下层卡片身上 */
+    if (L > 0 && nailBusy(draftNx, draftNy, L)) clash = true;
+    for (var m = 0; m < arr.length && !clash; m++) {
+      for (var n2 = m + 1; n2 < arr.length; n2++) {
+        if (hit(arr[m], arr[n2])) { clash = true; break; }
+      }
+    }
+    /* ★ 竖向放宽：墙是可滚动、可长高的。
+         以前用 scrollHeight（现有卡片占的高度）当边界，
+         卡片铺满后下面一律被判"出界"，于是出现"到处都放不下"。
+         这里给到 可视高度 + 两行余量，墙会在落位时自动长高。 */
+    var H = Math.max(wall.clientHeight, wall.scrollHeight) + 260;
+    var inb = !(draftNx - d.w / 2 < 2 || draftNx + d.w / 2 > wall.clientWidth - 2 ||
+                draftNy < 2 || draftNy + d.h > H);
+    var ok = inb && !clash;
+    draft.classList.toggle('valid', ok);
+    draft.classList.toggle('invalid', !ok);
+    var lay = draft.querySelector('.lay');
+    if (lay) lay.textContent = !inb ? '放到墙内'
+      : (clash ? (tooCloseNails(draftNx, draftNy, L) ? '钉子挨太近' : '挤不开') : '松手钉住');
+    return ok;
+  }
+
+  var forceBtn = null;
+  function makeForceBtn() {
+    /* 按钮已经在"完成"旁边（HTML 里写好的），这里只接管它 */
+    forceBtn = document.getElementById('wishForce');
+    if (!forceBtn || forceBtn.__wired) return;
+    forceBtn.__wired = true;
+    forceBtn.addEventListener('click', function () { forcePin(); });
+  }
+  function showForce(on) {
+    if (!forceBtn) return;
+    forceBtn.style.display = on ? '' : 'none';
+  }
+
+  /* ★ 强制钉到指定层：不走挤压判定，先把被顶歪的旧卡片放回去，再叠上去 */
+  function updateForceLabel() {
+    if (!forceBtn) return;
+    /* 层号统一用中文数字，和界面其它地方一致 */
+    var CN = ['零', '一', '二', '三', '四', '五'];
+    var n = forceTry + 1;
+    forceBtn.textContent = '可以试试钉到第' + (CN[n] || n) + '层';
+  }
+
+  /* ★ 强制钉第 N 层 —— 现在【只预览、不落地】：
+       不管这一层挤不挤得开，都保持【预备状态】，让你继续拖动/调整。
+       以前这里是"挤得开就直接 list.push 钉下"，于是空位多时一按就跳过了预备态。
+       真正的钉入交给拖动松手（bookDrag 的 end -> doPin）。
+       按钮只负责两件事：把拖动层切到目标层、按那一层的规则跑一次挤压预览。 */
+  function forcePin() {
+    if (!draft) return;
+    var L = forceTry;
+    /* ★ 判定前先把墙归位：否则 liveRelax 上一次留下的"顶歪"还挂在卡片上，
+         斜着占的横向更小 -> 会被误判成"有空位"。用户明确要求按归位后的状态判定。 */
+    restoreRots();
+    snapNow();
+    /* 钉子不能扎在下层卡片上 —— 这个判定在下面的 nailBusy 分支里做 */
+    /* ★ 钉子落在下层卡片上 → 不通过（钉子得扎在墙上） */
+    if (L > 0 && nailBusy(draftNx, draftNy, L)) {
+      liveRelax(L);
+      restoreRots();   /* ★ 必须复位：liveRelax 顶歪了同层卡片，不钉下就不能留着歪的 */
+      snapNow();
+      var layN = draft.querySelector('.lay');
+      if (layN) layN.textContent = '钉子扎在别人身上了 · 往旁边挪一点';
+      forceTry = L + 1;
+      targetLayer = L;                    /* 拖动层保持这一层 */
+      draft.dataset.layer = targetLayer;
+      draft.classList.remove('valid');
+      draft.classList.add('invalid');
+      updateForceLabel();
+      showForce(true);
+      return;
+    }
+    if (liveRelax(L)) {
+      /* 这一层挤得开：只标记为"可以钉"，卡片留在预备状态。
+         ★ 但必须先 restoreRots + snapNow 把墙复位 ——
+         liveRelax 会把同层卡片顶歪来腾位置，既然这次不钉下，
+         那些卡片就必须回到垂直状态，否则墙会一直歪着（上一版的 bug）。 */
+      restoreRots();
+      snapNow();
+      targetLayer = L;
+      draft.dataset.layer = L;
+      draft.classList.remove('invalid');
+      draft.classList.add('valid');
+      var layOk = draft.querySelector('.lay');
+      if (layOk) layOk.textContent = '可以钉 · 拖动调整位置，松手钉下';
+      forceTry = L;
+      updateForceLabel();
+      showForce(true);
+      return;
+    }
+    /* 这一层挤不开：复位被顶歪的，保持预备状态，按钮升级到下一层 */
+    restoreRots();
+    snapNow();
+    draft.classList.remove('valid');
+    draft.classList.add('invalid');
+    var layBad = draft.querySelector('.lay');
+    if (layBad) layBad.textContent = '这一层挤不开 · 换个位置或试试下一层';
+    forceTry = L + 1;
+    targetLayer = L;                      /* ★ 拖动层保持刚挤不开的那一层，不要跳层 */
+    draft.dataset.layer = targetLayer;
+    updateForceLabel();
+    showForce(true);
+  }
+
+  function makeLegend() {
+    if (legend && legend.parentNode) legend.parentNode.removeChild(legend);
+    legend = document.createElement('div');
+    legend.className = 'wish-legend';
+    legend.innerHTML = '<span class="plus">+</span> 放一张新卡片';
+    legend.addEventListener('click', takeCard);
+    wall.parentNode.appendChild(legend);
+  }
+
+  function takeCard() {
+    if (draft) return;
+    if (legend) legend.style.display = 'none';
+    showForce(true);
+    var d = draftDims();
+    draft = document.createElement('div');
+    draft.className = 'wish-item wish-draft';
+    draft.innerHTML = '<span class="hole"></span><span class="nail"></span>' +
+                      '<p class="t"></p>' +
+                      '<div class="m"><span class="who"></span><span class="lay">松手钉住</span></div>';
+    if (makeObjects.length) {
+      draft.querySelector('.t').style.display = 'none';      /* 有排版对象就不画纯文本 */
+      var dl = document.createElement('div');
+      dl.className = 'card-obj-layer';
+      paintObjects(dl, makeObjects, false);
+      draft.appendChild(dl);
+    } else {
+      draft.querySelector('.t').textContent = makeTxt || '';
+    }
+    draft.querySelector('.who').textContent = makeWho || '匿名';
+    wall.parentNode.appendChild(draft);
+    /* ★ 首次落位不要动画：卡片刚创建时在 left:0，随后才写 transform，
+         开着 transition 就会从 (0,0) 滑过去 —— 看起来像"从左边瞬移过来"。 */
+    draft.style.transition = 'none';
+    /* ★ 起点就是预览卡所在的位置（制作区右边）：
+         点完成之后卡片从这里出发，由你自己拖到墙上 —— 而不是瞬移进贴卡区。
+         此时它在墙上方（draftNy 为负），判定会显示"放到墙内"，拖进来即可。 */
+    var pvEl = document.getElementById('wishPreview');
+    var pr = pvEl ? pvEl.getBoundingClientRect() : null;
+    /* ★ 草稿卡是 .wish 的子节点，所以起点要按 .wish 的坐标系算，
+         再把 placeDraft 里会加上的 wall.offsetLeft/offsetTop 减掉。 */
+    var hostEl = wall.parentNode;
+    var hr2 = hostEl ? hostEl.getBoundingClientRect() : { left: 0, top: 0 };
+    var ox = wall.offsetLeft, oy = wall.offsetTop;
+    if (pr && pr.width) {
+      draftNx = (pr.left - hr2.left) + pr.width / 2 - ox;
+      draftNy = (pr.top - hr2.top) - oy;
+    } else {
+      draftNx = d.w / 2 + 6;
+      draftNy = 8;
+    }
+    snapNow();
+    picked = false;
+    fallbackSince = 0;
+    targetLayer = 0; forceTry = 1; updateForceLabel();   /* 新卡片从第一层开始 */
+    bookDrag();
+    liveRelax();
+    void draft.offsetWidth;          /* 强制重排，让落位立刻生效 */
+    draft.style.transition = '';     /* 恢复过渡：之后被挤压时依然平滑 */
+  }
+
+  /* 取卡时记下所有旧卡片的当前角度 */
+  /* ★ 快照只存"元素 + 角度"，不存卡片对象。
+       layoutCards() 每次都会重建卡片对象（el.__c = cd），
+       如果快照抓住的是旧对象，复原时改的是没人读的旧对象，DOM 就会纹丝不动。 */
+  function snapNow() {
+    snapRots = [];
+    var els = wall.querySelectorAll('.wish-item:not(.wish-draft)');
+    for (var i = 0; i < els.length; i++) {
+      /* 只记第 0 层：只有它们会被探测卡挤压 */
+      if (els[i].__c) snapRots.push({ el: els[i], rot: els[i].__c.rot });   /* 全记：可能换层挤压 */
+    }
+  }
+
+  function restoreRots() {
+    if (!snapRots) return;
+    for (var i = 0; i < snapRots.length; i++) {
+      var o = snapRots[i], cd = o.el && o.el.__c;
+      if (!cd) continue;
+      cd.rot = o.rot;
+      o.el.style.transform = 'translate(' + (cd.nx - cd.w / 2).toFixed(1) + 'px,' +
+                             cd.ny.toFixed(1) + 'px) rotate(' + cd.rot.toFixed(4) + 'rad)';
+    }
+    snapRots = null;
+  }
+  function backToLegend() {
+    picked = false;
+    showForce(false);
+    restoreRots();
+    if (draft && draft.parentNode) draft.parentNode.removeChild(draft);
+    draft = null;
+    if (legend) legend.style.display = '';
+  }
+
+  function doPin() {
+    /* ★ 层号跟 liveRelax 判定时用的 targetLayer 保持一致，不写死 0 */
+    var item = { who: makeWho, txt: makeTxt, t: today(),
+                 objects: JSON.parse(JSON.stringify(makeObjects)),
+                 nx: +draftNx.toFixed(1), ny: +draftNy.toFixed(1), layer: targetLayer };
+    /* ★ 钉子不能扎在【下层】已有卡片身上 —— 钉子总得钉在墙上。
+         注意：只判钉子那一点，不判整张卡。上层卡片的卡身【允许】压住下层卡片，
+         这正是分层的意义（更高的层看起来更靠前）。
+         判定放在最前面：此时 draft 还在，不通过就能安全地退回预备状态。 */
+    if (nailBusy(item.nx, item.ny, item.layer)) {
+      draft.classList.remove('valid');
+      draft.classList.add('invalid');
+      var _l0 = draft.querySelector('.lay');
+      if (_l0) _l0.textContent = '钉子扎在下层卡片上了 · 往旁边挪一点';
+      return;                                   /* ★ 保持预备状态，什么都不删 */
+    }
+
+    list.push(item);
+    save();
+    picked = false;
+    /* ★ 注意：这里【先不删 draft】，等下面复检通过再删。
+          否则复检失败要退回预备状态时，draft 已经没了 —— 那正是"卡片消失"的成因。 */
+    wall.classList.add('rebuilding');
+    var el = makeCardEl(item, [(item.who || '') + '|' + item.txt + '|' + (item.t || '')]);
+    wall.appendChild(el);
+    syncFoot();
+    fitText();
+    layoutCards();
+    void wall.offsetHeight;
+    wall.classList.remove('rebuilding');
+
+    /* ★ 钉下后复检：分层挤压（layoutCards 里那一次）如果没收敛，
+          这一层会留下重叠 —— 那就撤销这次钉入，退回预备状态。 */
+    if (layerHasOverlap(item.layer)) {
+      list.pop();
+      save();
+      if (el.parentNode) el.parentNode.removeChild(el);
+      restoreRots();                       /* 把被顶歪的旧卡片放回去 */
+      snapNow();
+      draft.classList.remove('valid');     /* ★ 这里 draft 一定还在 */
+      draft.classList.add('invalid');
+      var layB = draft.querySelector('.lay');
+      if (layB) layB.textContent = tooCloseNails(draftNx, draftNy, item.layer)
+        ? '钉子挨太近 · 往旁边挪一点' : '挤不开';
+      syncFoot();
+      fitText();
+      layoutCards();
+      return;
+    }
+
+    /* ★ 复检通过，这才真正收走预备卡 */
+    if (draft && draft.parentNode) draft.parentNode.removeChild(draft);
+    draft = null;
+    snapRots = null;
+    if (legend) legend.style.display = '';
+    showForce(false);
+    var nb = wall.querySelector('.wish-item.flash');
+    if (nb && nb.scrollIntoView) nb.scrollIntoView({ block: 'nearest' });
+    setTimeout(function () {
+      var arr = wall.querySelectorAll('.wish-item.flash');
+      for (var q = 0; q < arr.length; q++) arr[q].classList.remove('flash');
+    }, 1600);
+  }
+
+  function bookDrag() {
+    /* ★ 按住拖动；松开时：
+         能放 → 当场钉下
+         不能放 → 进入"预备放置"状态：卡片停在原地不再跟随鼠标，
+                  鼠标就自由了，可以去点「可以试试钉到第二层」。 */
+    draft.addEventListener('pointerdown', function (ev) {
+      ev.preventDefault();
+      picked = true;
+      /* ★ 重新抓取保持原来的层数：想继续和第二层的卡片挤形状就还能接着挤。
+           只有取出新卡片时才回到第一层。 */
+      if (!snapRots) snapNow();
+      drag = { id: ev.pointerId, x: ev.clientX, y: ev.clientY, nx: draftNx, ny: draftNy };
+      draft.classList.add('picked');
+      try { draft.setPointerCapture(ev.pointerId); } catch (e) {}
+    });
+    draft.addEventListener('pointermove', function (ev) {
+      if (!picked || !drag || ev.pointerId !== drag.id) return;
+      draftNx = drag.nx + (ev.clientX - drag.x);
+      draftNy = drag.ny + (ev.clientY - drag.y);
+      liveRelax();
+    });
+    function end(ev) {
+      if (!picked || !drag || ev.pointerId !== drag.id) return;
+      drag = null;
+      picked = false;                              /* 松开就停止跟随 */
+      draft.classList.remove('picked');
+      try { draft.releasePointerCapture(ev.pointerId); } catch (e) {}
+      if (liveRelax()) {
+        doPin();                                   /* 能放 → 直接放下 */
+      } else {
+        restoreRots();                             /* 不能放 → 把被顶歪的旧卡片复位 */
+        /* ★ 复位后绝不能再跑 liveRelax：
+             探测卡还压着，一跑旧卡片立刻又被顶歪，
+             预备状态下应该是"卡片停在原处、墙恢复原样"。 */
+        draft.classList.remove('valid');
+        draft.classList.add('invalid');
+        var lay = draft.querySelector('.lay');
+        if (lay) lay.textContent = '挤不开';
+      }
+    }
+    draft.addEventListener('pointerup', end);
+    draft.addEventListener('pointercancel', end);
+  }
+
+  /* render 会清空墙，所以每次渲染后重建图例 */
+  var _render0 = render;
+  render = function () { _render0.apply(null, arguments); makeForceBtn(); };
+  makeForceBtn();
+
+})();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* =====================================================
+     数字动画：从 0 → 目标数字
+     ===================================================== */
+  function animateCounter(el) {
+
+    const target = Number(el.dataset.value || 0);
+    const decimal = Number(el.dataset.decimal || 0);
+
+    const duration = 1400;
+    const startTime = performance.now();
+
+    function updateCounter(currentTime) {
+
+      const progress = Math.min(
+        (currentTime - startTime) / duration,
+        1
+      );
+
+      /* easeOutCubic：先快后慢 */
+      const eased =
+        1 - Math.pow(1 - progress, 3);
+
+      const current =
+        target * eased;
+
+      el.textContent =
+        current.toFixed(decimal);
+
+      if (progress < 1) {
+
+        requestAnimationFrame(updateCounter);
+
+      } else {
+
+        el.textContent =
+          target.toFixed(decimal);
+
+      }
+
+    }
+
+    requestAnimationFrame(updateCounter);
+  }
+
+
+  /* =====================================================
+     初始化柱状图
+     ===================================================== */
+
+  document.querySelectorAll(".bar-fill")
+    .forEach(function (bar) {
+
+      bar.style.setProperty(
+        "--bar-height",
+        bar.dataset.height + "%"
+      );
+
+    });
+
+
+  document.querySelectorAll(".progress-fill")
+    .forEach(function (bar) {
+
+      bar.style.setProperty(
+        "--progress-width",
+        bar.dataset.width + "%"
+      );
+
+    });
+
+
+  document.querySelectorAll(".tech-bar-fill")
+    .forEach(function (bar) {
+
+      bar.style.setProperty(
+        "--tech-height",
+        bar.dataset.height + "%"
+      );
+
+    });
+
+
+  /* =====================================================
+     初始化环形图
+     ===================================================== */
+
+  document.querySelectorAll(".donut")
+    .forEach(function (donut) {
+
+      donut.style.setProperty(
+        "--current-percent",
+        "0"
+      );
+
+    });
+
+
+  /* =====================================================
+     重置整张数据卡
+     ===================================================== */
+
+  function resetCard(card) {
+
+    /*
+     * 1. 移除 is-visible
+     * 柱状图重新回到 scaleY(0)
+     */
+    card.classList.remove("is-visible");
+
+
+    /*
+     * 2. 所有数字重新变成 0
+     */
+    card.querySelectorAll(".counter")
+      .forEach(function (counter) {
+
+        const decimal =
+          Number(counter.dataset.decimal || 0);
+
+        counter.textContent =
+          (0).toFixed(decimal);
+
+        /*
+         * 删除动画状态
+         * 下一次进入时可以重新执行
+         */
+        delete counter.dataset.animated;
+
+      });
+
+
+    /*
+     * 3. 环形图重新回到 0%
+     */
+    const donut =
+      card.querySelector(".donut");
+
+    if (donut) {
+
+      donut.style.setProperty(
+        "--current-percent",
+        "0"
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     播放整张卡片动画
+     ===================================================== */
+
+  function playCard(card) {
+
+    /*
+     * 加上 is-visible
+     *
+     * 柱状图：
+     * scaleY(0) → scaleY(1)
+     *
+     * 横向图：
+     * scaleX(0) → scaleX(1)
+     */
+    card.classList.add("is-visible");
+
+
+    /*
+     * 数字依次出现
+     *
+     * 第一个数字 180ms
+     * 第二个数字 270ms
+     * 第三个数字 360ms
+     */
+    card.querySelectorAll(".counter")
+      .forEach(function (counter, index) {
+
+        setTimeout(function () {
+
+          animateCounter(counter);
+
+        }, 180 + index * 90);
+
+      });
+
+
+    /*
+     * 环形图动画
+     */
+const donut =
+    card.querySelector(".donut");
+
+if (donut) {
+
+    const target =
+        Number(donut.dataset.percent || 0);
+
+    const duration = 1500;
+
+    const startTime =
+        performance.now();
+
+    function animateDonut(currentTime) {
+
+        const progress =
+            Math.min(
+                (currentTime - startTime) / duration,
+                1
+            );
+
+        /*
+         * easeOutCubic
+         * 让环形图开始时较快，
+         * 最后逐渐减速
+         */
+        const eased =
+            1 - Math.pow(1 - progress, 3);
+
+        const current =
+            target * eased;
+
+        donut.style.setProperty(
+            "--current-percent",
+            current
+        );
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                animateDonut
+            );
+
+        } else {
+
+            donut.style.setProperty(
+                "--current-percent",
+                target
+            );
+
+        }
+
+    }
+
+    /*
+     * 从 0 开始
+     */
+    donut.style.setProperty(
+        "--current-percent",
+        0
+    );
+
+    setTimeout(function () {
+
+        requestAnimationFrame(
+            animateDonut
+        );
+
+    }, 200);
+
+}
+
+  }
+
+
+  /* =====================================================
+     IntersectionObserver
+     ===================================================== */
+
+  const observer =
+    new IntersectionObserver(
+
+      function (entries) {
+
+        entries.forEach(function (entry) {
+
+          const card = entry.target;
+
+
+          /*
+           * ================================
+           * 进入屏幕
+           * ================================
+           */
+
+          if (entry.isIntersecting) {
+
+            /*
+             * 先确保是“0状态”
+             */
+            resetCard(card);
+
+
+            /*
+             * 下一帧再播放
+             *
+             * 这样浏览器能够明确看到：
+             *
+             * 0状态
+             * ↓
+             * 动画状态
+             */
+            requestAnimationFrame(function () {
+
+              playCard(card);
+
+            });
+
+          }
+
+
+          /*
+           * ================================
+           * 离开屏幕
+           * ================================
+           */
+
+          else {
+
+            /*
+             * 离开后马上重置
+             *
+             * 所以下一次进入的时候
+             * 就可以重新播放
+             */
+            resetCard(card);
+
+          }
+
+        });
+
+      },
+
+      {
+        /*
+         * 25% 的卡片进入屏幕以后触发
+         */
+        threshold: 0.25
+      }
+
+    );
+
+
+  /* =====================================================
+     开始监听四张数据卡
+     ===================================================== */
+
+  document.querySelectorAll(".data-card")
+    .forEach(function (card) {
+
+      observer.observe(card);
+
+    });
+
+});
+</script>
+</body>
+</html>
