@@ -58,7 +58,11 @@ ul{list-style:none}
 /* 点击跳转：回缩成小点 → 消失 */
 .nav-links a.retract::after{transform:translateX(-50%) scaleX(.04);opacity:0;
   transition:transform .17s cubic-bezier(.5,0,.7,.4),opacity .07s linear .11s}
-.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:26px;cursor:pointer}
+/* ★ 2026-10-09：触屏适配。原来按钮只有 23×35px ✗ 低于手指可点按的
+   建议下限（44×44）✗ 实测容易点不中。这里用伪元素把可点区域向外扩 11px ✗
+   变成约 45×57px ✗ 而不改变按钮本身的视觉大小与导航栏布局。 */
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:26px;cursor:pointer;position:relative}
+.nav-toggle::before{content:"";position:absolute;inset:-11px -11px;border-radius:6px}
 
 /* ---------- 首页首屏（合并 hero + 简介） ---------- */
 .hero{position:relative;height:120vh;background:#181212}
@@ -428,6 +432,8 @@ html.js .reveal[data-delay="4"]{transition-delay:.48s}
   .grid-2,.grid-3{grid-template-columns:1fr}
   .photo-grid{grid-template-columns:repeat(2,1fr)}
   .nav-toggle{display:block}
+  /* ★ 触屏：菜单项本身也加大到 44px 高 ✗ 便于点按 */
+  .nav-links a{padding:14px 16px;min-height:44px;display:flex;align-items:center}
   .nav-links{position:absolute;top:81px;left:0;right:0;flex-direction:column;display:none;padding:12px 16px 18px;
     background:linear-gradient(180deg,var(--red),var(--red-deep));box-shadow:0 16px 30px rgba(0,0,0,.4)}
   .nav-links.open{display:flex}
@@ -1621,7 +1627,16 @@ html.js .reveal[data-delay="4"]{transition-delay:.48s}
    现在每条都写成 .scroll-story <选择器>（0,2,0，与桌面规则同级），
    再加 !important 确保覆盖，并且放在文件最末尾（层叠顺序也赢）。
    ══════════════════════════════════════════════════════════════════════ */
-@media (max-width:900px){
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-10：这一整块【旧的窄屏竖向列表布局】已停用
+   ──────────────────────────────────────────────────────────────────────
+   它把卷轴拆成了竖向流式：.sx 改 flex-direction:column ✗ 节点改 flex-wrap ✗
+   卡片改成静态列表 ✗ 展开装饰层全部关掉 —— 等于把整根卷轴的结构拆了。
+   用户明确要求不要这套 ✗ 改为【整根卷轴旋转 90°】✗ 见文件末尾新写的那块。
+   为了可逆 ✗ 这里不删除 ✗ 只把媒体查询改成永不匹配（max-width:0px）。
+   要恢复旧方案 ✗ 把 0px 改回 900px 即可。
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width:0px){
 
   /* ── 隐藏桌面专用元素 ── */
   .scroll-story .pg-enter,
@@ -1904,8 +1919,320 @@ html.js .reveal[data-delay="4"]{transition-delay:.48s}
   text-align: justify;
 }
 
-/* ── 断点：窄屏时隐藏卷轴、显示列表 ── */
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-10：窄屏改回卷轴 ✗ 并且是【竖向展开】
+   ──────────────────────────────────────────────────────────────────────
+   原来这里只有两行：把卷轴 display:none ✗ 换成 .parade-mobile 竖向卡片列表。
+   用户要求改回卷轴 ✗ 并且给出了思路：
+     「窄到一定程度时卷轴直接变成竖向展开 ✗ 里面的东西都不变 ✗
+       卡片别跟着一起变竖着显示」
+
+   上面第 1630~1784 行其实已经写好了一整套窄屏竖向布局 ✗
+   只是被这两行整个覆盖掉了 ✗ 现在把覆盖去掉 ✗ 它就回来了：
+     · .sx 改成 flex-direction:column ✗ 两根卷杆变成上下的横条
+     · 纸面横向铺满、纵向流式
+     · 六个节点 flex-wrap 排列 ✗ 卡片 position:static ✗ 保持横向 ✓
+
+   但那一版只是"把东西堆上去" ✗ 没有"展开"的过程。
+   这里把桌面端驱动的 --unroll（0→1）接到纵向揭示上 ✗ 让纸面从上往下长出来：
+     · 纸面用 clip-path 只露出顶部 --unroll 那一段
+     · 下卷杆跟着视线往下走（贴在揭示边缘）
+   这样滚动推进时就有真实的"卷轴自上而下铺开"的观感 ✗
+   而内容本身（黄河 ✗ 卡片）方向不变 ✓
+   ══════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-10 窄屏：卷轴整体旋转 90°（重写版）
+   ──────────────────────────────────────────────────────────────────────
+   需求（用户原话）：
+     「在窄到一定程度上卷轴直接变成竖向展开 ✗ 里面的东西都不变 ✗
+       卡片别跟着一起变竖着显示就行」
+     「把黄河和光点也转向 ✗ 只有底图不转 ✗ 底图本来就是竖版的」
+     「不要使用卡片竖向排列的设定」
+
+   做法只有三条 ✗ 其余一律不动：
+     ① .scroll-stage 整体 rotate(90deg)
+        —— 卷纸材质 ✗ 卷杆 ✗ 祥云 ✗ 黄河 ✗ 光点全部跟着转 ✗ 结构零改动。
+        桌面版的展开靠 JS 每帧改 .scroll-stage 的 width（104 → 展开到满）✗
+        转 90° 后那个 width 在视觉上就是【纵向高度】✗
+        所以"横向展开"自动变成"自上而下展开" ✗ JS 一行都不用改。
+        height 设成 100vw-16px ✗ 转完正好是一屏的宽度。
+     ② .gt-node 反向 rotate(-90deg)
+        —— 光点本身跟着卷轴转 ✗ 但卡片要正立 ✗ 所以给承载卡片的节点转回来。
+        放在 .gt-node 上（而不是 .gt-card 上）✗ 是为了让卡片自己的
+        定位体系（left:50% / bottom:100%+5px）原样保留 ✗ 仍从光点旁长出。
+     ③ .gt-img 反向 rotate(-90deg) 并放大到覆盖
+        —— 底图是竖版油画《黄河大合唱》✗ 用户要求它不转。
+        它原本 absolute inset:0 铺满整个画心 ✗ 转 90° 后会变成横躺 ✗
+        所以单独转回来 ✗ 并把宽高互换、居中放大 ✗ 让它继续铺满画心。
+
+   标题 / 介绍 / 滚动提示不在 .scroll-stage 里 ✗ 天然不转 ✓
+   ══════════════════════════════════════════════════════════════════════ */
 @media (max-width:900px){
-  .scroll-story{ display:none !important; }
-  .parade-mobile{ display:block !important; }
+  /* 那份竖向卡片列表彻底不用 */
+  .parade-mobile{ display:none !important; }
+
+  /* ★★★ 2026-10-10：首屏标题与介绍的窄屏兜底
+     旧的那套窄屏覆盖被停用后 ✗ 它们回落到桌面规则：
+       .pg-title / .pg-intro{ position:absolute; left:50%;
+                              width:min(760px,82vw); transform:translate(-50%,-50%) }
+     390px 下 82vw = 320px ✗ 本该装得下 ✗ 但保险起见再收一道：
+     左右各留 16px 内边距 ✗ 并限制最大宽度 ✗ 保证任何视口都不横向溢出。 */
+  /* ★★★ 2026-10-10 首屏标题与介绍：宽度与【画心】对齐
+     ──────────────────────────────────────────────────────────────
+     上一版写的是 100vw − 32 ✗ 390 下 = 358px ✗ 那是"离屏幕边 16px"✗
+     但底图所在的画心只有 284px 宽 ✗ 于是文字比底图宽出 74px ✗
+     看起来就是"介绍超出底图"（用户反馈）。
+
+     画心的屏幕宽度是怎么来的：
+       舞台   100vw − 16      （.scroll-stage 左右各留 8px）
+       纸面        84%（高度百分比 ✗ 转 90° 后变成屏幕宽度）
+       画心        − 42×2     （.sx-inner 的左右内边距 ✗ 转完变成上下）
+     三项叠起来在 390px 下正好是 284px ✗ 也就是 100vw − 106。
+
+     这里直接用 100vw − 108 ✗ 留 2px 余量 ✗ 保证不越界也不贴着边。 */
+  .scroll-story .pg-title,
+  .scroll-story .pg-intro{
+    width:calc(100vw - 108px) !important;
+    max-width:calc(100vw - 108px) !important;
+    left:50% !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    /* ★ 补 7px 横向偏移：桌面这两块是 translate(-50%,-50%) 按【视口中心】居中的 ✗
+       实测底图所在画心的中心在 x=202 ✗ 而视口中心是 195 ✗ 差 7px。
+       来源是画心自己的排版（--sx-gap 那套 left+width 的非对称定位 ✗
+       转 90° 之后左右关系被映射到了别处）。
+       这里直接把文字推 7px ✗ 让它和底图同心。 */
+    transform:translate(calc(-50% + 7px), -50%) !important;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 卷轴内部留白：恢复桌面的百分比，不再铺满
+     ──────────────────────────────────────────────────────────────────
+     桌面端的分层比例（style.css 上游的规则）：
+       .scroll-stage            容器宽
+         .sx                    height: calc(100% - 14px)   上下各留 7px
+           .sx-rod              52px（两端）✗ 左右各占 52
+           .sx-paper            height: 84%                 上下各留 8%
+             .sx-inner          left/right: 42px ✗ top/bottom: 5%
+     转 90° 之后 ✗ 纸面的"上下 8%"就变成屏幕上的"左右各一条祥云"✗
+     画心的 42px 左右内边距则变成屏幕上的上下留白 ✓
+
+     我之前为了让"高度链不塌"把这几个百分比全改成了 100% ✗
+     结果留白全部消失 ✗ 底图直接铺满整根卷轴的宽度 ✗
+     用户看到的"图片超出容器"其实就是这个 —— 祥云那一小条被图片盖住了。
+
+     所以这一版不写任何百分比 ✗ 只是【不覆盖】✗ 让桌面规则原样生效。
+     至于当初担心的"百分比失去参照"✗ 根因是 .scroll-stage 的尺寸语义变了
+     （height 变成视觉宽度 ✗ width 由 JS 撑开）✗
+     但 .sx / .sx-paper / .sx-inner 参照的都是【父级的高度】✗
+     而父级的高度始终是 100% 链下来的 ✗ 并没有断 ✗ 所以百分比本来就是有效的 ✓ */
+  .scroll-story .sx,
+  .scroll-story .sx-paper,
+  .scroll-story .sx-inner,
+  .scroll-story .gt,
+  .scroll-story .gt-nodes{
+    /* 只保证 box-sizing 一致 ✗ 不写任何尺寸 ✗ 交给桌面规则 */
+    box-sizing:border-box !important;
+  }
+
+  /* 保持桌面的滚动行程与粘性视口 —— 动效全靠它们 */
+  .scroll-story{ height:300vh !important; }
+  .scroll-story .scroll-pin{
+    position:sticky !important;
+    top:81px !important;
+    height:calc(100vh - 81px) !important;
+    overflow:hidden !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+  /* ① 整根卷轴转 90° */
+  .scroll-story .scroll-stage{
+    transform:rotate(90deg) !important;
+    transform-origin:center center !important;
+    height:calc(100vw - 16px) !important;
+    flex:0 0 auto !important;
+  }
+
+  /* ② 卡片反着转回来 ✗ 保持正立 */
+  .scroll-story .gt-node{
+    transform:translate(-50%,-50%) rotate(-90deg) !important;
+  }
+
+  /* ③ 底图：不跟着卷轴躺倒 ✗ 而且要真正铺满画心的四边
+     ────────────────────────────────────────────────────────────────
+     上一版的问题：.gt-img 自己反向转了 90° ✗ 但它的盒子还是"旋转坐标系
+     里的横向画心"✗ 于是 contain 把竖版油画缩进横向框里 ✗ 四周一圈米色留白。
+
+     关键在于两套坐标系的错位：
+       · 卷轴整体转了 90° ✗ 所以 .sx-inner 的【局部坐标】是横的
+       · 但它在【屏幕上看起来】是竖的
+     底图要正立 ✗ 就得在自己的局部坐标里再转 -90° ✗
+     转完之后它占的位置必须按【屏幕上看到的尺寸】算 ✗ 而不是局部尺寸。
+
+     所以直接写死两个方向的尺寸（都留掉画心内边距）：
+       width  = 屏幕高 − 导航(81) − 画心上下内边距(26)   ← 转完变成屏幕上的"高"
+       height = 屏幕宽 − 卷轴左右留白(16) − 画心左右内边距(26) ← 转完变成屏幕上的"宽"
+     再用 object-fit:cover 填满 ✗ 图像内容正立 ✗ 四边严丝合缝。 */
+  /* ③ 底图：用【预旋转好的图片文件】✗ CSS 一行旋转都不需要
+     ────────────────────────────────────────────────────────────────
+     前面几版一直在用 CSS 反向旋转 ✗ 由此产生的所有麻烦：
+       · 图片的坐标系与容器错开 90° ✗ 尺寸只能靠 calc 硬算
+       · 算 100vw−42 偏大 ✗ 算 100vw−124 偏小 ✗ 怎么算都对不齐
+       · 还要额外解除全局 img{max-width:100%} 的夹取
+     现在改成：图片文件【本身就是竖过来的】✗ 交给 CSS 的只是一张普通图片。
+
+     配合关系：
+       parade.html 里窄屏用 parade-huanghe-v.jpg（454×1000 ✗ 已逆时针转 90°）
+       卷轴整体转了 +90° ✗ 图片再被转回来 ✗ 屏幕上看到的就是正的 ✓
+       容器 .gt-img = 画心 ✗ width/height 100% 就是画心尺寸 ✓
+       object-fit:cover 按比例裁 ✗ 既不露白也不溢出 ✓
+
+     为什么这样一定对：
+       没有了反向旋转 ✗ 图片和容器处在【同一个坐标系】✗
+       width:100% 就是容器宽 ✗ height:100% 就是容器高 ✗ 没有任何换算。 */
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 底图：完全沿用桌面那套，一行都不覆盖
+     ──────────────────────────────────────────────────────────────────
+     桌面机制（style.css 第 780~800 行 + JS 第 667/700 行）：
+       JS  →  --inner-w = 最终画心宽度（固定像素）
+              --vis      = 当前可见比例 0→1
+       img →  position:absolute; left:50%; transform:translate3d(-50%,0,0)
+              width:var(--inner-w)          ← 【固定】尺寸 ✗ 不随展开变化
+              height:100%; object-fit:cover ← 竖版图在 cover 下按比例裁一次
+              clip-path: inset(0 (1-var(--vis))*50% 0 …)  ← 从中间往两边揭开
+     也就是：底图一开始就是【裁好的最终样子】✗ 展开时只是取景窗在它上面滑开 ✓
+     —— 正是用户要的"裁切好然后展开"。
+
+     之前我在窄屏里覆盖了 .gt-img img（改成 width/height:100%）✗
+     于是容器一变大 ✗ 图片就跟着重新适配 ✗ 变成"完整底图不断被裁" ✗
+     用户两次反馈这个问题。现在整段删掉 ✗ 让桌面规则原样生效。
+
+     为什么窄屏不用改：
+       整根卷轴转了 90° ✗ 而 clip-path 是在【局部坐标系】里算的 ✗
+       局部的"左右揭开"转 90° 之后正好是屏幕上的"上下揭开"✓
+       卷轴的展开方向本来就是"纸面变宽"✗ 转完 = 变高 ✗ 两者天然一致 ✓ */
+
+  /* picture 只是"按断点选源"的包装 ✗ display:contents 让它在布局上消失 */
+  .scroll-story .gt-img picture{ display:contents !important; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 竖屏：重新指派卡片的弹出方向
+     ──────────────────────────────────────────────────────────────────
+     用户指定的方向（按屏幕看）：
+       1949 → 下     1984 → 左     1999 → 左
+       2009 → 右     2019 → 上     2026 → 上
+
+     为什么可以直接用"屏幕方向"来写：
+       整根卷轴转了 +90° ✗ 但 .gt-node 又反向转了 −90°（让卡片文字正立）✗
+       两次旋转抵消 ✗ 卡片所在的坐标系其实就是【屏幕坐标系】✗
+       所以这里的 top/bottom/left/right 与屏幕上看到的方向一致 ✓
+
+     DOM 顺序（parade.html 里的出场次序 ✗ 与年份无关）：
+       nth-child(1) 1949   nth-child(2) 1999   nth-child(3) 1984
+       nth-child(4) 2009   nth-child(5) 2019   nth-child(6) 2026
+
+     桌面那套是靠类名（.below / .side-l / .side-r / .up / .edge-l）驱动的 ✗
+     而 CSS 改不了类名 ✗ 所以这里用 :nth-child 把四套定位重新写一遍。
+     选择器权重与桌面同级的规则相同 ✗ 靠"写在后面 + !important"确保覆盖 ✓
+     ══════════════════════════════════════════════════════════════════ */
+
+  /* ── 通用：先把桌面那套方向相关属性全部清掉 ── */
+  .scroll-story .gt-node .gt-pop{
+    top:auto !important;
+    bottom:auto !important;
+    left:auto !important;
+    right:auto !important;
+  }
+  .scroll-story .gt-node .gt-pop::after{
+    top:auto !important;
+    bottom:auto !important;
+    left:auto !important;
+    right:auto !important;
+  }
+
+  /* ── 1949（nth-child 1）→ 向下 ── */
+  .scroll-story .gt-node:nth-child(1) .gt-pop{
+    left:50% !important;
+    top:calc(100% + 8px) !important;
+    transform:translateX(-50%) translateY(-10px) !important;
+  }
+  .scroll-story .gt-node:nth-child(1):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(1):focus-within .gt-pop{
+    transform:translateX(-50%) translateY(0) !important;
+  }
+  .scroll-story .gt-node:nth-child(1) .gt-pop::after{
+    left:50% !important;
+    top:-6px !important;
+    transform:translateX(-50%) rotate(45deg) !important;
+    border:none !important;
+    border-left:1px solid rgba(200,165,90,.62) !important;
+    border-top:1px solid rgba(200,165,90,.62) !important;
+  }
+
+  /* ── 1999（2）× 1984（3）→ 向左 ── */
+  .scroll-story .gt-node:nth-child(2) .gt-pop,
+  .scroll-story .gt-node:nth-child(3) .gt-pop{
+    right:calc(100% + 8px) !important;
+    top:50% !important;
+    transform:translateY(-50%) translateX(10px) !important;
+  }
+  .scroll-story .gt-node:nth-child(2):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(2):focus-within .gt-pop,
+  .scroll-story .gt-node:nth-child(3):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(3):focus-within .gt-pop{
+    transform:translateY(-50%) translateX(0) !important;
+  }
+  .scroll-story .gt-node:nth-child(2) .gt-pop::after,
+  .scroll-story .gt-node:nth-child(3) .gt-pop::after{
+    right:-6px !important;
+    top:50% !important;
+    transform:translateY(-50%) rotate(45deg) !important;
+    border:none !important;
+    border-right:1px solid rgba(200,165,90,.62) !important;
+    border-top:1px solid rgba(200,165,90,.62) !important;
+  }
+
+  /* ── 2009（4）→ 向右 ── */
+  .scroll-story .gt-node:nth-child(4) .gt-pop{
+    left:calc(100% + 8px) !important;
+    top:50% !important;
+    transform:translateY(-50%) translateX(-10px) !important;
+  }
+  .scroll-story .gt-node:nth-child(4):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(4):focus-within .gt-pop{
+    transform:translateY(-50%) translateX(0) !important;
+  }
+  .scroll-story .gt-node:nth-child(4) .gt-pop::after{
+    left:-6px !important;
+    top:50% !important;
+    transform:translateY(-50%) rotate(45deg) !important;
+    border:none !important;
+    border-left:1px solid rgba(200,165,90,.62) !important;
+    border-bottom:1px solid rgba(200,165,90,.62) !important;
+  }
+
+  /* ── 2019（5）× 2026（6）→ 向上 ── */
+  .scroll-story .gt-node:nth-child(5) .gt-pop,
+  .scroll-story .gt-node:nth-child(6) .gt-pop{
+    left:50% !important;
+    bottom:calc(100% + 8px) !important;
+    transform:translateX(-50%) translateY(10px) !important;
+  }
+  .scroll-story .gt-node:nth-child(5):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(5):focus-within .gt-pop,
+  .scroll-story .gt-node:nth-child(6):hover .gt-pop,
+  .scroll-story .gt-node:nth-child(6):focus-within .gt-pop{
+    transform:translateX(-50%) translateY(0) !important;
+  }
+  .scroll-story .gt-node:nth-child(5) .gt-pop::after,
+  .scroll-story .gt-node:nth-child(6) .gt-pop::after{
+    left:50% !important;
+    bottom:-6px !important;
+    transform:translateX(-50%) rotate(45deg) !important;
+    border:none !important;
+    border-right:1px solid rgba(200,165,90,.62) !important;
+    border-bottom:1px solid rgba(200,165,90,.62) !important;
+  }
 }

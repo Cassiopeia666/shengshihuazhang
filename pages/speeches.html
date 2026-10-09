@@ -150,6 +150,34 @@
 }
 @media (max-width:768px){
   .dev-intro{ width:94vw; top:45%; }
+  /* ★★★ 2026-10-10 窄屏：首屏文字居中 + 不再溢出
+     ──────────────────────────────────────────────────────────────────
+     问题：390px 下标题偏右 ✗ 介绍文字右侧被裁 51px。
+     原因：这两个块在桌面是【绝对定位 + 左侧固定偏移】✗
+         .dev-hero-copy{ left:88px; width:clamp(290px,37vw,500px) }
+         .dev-intro    { left:75px; width:min(720px,62vw) }
+       窄屏的媒体查询只改了 width ✗ 【left 一直没清】✗
+       实测：left:75 + width:94vw(366) = 441px ✗ 屏幕上只有 390 ✗ 右边 51px 出去了。
+     修法：窄屏改成 left:0 / right:0 让它们自己撑满可用宽度 ✗ 再靠内边距留白 ✗
+       左右对称 ✗ 内容自然居中 ✗ 也不会再有溢出。
+     标题块 .dev-title-block 是相对定位、宽 100% ✗ 父级一居中它就跟着居中 ✓ */
+  .dev-hero-copy{
+    left:0; right:0;
+    width:auto;
+    max-width:100%;
+    padding:0 18px;
+    text-align:center;
+  }
+  .dev-intro{
+    left:0; right:0;
+    width:auto;
+    max-width:100%;
+    padding:0 18px;
+    box-sizing:border-box;
+  }
+  .dev-title-mao{ width:100%; max-width:100%; }
+  .dev-poem{ width:min(420px, 88vw); margin:14px auto 0; }
+  .dev-years{ letter-spacing:.24em; font-size:13.5px; }
   .dev-points{ flex-wrap:wrap; gap:8px; }
   .dev-points .pt{ width:auto; flex:1 1 28%; padding:9px 10px; }
   .dev-lead{ font-size:16px; }
@@ -1406,6 +1434,96 @@
   .s-card{ padding:34px 20px; min-height:auto; }
   .s-detail{ font-size:15px; padding-top:24px; }
   .dev-copy p{ font-size:15px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-09：窄屏横向溢出修复
+   ──────────────────────────────────────────────────────────────────
+   症状：390px 视口下文档 scrollWidth = 454px ✗ 右侧被撑出 64px。
+   定位：溢出的是 .dev-stats-left / .dev-stats-right / 四个 .s-card，
+         实测都是 454px —— 比它们的父级 .dev-stats（390px）宽 64px。
+   原因：.dev-stats 在窄屏切成 grid-template-columns:1fr，
+         而 grid 项的 min-width 默认是 auto ✗ 内容里那些图表（柱状图、
+         环形图、数据罗列）有各自的固有宽度 ✗ 把轨道硬撑到 454px。
+         这是 CSS Grid 的经典坑 ✗ 单列 grid 也会横向溢出。
+   修法：① 轨道用 minmax(0,1fr) 而不是 1fr
+         ② 两侧与卡片显式 min-width:0 —— 允许它们被压缩
+         ③ 图表容器加一道 max-width:100% 兜底
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:768px){
+  .dev-stats{ grid-template-columns:minmax(0, 1fr); }
+  .dev-stats-left, .dev-stats-right,
+  .s-card, .data-card, .dev-stats-left > *, .dev-stats-right > *{
+    min-width:0;
+    max-width:100%;
+  }
+  .chart-box, .bar-chart, .donut-wrap, .eco-layout{ max-width:100%; min-width:0; }
+  /* 极窄屏下图表允许自己横向滚动 ✗ 而不是撑破页面 */
+  .chart-box{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 窄屏：愿望墙板块的三处排版修复
+     ──────────────────────────────────────────────────────────────────
+     用 390px 视口实测出来的三个问题 ✗ 都在这一个板块里：
+
+     ① 左栏与右栏重叠 81px
+        实测：左栏 offsetTop=7847 高=421 → 底 8268 ✗ 右栏却从 8187 开始。
+        原因：桌面规则里 .dev-stats-left 是 position:sticky; top:81px ✗
+        窄屏的媒体查询只把 position 改成了 relative ✗ 【top 没清】✗
+        position:relative 下的 top 会让元素【视觉下移但不占布局高度】✗
+        于是左栏整体被往下推了 81px ✗ 正好压在右栏上。
+        症状就是截图里「6 条 · 只存在你的浏览器里」和「经济民生」叠在一起。
+        → top 必须显式归零。
+
+     ② 贺卡列表比容器宽 48px 且左移 48px
+        实测：width=398px  margin-left:-48px ✗ 父容器只有 350px。
+        那个负边距是桌面端用来「露出前一卡的一角」的 ✗ 窄屏下就成了溢出。
+        → 窄屏取消负边距 ✗ 宽度交给容器。
+
+     ③ 手写板只剩 96px 宽 ✗ 里面的工具条就占 88px
+        文字框与手写板在桌面是左右各半 ✗ 手机上每边不到 100px ✗
+        工具条（橡皮 / 清空）直接盖满整个手写板 ✗ 看着像叠在一起。
+        → 窄屏改成上下排列 ✗ 两块各占整宽 ✗ 手写板至少给 150px 高。
+     ══════════════════════════════════════════════════════════════════ */
+  .dev-stats-left{ top:auto !important; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 窄屏：愿望墙板块改为普通文档流
+     ──────────────────────────────────────────────────────────────────
+     前几版一直在 flex 里打补丁（改 flex 比例 / 解 min-height ✗）✗
+     但始终有 194px 的重叠 —— 因为这条链路上有【四五层嵌套 flex】：
+       .dev-stats（grid）→ .dev-stats-left（flex column）
+         → .wish（flex column）→ .wish-make（flex）
+           → .wish-form（flex column）→ .wish-inputs（flex）
+     每一层都有自己的 flex 基数和 min-height:0 ✗ 高度被层层压缩 ✗
+     制作区的 offsetHeight 报 535 ✗ 但它在布局里实际只占 341 ✗
+     多出来的部分就盖住了下一个兄弟（贺卡墙）。
+
+     窄屏下根本不需要这套弹性布局 —— 直接全部改成 block：
+       block 的规则只有一条：高度 = 内容高度 ✗ 从上往下依次排 ✗
+     这样从原理上就不可能出现重叠 ✗ 也不用再去追是哪一层压的谁。
+
+     桌面端不受影响（这些规则都在 @media max-width:768px 里）。
+     ══════════════════════════════════════════════════════════════════ */
+  .dev-stats-left{ display:block !important; height:auto !important; min-height:0 !important; }
+  .wish{ display:block !important; height:auto !important; min-height:0 !important; }
+  .wish-make,
+  .wish-form,
+  .wish-inputs{ display:block !important; height:auto !important; min-height:0 !important; }
+  .wish-make{ margin-bottom:14px; }
+  .wish-make .form-top{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .wish-make .form-top input{ flex:1 1 auto; width:auto !important; min-width:0; }
+  .wish-make .wish-inputs textarea{ display:block; width:100% !important; height:64px !important; min-height:0 !important; margin-bottom:10px; }
+  .wish-make .wish-hand{ display:block; width:100% !important; height:180px !important; min-height:0 !important; }
+  .wish-list{ display:block !important; position:relative !important; width:auto !important;
+              height:340px !important; min-height:0 !important; margin:0 !important; padding:6px 4px !important; }
+  .wish-make .wish-form,
+  .wish-make .wish-inputs{ flex:1 1 auto; min-width:0; }
+  .wish-make .wish-inputs{ flex-direction:column; }
+  .wish-make .wish-inputs textarea{ flex:0 0 auto; min-height:64px; }
+  .wish-make .wish-hand{ flex:0 0 auto; min-height:158px; }
+  .wish-make .wish-hand .hand-tools{ left:8px; bottom:7px; gap:7px; }
+  .wish-make .wish-hand .hand-tools button{ font-size:11.5px; padding:3px 10px; }
 }
 </style>
 </head>

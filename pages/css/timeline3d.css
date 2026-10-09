@@ -131,3 +131,81 @@ input[type=range]{width:min(600px,80%);display:block;margin:10px auto 0}
 /* ★ 金线的显隐：出现时淡入，消失时【立刻】（避免离开年份后还拖尾=闪烁）*/
 #callout{ transition: opacity .28s ease; }
 #callout:not(.on){ transition: none !important; opacity: 0 !important; }
+
+/* ★★★ 2026-10-09 触屏适配：时间轴的拖动方向
+   pan-y 表示「纵向滚动交给浏览器 ✗ 横向手势留给脚本」。
+   时间轴是横向的 ✗ 手指横着划应该翻书；竖着划仍然应该滚页面。
+   如果写成 none ✗ 手指落在时间轴上就再也滚不动页面了 ✗ 反而困住用户。 */
+.tl, .tlscroll, #tl{ touch-action:pan-y; }
+
+/* ══════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-09 窄屏适配：时间轴改成「超出容器 ✗ 可左右拖动」
+   ──────────────────────────────────────────────────────────────────
+   上一版的做法是「把时间轴塞进屏幕 ✗ 再隐藏小点」✗ 结果是：
+   78 个年份挤在 334px 里 ✗ 每点 4px ✗ 看不清也点不中 ✗ 只好全藏起来。
+   但藏起来等于把这条时间轴的信息量砍掉一大半 ✗ 用户要求改回来。
+
+   现在改成：时间轴本身做宽（920px）✗ 让它超出屏幕 ✗
+   由父容器 .bookwrap 作为「可横向滚动的取景窗」✗ 手指左右拖即可平移。
+   920px 下 78 个点平均每点 11px ✗ 关键年份之间约 130px ✗ 都够用。
+
+   为什么原来的滑动判定不用改：
+   JS 里算的是 pos = (clientX - tlEl.getBoundingClientRect().left) / tlEl.width
+   —— 取的是 .tl 自己的矩形 ✗ 它比屏幕宽 ✗ 左缘在滚动时会变成负数 ✗
+   公式天然把滚动量算进去了 ✗ 所以点哪个年份就是哪个年份 ✓
+
+   touch-action 用 pan-x：横向手势交给浏览器去滚动 ✗
+   纵向仍然可以把页面上下滚 ✗ 不会把手指困在时间轴上。
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:900px){
+  /* ★★★ 2026-10-10：时间轴独立取景窗
+     上一版把 overflow-x:auto 加在 .bookwrap 上 ✗ 而 .stage（书本画布）
+     是它的兄弟节点 ✗ 于是横向滚动时整块区域一起移动 ✗ 书跟着跑。
+     现在单独给 .tl 套一层 .tl-wrap 作为取景窗 ✗ 书在外面 ✗ 互不影响。 */
+  .tl-wrap{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    touch-action:pan-x;
+    cursor:grab;
+  }
+  .tl-wrap::-webkit-scrollbar{ display:none; }
+  .tl-wrap.dragging{ cursor:grabbing; }
+  .tl{
+    width:920px;
+    margin:0;
+    touch-action:none;          /* ★ 改由 JS 自己处理拖动 ✗ 鼠标也能拖 */
+  }
+  .tl-dot{ display:block; }
+  .tl-lab{ font-size:16px; line-height:22px; }
+  .tl-labhit{ padding:9px 3px; }
+  /* ★ 2026-10-10：端线不再压住两端的年份
+     1949 与 2026 的标签正好在时间轴的两端（0% 与 100%）✗
+     而端线原来也放在 left:0 / right:0 ✗ 高度又都在垂直中线上 ✗
+     结果就是一条横线从「2026」四个数字中间穿过去。
+     端线的作用只是标出"这条时间轴的起止"✗ 而 1949 和 2026
+     两个年份本身已经把这个信息说清楚了 ✗ 窄屏下直接不显示。
+     桌面端保持不变（那里端线在时间轴外 52px ✗ 不冲突）。 */
+  .tl-end{ display:none; }
+}
+
+/* ★ 2026-10-10：窄屏小卡的文字
+   实测小卡里正文是空白的 ✗ 原因是 .is-flat 用了 -webkit-box 多行截断
+   而窄屏下那点高度把行数压到了 0 ✗ 文字就整段不可见。
+   窄屏改成正常显示 ✗ 允许两行 ✗ 字号也调大一点。 */
+@media (max-width:900px){
+  .board-grid.expanded .card.is-small{ padding:10px 8px; }
+  .board-grid.expanded .card.is-small h3{
+    writing-mode:horizontal-tb; font-size:14px; letter-spacing:.06em; margin:0 0 4px;
+  }
+  .board-grid.expanded .card.is-small p{
+    display:block; -webkit-line-clamp:none; font-size:11px; line-height:1.4;
+    color:var(--muted); margin:0;
+    overflow:hidden; text-overflow:ellipsis;
+  }
+  .board-grid.expanded .card.is-small.is-flat{ flex-direction:column; }
+  .board-grid.expanded .card.is-small.is-flat h3{ font-size:14px; margin:0 0 4px; }
+  .board-grid.expanded .card.is-small.is-flat p{ display:block; font-size:11px; }
+}

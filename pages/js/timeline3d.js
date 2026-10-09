@@ -378,14 +378,34 @@
     });
   }
 
+  /* ★★★ 2026-10-09：窄屏适配 —— 书本整体缩放
+     ──────────────────────────────────────────────────────────────────
+     问题：相机固定在 (0, 380, 1330) ✗ 视场角 30° ✗
+     在 390px 宽的手机上 ✗ 可视宽度只有约 392 世界单位 ✗
+     而书本横向跨度约 900 ✗ 于是右侧一大截被切在屏幕外。
+     原来的 resize() 只改 camera.aspect ✗ 那只影响纵向 ✗ 横向依旧裁切。
+
+     修法：按宽高比给 bookRoot 一个统一缩放。
+     基准取 aspect = 1.30（接近桌面 1440×900 的 1.6 再留些余量 ✗ 实测合适）
+     窄于这个比例就等比缩小 ✗ 宽于则保持 1 ✗ 桌面端一点都不变。
+     缩放作用在 bookRoot 上 ✗ 相机、光照、DOM 覆盖层全部不动 ——
+     金线框与照片是按相机投影算的 ✗ 会自然跟着缩放后的几何走 ✓ */
+  function fitBook(){
+    if (!bookRoot) return;
+    var k = Math.min(1, camera.aspect / 1.30);
+    bookRoot.scale.setScalar(k);
+  }
+
   function resize(){
     var r = stage.getBoundingClientRect();
     renderer.setSize(r.width, r.height, false);
     camera.aspect = r.width / r.height;
     camera.updateProjectionMatrix();
+    fitBook();
   }
   window.addEventListener('resize', function(){
-    resize(); layoutDots(); buildMarkers();
+    resize();
+  fitBook(); layoutDots(); buildMarkers();
     if (coSvg.classList.contains('on') && FRAME_MODE === '3d' && lastCalloutYear) drawConnector(lastCalloutYear, true);
   });
 
@@ -631,8 +651,10 @@
       var hit = lb.parentNode;
       return (parseFloat(hit.style.left) || 0) / 100;
     }
-    lb.addEventListener('mouseenter', function(){ squeeze(curPos(), 1); });
-    lb.addEventListener('mouseleave', function(){ squeeze(curPos(), 0); });
+    var _en = window.PointerEvent ? 'pointerenter' : 'mouseenter';
+    var _lv = window.PointerEvent ? 'pointerleave' : 'mouseleave';
+    lb.addEventListener(_en, function(){ squeeze(curPos(), 1); });
+    lb.addEventListener(_lv, function(){ squeeze(curPos(), 0); });
   });
   window.__squeeze = squeeze;        // 便于测试/外部调用
 
@@ -1533,14 +1555,21 @@
   window.__hoverDot = hoverDot;
   window.__hoverRec = function(){ return hoverRec ? hoverRec.year : null; };
 
-  tlEl.addEventListener('mousemove', function(e){
+  /* ★★★ 2026-10-09 触屏适配：mousemove → pointermove
+     原来只监听 mousemove ✗ 触屏上手指沿时间轴滑动完全不触发 ✗
+     翻不了书 ✗ 只能一个一个点小点 ✗ 而这一页的卖点正是「滑动即翻页」。
+     PointerEvent 同时覆盖鼠标与触摸 ✗ 换掉即可 ✗ 逻辑一行没动。
+     不支持的旧浏览器回退到 mousemove。 */
+  var SCRUB_EV = (window.PointerEvent ? 'pointermove' : 'mousemove');
+  function _scrub(e){
     var r = tlEl.getBoundingClientRect();
     var pos = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-    highlightNearest(pos);                 // 高亮：离鼠标最近的标记
+    highlightNearest(pos);                 // 高亮：离指针最近的标记
     setYear(pctToYear(e));                 // 翻页：按标记插值出的年份（连续）
     hoverDot(nearestDotPx(e.clientX - r.left, r.width));   // ★ 最近标记，无死区
-  });
-  tlEl.addEventListener('mouseleave', function(){
+  }
+  tlEl.addEventListener(SCRUB_EV, _scrub, { passive: true });
+  tlEl.addEventListener(window.PointerEvent ? 'pointerleave' : 'mouseleave', function(){
     hoverDot(null);
     if (_holdTimer){ clearTimeout(_holdTimer); _holdTimer = null; }
     // ★ 不要把已经画好的内容收掉！用户明确要求：鼠标划出时间轴后

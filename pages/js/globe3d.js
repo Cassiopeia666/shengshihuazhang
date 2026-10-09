@@ -484,6 +484,36 @@ var CN_CORE  = [1.000, 0.992, 0.957];   // #fffdf4 中心亮芯
     var rotY = 0, autoY = 0;
     var dragging = false, lastX = 0, vX = 0, camZ = 5.4;
 
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-10 窄屏适配：机位随窗口自适应拉远
+   ──────────────────────────────────────────────────────────────────────
+   问题：手机上地球左右两端跑出屏幕 ✗ 西部的城市光点点不到。
+   根因在视场角 ✗ 与"球多大"无关：
+     相机 PerspectiveCamera(32°, …) ✗ 球半径 1 ✗ 默认机位 z = 5.4
+     垂直方向：球张角 2·asin(1/5.4) = 21.3° ✗ 视场 32°   → 占 67%  ✓ 够
+     水平方向：水平视场 = 2·atan(tan(16°) × 宽高比)
+       桌面 宽高比 1.6  →  水平视场 49.3°  →  球只占 43%   ✓ 富余
+       手机 宽高比 0.55 →  水平视场 17.9°  →  球要 21.3°   ★ 比屏幕还宽
+     所以是【水平方向装不下】✗ 竖屏越窄越明显。
+
+   修法：按水平视场反算"刚好装下球"所需的最小机位 ✗ 与基准 5.4 取较大者。
+     fitK = max(1, 所需机位 / 5.4)
+   桌面算出 fitK = 1（不动）✗ 手机约 1.31（整球缩小到能完整看到）。
+   它是【乘在 camZ 上的系数】✗ 所以后续的板块聚焦（GROUP_ZOOM 1.60 ✓）
+   和中国全景（2.55 ✓）都会同步等比拉远 ✗ 放大后的视图也不会再溢出。
+   ══════════════════════════════════════════════════════════════════════ */
+var fitK = 1;
+function computeFitK(){
+  var BASE_Z = 5.4;                     /* 与初始机位一致 */
+  var R = 1.10;                         /* 球半径 1 ✗ 留 10% 边距 */
+  var halfV = camera.fov * Math.PI / 360;
+  var halfH = Math.atan(Math.tan(halfV) * (camera.aspect || 1));
+  var need = R / Math.sin(halfH || 0.5);
+  fitK = Math.max(1, need / BASE_Z);
+  return fitK;
+}
+window.__globeFitK = function(){ return fitK; };
+
     /* ★ 2026-10-08：把聚焦所需的状态暴露给页面脚本。
        页面脚本负责算动画（rot / camZ / x），帧循环只读这里。
        rot 是「总角度」= rotY + autoY，非聚焦时每帧同步，供 startFocus 取起始值。 */
@@ -563,7 +593,8 @@ var CN_CORE  = [1.000, 0.992, 0.957];   // #fffdf4 中心亮芯
       camera.updateProjectionMatrix();
       renderer.setSize(h * aspect, h);
       var camXX = (window.__globeFocus && window.__globeFocus.on) ? (window.__globeFocus.x || 0) : 0;
-      camera.position.set(camXX, 0, camZ);
+      computeFitK();
+      camera.position.set(camXX, 0, camZ * fitK);
       camera.lookAt(0, 0, 0);
     }
     window.addEventListener('resize', fit);
@@ -805,7 +836,7 @@ var CN_CORE  = [1.000, 0.992, 0.957];   // #fffdf4 中心亮芯
       /* ★ 光晕跟随球体：它挂在 scene 上而不是 globe 组里，不手动同步就会错位 */
       if (halo) halo.position.y = globe.position.y;
       globe.children[0].rotation.y = autoY;
-      camera.position.set(0, 0, camZ);
+      camera.position.set(0, 0, camZ * fitK);
       camera.lookAt(0, 0, 0);
       /* ★★ 2026-10-08：立刻刷新相机的世界矩阵与它的逆矩阵。
          为什么必须在这里做：本帧后面的城市光点/年份光点/省名标签，

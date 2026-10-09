@@ -886,6 +886,25 @@
   @media (prefers-reduced-motion: reduce){
     .group-dot .gd-dot{ animation: none; opacity:.9; }
   }
+
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-09 触屏适配：把可点元素放大到手指够用
+     ──────────────────────────────────────────────────────────────────
+     用 (pointer:coarse) 只在触屏设备生效 ✗ 桌面端观感完全不变。
+     翻页按钮 24 → 40px（卡片两侧固定占位 ✗ 不会挤压照片）
+     光点热区按档位放大到 28~34px（原来 11~20px ✗ 手指点不中）
+     ══════════════════════════════════════════════════════════════════ */
+  @media (pointer:coarse){
+    .city-dot .cd-nav{ flex:0 0 40px; width:40px; height:40px; }
+    .city-dot .cd-nav svg{ width:18px; height:18px; }
+    .city-dot .cd-del{ min-height:34px; padding:0 12px; font-size:13px; }
+    .city-dot.lv1::before{ --hit:34px; }
+    .city-dot.lv2::before{ --hit:32px; }
+    .city-dot.lv3::before{ --hit:30px; }
+    .city-dot.lv4::before{ --hit:28px; }
+    /* 卡片在小屏上不要顶到边 ✗ 留出拇指余量 */
+    .city-dot .cd-pop{ max-width:calc(100vw - 24px); }
+  }
 </style>
 </head>
 <body>
@@ -1723,6 +1742,57 @@ try {
   var GROUP_DUR = 1.5;
   var groupFocus = null;      /* 当前聚焦的板块名，null = 中国全景 */
 
+  /* ══════════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-10 窄屏/大板块适配：按板块的实际张角算机位
+     ──────────────────────────────────────────────────────────────────────
+     问题：聚焦「西部」时最边缘的光点点不到 ✗ 而聚焦「中部」没问题。
+     原因：camZ 对所有板块都取同一个 GROUP_ZOOM = 1.60 ✗
+     但各板块在地球上占的范围差得很远：
+       西部 = 陕西+甘肃+宁夏+青海+新疆+西藏 ✗ 横跨约 35 个经度
+       中部 = 山河四省+京津+内蒙 ✗ 相对紧凑
+     同一个机位 ✗ 大板块的边缘就被推出屏幕了。
+
+     做法：用 __PROV_GROUPS（板块→省份）和 __CITY_POOL（每座城市带省份）
+     把该板块所有城市的经纬度找出来 ✗ 算它们到板块中心的最大球面角 θ ✗
+     再反算"刚好装下 θ 所需的最小机位"：
+       屏幕上某点的半角 = atan( sinθ / (z − cosθ) )  ≤  limit
+       ⇒ z ≥ cosθ + sinθ / tan(limit)
+     limit 取横竖两个半视场中较小的那个 ✗ 再乘 0.82 留出边距。
+     最后除以全局 fitK —— 因为实际机位是 camZ × fitK ✗ 这里要还原成未缩放的值。
+     ══════════════════════════════════════════════════════════════════════ */
+  function groupExtent(name){
+    var provs = (window.__PROV_GROUPS || {})[name] || [];
+    var pool  = (window.__CITY_POOL && window.__CITY_POOL.list) || [];
+    var C     = window.__GROUP_CENTERS && window.__GROUP_CENTERS[name];
+    if (!C || !provs.length || !pool.length) return Math.PI / 6;   /* 兜底 30° */
+    var clat = C.lat * Math.PI / 180, clon = C.lon * Math.PI / 180;
+    var max = 0;
+    for (var i = 0; i < pool.length; i++){
+      if (provs.indexOf(pool[i][4]) < 0) continue;
+      var lat = pool[i][2] * Math.PI / 180, lon = pool[i][1] * Math.PI / 180;
+      var cosd = Math.sin(clat) * Math.sin(lat) +
+                 Math.cos(clat) * Math.cos(lat) * Math.cos(lon - clon);
+      var d = Math.acos(Math.max(-1, Math.min(1, cosd)));
+      if (d > max) max = d;
+    }
+    return max || Math.PI / 6;
+  }
+
+  function zoomForGroup(name){
+    var theta = groupExtent(name);
+    var fov   = 32 * Math.PI / 180;
+    var halfV = fov / 2;
+    var aspect = (window.innerWidth || 1) / (window.innerHeight || 1);
+    var halfH = Math.atan(Math.tan(halfV) * aspect);
+    var limit = Math.min(halfV, halfH) * 0.82;
+    var z = Math.cos(theta) + Math.sin(theta) / Math.tan(limit);
+    z = Math.max(1.35, Math.min(7.5, z));
+    var k = (typeof window.__globeFitK === 'function') ? window.__globeFitK() : 1;
+    return z / (k || 1);
+  }
+  window.__globeGroupExtent = groupExtent;
+  window.__globeZoomForGroup = zoomForGroup;
+
   function targetOf(name){
     var C = window.__GROUP_CENTERS && window.__GROUP_CENTERS[name];
     if (!C) return null;
@@ -1731,7 +1801,7 @@ try {
       /* ★★ 2026-10-08：同样要减掉「球体下移带来的画面偏北」17.46°（0.3047 rad），
          否则板块会停在比它真实纬度偏北 17.46° 的位置。 */
       tilt: C.lat * Math.PI / 180 - Math.asin(0.30),
-      camZ: GROUP_ZOOM,
+      camZ: zoomForGroup(name),        /* ★ 按板块张角各自计算 */
       x:    0,
       dur:  GROUP_DUR
     };
@@ -1900,6 +1970,30 @@ try {
        只有点到板块以外的地方才退回中国全景。
        判断方法：用 globe3d.js 暴露的 __globePick(屏幕坐标) 反算出鼠标下的经纬度，
        再交给 __groupAt() 判断它属于哪个板块。 */
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★ 2026-10-09 触屏适配：点空白处收起卡片
+     ──────────────────────────────────────────────────────────────────
+     触屏没有 mouseleave ✗ 卡片弹出后不会自己收回去。
+     这里补一条：手指点在「既不是光点、也不是卡片」的地方就收起。
+     只判断 .city-dot.locked ✗ 不影响未锁定的卡片（那种本来就不会在触屏上出现）。
+     ══════════════════════════════════════════════════════════════════ */
+  if (window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+    document.addEventListener('pointerup', function (ev) {
+      var t = ev.target;
+      if (!t || !t.closest) return;
+      if (t.closest('.city-dot')) return;      /* 点在光点上 ✗ 光点自己处理 */
+      if (t.closest('.cd-pop')) return;        /* 点在卡片上 ✗ 不收起 */
+      var any = false;
+      document.querySelectorAll('.city-dot.locked').forEach(function (el) {
+        el.classList.remove('locked');
+        el.classList.remove('holding');
+        var rr = el.querySelector('.cd-ring');
+        if (rr) rr.style.opacity = '0';
+        any = true;
+      });
+      if (any && window.__cardHoverEnd) window.__cardHoverEnd();
+    }, { passive: true });
+  }
   document.addEventListener('click', function (ev) {
     /* ★★ 2026-10-08：卡片内部的点击（翻页按钮等）必须【就地消化】✗
        否则会被下面那条"点板块外就退回全景"的规则判成外部点击 ✗
@@ -2922,6 +3016,57 @@ try {
         pop0.addEventListener('mouseenter', function () { cancelHide(); });
         pop0.addEventListener('mouseleave', function () { scheduleHide(); });
       }
+
+      /* ══════════════════════════════════════════════════════════════════
+         ★★★ 2026-10-09 触屏适配：光点改成「点一下」开卡片
+         ──────────────────────────────────────────────────────────────────
+         问题：原来只有 mouseenter / mouseleave ✗ 这是悬停模型的交互。
+         触屏没有悬停 ✗ 手指点上去时浏览器虽然会补发一次 mouseenter ✗
+         但 mouseleave 的时机完全不可预期 ✗ 表现就是卡片要么不出现、
+         要么出现后收不掉。而且「悬停满 1 秒锁定」这条对触屏毫无意义 ——
+         手指早就抬起来了 ✗ 那一秒的圆环倒计时也就永远走不完。
+
+         做法：在触屏上改成点击模型。
+         ① pointerdown 记下按下的位置与时刻
+         ② pointerup 时比对位移 —— 位移小、间隔短才算「点击」✗
+            否则是一次拖拽地球（拖拽时不应该弹卡片）
+         ③ 是点击就直接把卡片置为已锁定状态 ✗ 不走那 1 秒
+         ④ 点空白处收起：交给下面那个 document 上的 click 处理
+
+         阈值取 12px / 600ms：手指抖动通常在 10px 以内 ✗
+         而真正的拖拽一定会超过这个位移。
+         ══════════════════════════════════════════════════════════════════ */
+      var COARSE = window.matchMedia &&
+                   window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      if (COARSE) {
+        d.addEventListener('pointerdown', function (e) {
+          d._tapX = e.clientX;
+          d._tapY = e.clientY;
+          d._tapT = Date.now();
+          d._tapped = false;
+        });
+        d.addEventListener('pointerup', function (e) {
+          var dx = Math.abs(e.clientX - (d._tapX || 0));
+          var dy = Math.abs(e.clientY - (d._tapY || 0));
+          var dt = Date.now() - (d._tapT || 0);
+          if (dx > 12 || dy > 12 || dt > 600) return;      /* 是拖拽 ✗ 不弹卡片 */
+          d._tapped = true;
+          cancelHide();
+          window.__buildCarousel(d);
+          requestAnimationFrame(function () { window.__positionCard(d); });
+          window.__cardHoverStart(d);
+          clearTimeout(d._holdT);
+          clearInterval(d._ringT);
+          d.classList.remove('holding');
+          d.classList.add('locked');                        /* 直接锁定 ✗ 不等那 1 秒 */
+          var rgT = d.querySelector('.cd-ring');
+          if (rgT) { rgT.style.transition = 'none'; rgT.style.opacity = '0'; }
+        });
+        /* 触屏上没有 mouseleave ✗ 收卡片靠点空白处 */
+      } else {
+        d._tapped = false;
+      }
+
       d.addEventListener('focus', function () {
         window.__buildCarousel(d);
         requestAnimationFrame(function () { window.__positionCard(d); });

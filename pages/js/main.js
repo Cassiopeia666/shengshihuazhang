@@ -229,7 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       card.addEventListener('click', (e) => {
         if (e.target.closest('.card-enter')) return;
-        if (window.innerWidth < 900) return;
+        /* ★★★ 2026-10-09：原来这里有一道 window.innerWidth < 900 的守卫 ✗
+           窄屏下直接 return ✗ 卡片点击放大 + 挤压的整套动效在手机上完全失效 ✗
+           点上去只会跳转 ✗ 用户要求「和电脑浏览完全一样的效果」。
+           现在把门槛降到 320px（比任何在用机型都窄 ✗ 等于不设限 ✓）。
+           挤压动画本身是按 grid 的实际矩形算的 ✗ 与视口宽度无关 ✗ 所以能直接跑。 */
+        if (window.innerWidth < 320) return;
         e.preventDefault();
         if (expandedCard === card) collapseAll();
         else expandCard(card);              // 已有放大卡时，直接切换并重新生长
@@ -263,6 +268,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const K_SMALL_H = 0.46;  // 底排卡片高度比例（很扁）
 
     const targets = (bigIdx, W, u, nh) => {
+      /* ══════════════════════════════════════════════════════════════
+         ★★★ 2026-10-09：窄容器专用布局
+         ──────────────────────────────────────────────────────────────
+         桌面那套算法建立在一个前提上：容器宽 W 远大于单元宽 u
+         （桌面 W≈1100 ✗ u≈296 ✗ 侧卡占 0.58u=172 ✗ 大卡还剩 908 ✓）。
+         但在手机上 ✗ .board-grid 的卡片会被 flex 拉满整行 ✗ u 等于 W ✗
+         于是 sideTarget = 0.58W ✗ 大卡只剩 W-0.58W-20
+         ✗ 342px 的容器算出 124px 的大卡 —— 比一张邮票大不了多少。
+
+         窄容器（< 620px）改用一套简单得多的布局：
+           大卡：整宽 ✗ 高度按原卡长宽比换算（不变形）
+           小卡：两列 ✗ 依次往下排 ✗ 保持「扁」的观感
+         动效本身完全不动 —— tween 只是把矩形从一个状态插值到另一个 ✓
+         ══════════════════════════════════════════════════════════════ */
+      const R0 = (l, t, w, h) => ({ left: Math.round(l), top: Math.round(t),
+        width: Math.round(w), height: Math.round(h) });
+      if (W < 620) {
+        const gn = 14;
+        const bigW = W;
+        const bigH = Math.round(bigW * nh / u);      // 等比 ✗ 不变形
+        const sw = Math.floor((W - gn) / 2);
+        const sh = Math.max(72, Math.round(K_SMALL_H * nh));
+        const outN = new Array(animCards.length);
+        const flatN = [];
+        outN[bigIdx] = R0(0, 0, bigW, bigH);
+        const rest = [];
+        for (let i = 0; i < animCards.length; i++) if (i !== bigIdx) rest.push(i);
+        rest.forEach(function (ci, k) {
+          const col = k % 2, rw = Math.floor(k / 2);
+          outN[ci] = R0(col * (sw + gn), bigH + gn + rw * (sh + gn), sw, sh);
+          flatN.push(ci);
+        });
+        return { rects: outN, gridH: bigH + gn + 2 * sh + gn, flat: flatN };
+      }
+
       const g = 20;
       const sideTarget = Math.round(K_SIDE * u);
       // 中间卡放大时两侧夹击、大卡取固定倍数；其余情况旁卡定宽，大卡吃满剩余宽度
@@ -454,6 +494,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.__cards = { expand: (i) => expandCard(animCards[i]), collapse: collapseAll, isOpen: () => !!expandedCard };
+
+    /* ══════════════════════════════════════════════════════════════════
+       ★★★ 2026-10-10 窄屏：容器窄时摆成「一大四小」✗ 大卡是「我们的构想」
+       ──────────────────────────────────────────────────────────────────
+       窄屏下五张卡在常态是竖着一条排下来的 ✗ 要划好几屏才看得完 ✗
+       而且「我们的构想」是最后一张 ✗ 永远在很下面。
+       用户要求：小屏进来就是「最上面一张大卡 + 下面四张小的」这套布局 ✗
+       大卡放「我们的构想」（它是五张里唯一不跳转的 ✗ 当封面最合适）。
+
+       ★ 2026-10-10 补：原来只在加载时判断一次 ✗ 用户手动把窗口缩窄时
+         布局不会跟着变 ✗ 而且下面那个 resize 监听器在宽度变化时只会
+         collapseAll() ✗ 从来不重新展开 ✗ 所以缩窄后反而回到竖排一列。
+         现在改成：宽度变化时重新判断 ✗ 并做 180ms 防抖 ✗
+         这样拖动窗口边缘就能实时看到布局切换。
+       ══════════════════════════════════════════════════════════════════ */
+    (function narrowLayout(){
+      var NARROW = 620;
+      var state = null, timer = null, armed = false;
+
+      function apply(){
+        if (!armed) return;
+        var narrow = grid.clientWidth < NARROW;
+        if (narrow === state) return;
+        state = narrow;
+        if (narrow){
+          if (!expandedCard && animCards.length){
+            expandCard(animCards[animCards.length - 1]);   /* 「我们的构想」 */
+          }
+        } else {
+          if (expandedCard) collapseAll();
+        }
+      }
+
+      /* 首次：等布局稳定再判断 */
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        setTimeout(function(){ armed = true; apply(); }, 120);
+      }); });
+
+      /* 之后：窗口尺寸变化时重新判断（防抖 ✗ 免得拖窗口时反复触发展开动画） */
+      window.addEventListener('resize', function(){
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          /* 内置的 resize 监听器可能刚把展开态收掉了 ✗ 等它做完再判断 */
+          requestAnimationFrame(apply);
+        }, 180);
+      });
+    })();
   }
 
   window.__shReady = true;
@@ -522,24 +609,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const placeNodes = () => {
       const gtBox = story.querySelector('.gt');
-      if (!gtBox || !isDesktop()) return;
+      /* ★★★ 2026-10-10 窄屏适配：去掉 isDesktop 限制
+         光点位置是按黄河 SVG 的屏幕坐标算的（svg.getScreenCTM + data-map）✗
+         这套算法与视口宽度、甚至与卷轴有没有旋转都无关 ✗ 任何布局下都成立。
+         但原来这里有一道 !isDesktop() 的拦截 ✗ 窄屏下直接 return ✗
+         于是六个光点一直停在【桌面布局时的初始位置】✗
+         卷轴转了 90° 之后它们自然就全部错位了（用户反馈的"光点错位"）。
+         去掉拦截即可 ✗ 算法本身一行没动。 */
+      if (!gtBox) return;
       const svg = gtBox.querySelector('.gt-river');
-      const ctm = svg && svg.getScreenCTM();
-      if (!ctm) return;
-      const box = gtBox.getBoundingClientRect();
+      if (!svg) return;
+
+      /* ★★★ 2026-10-10：改用 viewBox 线性映射 ✗ 不再用 getScreenCTM
+         ──────────────────────────────────────────────────────────────
+         原做法：
+           var box = gtBox.getBoundingClientRect();        // .gt 的【屏幕】矩形
+           var s = pt.matrixTransform(svg.getScreenCTM()); // data-map → 【屏幕】点
+           n.style.left = (s.x - box.left) + 'px';         // 屏幕差当【局部】坐标
+         桌面下 .scroll-stage 没有旋转 ✗ 局部坐标 = 屏幕坐标 − 盒子原点 ✗ 成立 ✓
+         但窄屏把整根卷轴 rotate(90deg) 了 ✗ 局部坐标系跟着转了 90° ✗
+         于是"屏幕差"和"局部坐标"不再相等 ✗ 光点全部错位（用户两次反馈）。
+
+         新做法：黄河 SVG 上写的是 preserveAspectRatio="none" ✗
+         也就是说 viewBox(0 0 2204 880) 到元素盒子之间是【纯线性缩放】✗
+         没有任何保持比例的补偿 ✗ 那么坐标映射就是一次简单的按比例换算：
+             left = vx / viewBox.width  × 盒子的 clientWidth
+             top  = vy / viewBox.height × 盒子的 clientHeight
+         这一步完全在【局部坐标系】里完成 ✗ 与视口宽度无关 ✗
+         与卷轴转没转也无关 ✗ 任何布局下都精确 ✓ */
+      const vb = svg.viewBox && svg.viewBox.baseVal;
+      if (!vb || !vb.width || !vb.height) return;
+      const bw = gtBox.clientWidth, bh = gtBox.clientHeight;
       gtBox.querySelectorAll('.gt-node').forEach((n) => {
         const v = (n.dataset.map || '').split(' ');
         if (v.length !== 2) return;
-        const pt = svg.createSVGPoint();
-        pt.x = parseFloat(v[0]); pt.y = parseFloat(v[1]);
-        const s = pt.matrixTransform(ctm);
-        n.style.left = (s.x - box.left).toFixed(1) + 'px';
-        n.style.top = (s.y - box.top).toFixed(1) + 'px';
+        const vx = parseFloat(v[0]), vy = parseFloat(v[1]);
+        if (isNaN(vx) || isNaN(vy)) return;
+        n.style.left = (vx / vb.width  * bw).toFixed(1) + 'px';
+        n.style.top  = (vy / vb.height * bh).toFixed(1) + 'px';
       });
     };
 
     const setOpenLayout = () => {
-      openW = Math.round(pin.clientWidth || window.innerWidth);
+      /* ★★★ 2026-10-10 窄屏适配：卷轴旋转 90° 后 ✗ 宽度 = 视觉高度
+         桌面取容器【宽度】✗ 因为卷轴横着铺开。
+         窄屏 CSS 给 .scroll-stage 加了 rotate(90deg) ✗
+         它被 JS 撑开的 width 在视觉上变成了【纵向高度】✗
+         所以这里要取容器【高度】✗ 转完才是正好铺满一屏。
+         实测不改这里的话 ✗ 窄屏 openW = 390 ✗
+         转过来只有 390px 高 ✗ 卷轴还没展开就到底了。 */
+      var _narrow = window.innerWidth < 900;
+      openW = Math.round((_narrow ? pin.clientHeight : pin.clientWidth) || window.innerWidth);
       /* ★ 最终画心宽度 = 舞台全宽 − 左右画杆(52×2) − 左右留白(42×2)。
            底图按这个宽度渲染并居中，滚动时只被画心当取景窗逐步揭开，画面不缩放。 */
       /* ★ 全部整数化：底图宽度取偶数，避免半像素定位在快速滚动时来回舍入。 */
@@ -642,8 +762,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let ticking = false;
+    /* ★★★ 2026-10-10：窄屏也要跑滚动逻辑
+       原来这里一句 if (!isDesktop()) return; 把窄屏整个挡掉了 ✗
+       于是 --unroll 永远是 HTML 里写死的 0 ✗ 竖向卷轴无从展开。
+       现在窄屏走一条精简版：
+         只算进度 → 只写 --unroll（CSS 用它驱动内容的纵向平移）
+         桌面那些横向布局计算（setOpenLayout / setHeight / placeNodes）跳过 ✗
+         因为窄屏 CSS 已经把布局改成竖向流式了 ✗ 不需要 JS 摆位。 */
+    const narrowUnroll = () => {
+      const p = storyProgress();
+      /* 前 88% 的行程用来展开 ✗ 留一点余量让终态停稳 */
+      const u = clamp01(p / 0.88);
+      story.style.setProperty('--unroll', u.toFixed(4));
+    };
     const onScroll = () => {
-      if (!isDesktop()) return;
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => { apply(); ticking = false; });
@@ -661,31 +793,115 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const onResize = () => {
-      if (!isDesktop()) {
-        clearInline();
-        story.classList.add('open');
-        story.classList.remove('finished', 'entered', 'opening');
-        return;
-      }
+      /* ★ 窄屏也重算：旋转后 openW 取的是容器高度 ✗ 窗口一变就必须更新 */
+      clearInline();
       story.classList.add('open');
+      story.classList.remove('finished', 'entered', 'opening');
       setOpenLayout();
       setHeight();
       placeNodes();
       apply();
     };
 
-    if (isDesktop()) {
-      story.classList.add('open');
-      setOpenLayout();
-      setHeight();
-      placeNodes();
-      apply();
-    } else {
-      story.classList.add('open');
-    }
+    /* ★★★ 2026-10-10：窄屏不再走"精简版" ✗ 和桌面走同一条路
+       原来窄屏只调 narrowUnroll() ✗ 从不调 setOpenLayout / setHeight / apply ✗
+       结果 openW 恒为 0 ✗ apply 里那句 if (openW) 永远不成立 ✗
+       卷轴宽度动画从头到尾没跑过 —— 这就是"动效完全失效"的直接原因。
+       现在两边统一：窄屏只是布局被 CSS 旋转了 ✗ 驱动逻辑一模一样。
+       placeNodes() 内部自己会判断 ✗ 窄屏下会直接 return ✗ 不影响。 */
+    story.classList.add('open');
+    setOpenLayout();
+    setHeight();
+    placeNodes();
+    apply();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
     window.addEventListener('load', () => { if (isDesktop()) { setOpenLayout(); setHeight(); placeNodes(); apply(); } });
   })();
 
 });
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ★★★ 2026-10-10 窄屏：时间轴取景窗 —— 拖拽平移 + 点击选年
+   ──────────────────────────────────────────────────────────────────────
+   上一版有两个问题：
+     ① 滚动加在 .bookwrap 上 ✗ 而书本画布 .stage 是它的兄弟 ✗
+        横向拖动时整块区域一起动 ✗ 书也跟着跑。
+        现在 .tl 有自己的取景窗 .tl-wrap ✗ 书在外面 ✗ 互不干扰。
+     ② overflow-x:auto 对鼠标完全没有拖动方式（滚动条又被藏了）✗
+        在电脑上用鼠标根本拖不动 ✗ 只有触屏能靠原生手势。
+        所以现在自己实现拖动：pointerdown / move / up 直接写 scrollLeft ✗
+        鼠标和手指都能拖。
+
+   另外定下交互分工（用户要求「独立移动」）：
+     拖动  = 只平移时间轴 ✗ 不翻书
+     点击  = 选中该年份 ✗ 翻书
+   实现上 ✗ 拖动时在【捕获阶段】拦下 pointermove 并 stopPropagation ✗
+   timeline3d.js 里那个滑动选年的监听就收不到事件了 ✗ 两者不会打架。
+   松手后如果发生过位移 ✗ 再把随后那次 click 也拦掉 ✗ 避免拖完顺手翻了书。
+   ══════════════════════════════════════════════════════════════════════ */
+(function timelinePan(){
+  var wrap = document.getElementById('tlWrap');
+  var tl = document.getElementById('tl');
+  if (!wrap || !tl) return;
+
+  var panning = false, moved = false, startX = 0, startScroll = 0, lastX = 0;
+
+  function scrollable(){ return wrap.scrollWidth > wrap.clientWidth + 2; }
+  function pos(e){ return e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0); }
+
+  /* 加载后回到最左端 */
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.scrollLeft = 0; }); });
+
+  wrap.addEventListener('pointerdown', function(e){
+    if (e.button !== undefined && e.button !== 0) return;
+    panning = true; moved = false;
+    startX = lastX = pos(e);
+    startScroll = wrap.scrollLeft;
+  }, true);
+
+  wrap.addEventListener('pointermove', function(e){
+    if (!panning) return;
+    var x = pos(e);
+    var dx = x - startX;
+    if (!moved && Math.abs(dx) > 4) { moved = true; wrap.classList.add('dragging'); }
+    if (!moved) return;
+    if (scrollable()) wrap.scrollLeft = startScroll - dx;
+    lastX = x;
+    e.stopPropagation();                 /* ★ 不让滑动选年插进来 */
+    if (e.cancelable) e.preventDefault();
+  }, true);
+
+  function endPan(e){
+    if (!panning) return;
+    panning = false;
+    wrap.classList.remove('dragging');
+    if (moved){
+      e.stopPropagation();
+      /* 位移过就不算点击 ✗ 吞掉紧随其后的 click */
+      var swallow = function(ev){ ev.stopPropagation(); ev.preventDefault(); wrap.removeEventListener('click', swallow, true); };
+      wrap.addEventListener('click', swallow, true);
+      setTimeout(function(){ wrap.removeEventListener('click', swallow, true); }, 350);
+    }
+    moved = false;
+  }
+  wrap.addEventListener('pointerup', endPan, true);
+  wrap.addEventListener('pointercancel', endPan, true);
+  window.addEventListener('pointerup', function(e){ if (panning) endPan(e); }, true);
+
+  /* 选中关键年份后 ✗ 把它带到取景窗中间（拖动时不触发 ✗ 那时 .on 不变） */
+  var lastY = null, armed = false;
+  setTimeout(function(){ armed = true; }, 1600);
+  setInterval(function(){
+    if (!armed || !scrollable() || panning) return;
+    var on = document.querySelector('.tl-lab.on');
+    if (!on) return;
+    var y = parseInt(on.textContent, 10);
+    if (!y || y === lastY) return;
+    lastY = y;
+    var wr = wrap.getBoundingClientRect(), er = on.getBoundingClientRect();
+    var x = er.left - wr.left + wrap.scrollLeft + er.width / 2;
+    wrap.scrollTo({ left: Math.max(0, x - wrap.clientWidth / 2), behavior: 'smooth' });
+  }, 260);
+})();
